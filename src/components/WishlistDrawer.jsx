@@ -25,6 +25,7 @@ export const WishlistDrawer = () => {
       onClick={() => setIsWishlistOpen(false)}
     >
       <div
+        className="drawer-panel"
         onClick={(e) => e.stopPropagation()}
         style={{
           width: '100%',

@@ -82,7 +82,8 @@ img {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg-warm-linen);
@@ -97,7 +98,7 @@ img {
 
 /* Utility Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -112,7 +113,7 @@ img {
 }
 
 .fade-in {
-  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Layout Utilities */
@@ -127,8 +128,11 @@ img {
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
   .section-padding {
-    padding: 3rem 0;
+    padding: 2.8rem 0;
   }
 }
 
@@ -249,7 +253,7 @@ img {
 }
 
 .heritage-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-hover);
   border-color: rgba(184, 92, 56, 0.3);
 }
@@ -261,8 +265,8 @@ img {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(43, 43, 43, 0.65);
-  backdrop-filter: blur(4px);
+  background: rgba(43, 43, 43, 0.7);
+  backdrop-filter: blur(5px);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -278,7 +282,7 @@ img {
   right: -4px;
   background: var(--primary-terracotta);
   color: white;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   width: 18px;
   height: 18px;
@@ -286,4 +290,26 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Mobile & Tablet Utility Classes */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+  .modal-card-content {
+    padding: 1.4rem !important;
+    max-height: 92vh !important;
+  }
+  .btn-primary, .btn-secondary, .btn-whatsapp {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .drawer-panel {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
 }
