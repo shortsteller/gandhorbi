@@ -93,7 +93,7 @@ export const Navbar = () => {
           maxWidth: '100%'
         }}
       >
-        <div className="container" style={{ height: '76px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem' }}>
+        <div className="container navbar-container" style={{ height: '76px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem' }}>
           
           {/* Brand Logo & Name */}
           <div
@@ -102,7 +102,7 @@ export const Navbar = () => {
               setMobileMenuOpen(false);
               setDesktopDropdownOpen(false);
             }}
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}
           >
             <img
               src="/gandhorbi-logo.png"
@@ -119,7 +119,7 @@ export const Navbar = () => {
               }}
             />
             <div>
-              <span style={{
+              <span className="brand-title-text" style={{
                 fontFamily: 'var(--font-heading)',
                 fontSize: '1.45rem',
                 fontWeight: 700,
@@ -351,12 +351,13 @@ export const Navbar = () => {
           </nav>
 
           {/* Right Action Icons & Hamburger */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+          <div className="navbar-actions-group" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0 }}>
             
             {/* Search Button */}
             <button
               onClick={() => setIsSearchOpen(true)}
               aria-label="Search Products"
+              className="nav-action-icon-btn"
               style={{
                 padding: '8px',
                 color: isHeroOverlay ? '#ffffff' : 'var(--text-charcoal)',
@@ -370,6 +371,7 @@ export const Navbar = () => {
             <button
               onClick={() => setIsWishlistOpen(true)}
               aria-label="Wishlist"
+              className="nav-action-icon-btn"
               style={{
                 position: 'relative',
                 padding: '8px',
@@ -387,6 +389,7 @@ export const Navbar = () => {
             <button
               onClick={() => setIsCartOpen(true)}
               aria-label="Shopping Cart"
+              className="nav-action-icon-btn"
               style={{
                 position: 'relative',
                 padding: '8px',
@@ -404,7 +407,7 @@ export const Navbar = () => {
             <button
               onClick={() => setIsUserAccountOpen(true)}
               aria-label="User Account"
-              className="desktop-nav-icon"
+              className="desktop-nav-icon nav-action-icon-btn"
               style={{
                 padding: '8px',
                 color: isHeroOverlay ? '#ffffff' : 'var(--text-charcoal)',
@@ -428,7 +431,8 @@ export const Navbar = () => {
                 display: 'none',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginLeft: '4px'
+                marginLeft: '4px',
+                flexShrink: 0
               }}
             >
               <Menu size={24} />
@@ -529,7 +533,7 @@ export const Navbar = () => {
             <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '1.4rem 1.2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%', boxSizing: 'border-box' }}>
               <div>
                 
-                {/* 1. Main Navigation Links (One item per line, never wrapping letter-by-letter) */}
+                {/* 1. Main Navigation Links */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', marginBottom: '1.8rem', width: '100%' }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '0.5rem', display: 'block' }}>
                     Navigation
@@ -679,13 +683,12 @@ export const Navbar = () => {
                 {/* Divider Line */}
                 <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '1.2rem 0' }} />
 
-                {/* 2. Utility Actions Section (Below Navigation Links: Search, Wishlist, Cart, Login) */}
+                {/* 2. Utility Actions Section */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%' }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '0.3rem', display: 'block' }}>
                     Quick Actions
                   </span>
 
-                  {/* Search Link */}
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
@@ -710,7 +713,6 @@ export const Navbar = () => {
                     <span>Search Products</span>
                   </button>
 
-                  {/* Wishlist Link */}
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
@@ -742,7 +744,6 @@ export const Navbar = () => {
                     )}
                   </button>
 
-                  {/* Cart Link */}
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
@@ -774,7 +775,6 @@ export const Navbar = () => {
                     )}
                   </button>
 
-                  {/* Login / Account Link */}
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
@@ -821,7 +821,7 @@ export const Navbar = () => {
         </>
       )}
 
-      {/* RESPONSIVE CSS MEDIA QUERIES */}
+      {/* RESPONSIVE CSS MEDIA QUERIES FOR NAVBAR (ZERO CUT OFF ON MOBILE) */}
       <style>{`
         @media (max-width: 960px) {
           .desktop-nav {
@@ -834,12 +834,57 @@ export const Navbar = () => {
             display: flex !important;
           }
         }
-        @media (max-width: 520px) {
+        @media (max-width: 768px) {
+          .navbar-container {
+            padding: 0 0.6rem !important;
+          }
+          .navbar-actions-group {
+            gap: 0.15rem !important;
+            flex-shrink: 0 !important;
+          }
+          .nav-action-icon-btn {
+            padding: 5px !important;
+          }
+          .brand-logo-img {
+            height: 34px !important;
+          }
+          .brand-title-text {
+            font-size: 1.2rem !important;
+          }
+          .mobile-hamburger-btn {
+            padding: 6px 8px !important;
+            margin-left: 2px !important;
+            flex-shrink: 0 !important;
+            min-width: 36px !important;
+            height: 36px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+        }
+        @media (max-width: 380px) {
+          .navbar-container {
+            padding: 0 0.4rem !important;
+          }
+          .navbar-actions-group {
+            gap: 0.1rem !important;
+          }
+          .nav-action-icon-btn {
+            padding: 4px !important;
+          }
+          .brand-title-text {
+            font-size: 1.08rem !important;
+          }
+          .brand-logo-img {
+            height: 32px !important;
+          }
           .brand-tagline {
             display: none !important;
           }
-          .brand-logo-img {
-            height: 36px !important;
+        }
+        @media (max-width: 520px) {
+          .brand-tagline {
+            display: none !important;
           }
         }
       `}</style>
