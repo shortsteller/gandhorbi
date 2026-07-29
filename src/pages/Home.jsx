@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
 import { categories } from '../data/categories';
 import { testimonials } from '../data/testimonials';
@@ -12,12 +12,27 @@ export const Home = () => {
   const trendingProducts = products.filter((p) => p.trending).slice(0, 8);
   const featuredProduct = products.find((p) => p.featured) || products[0];
 
+  const mobileHeroImages = [
+    '/gandhorbi-mobile-hero-1.jpg',
+    '/gandhorbi-mobile-hero-2.jpg',
+    '/gandhorbi-mobile-hero-3.jpg'
+  ];
+
+  const [activeMobileSlide, setActiveMobileSlide] = useState(0);
+
+  useEffect(() => {
+    const slideTimer = setInterval(() => {
+      setActiveMobileSlide((prev) => (prev + 1) % mobileHeroImages.length);
+    }, 4500);
+    return () => clearInterval(slideTimer);
+  }, []);
+
   return (
     <div className="fade-in">
       
-      {/* LUXURY HERO BANNER SECTION (OFFICIAL EMBLEM & BRANDING BAKED INTO BACKGROUND IMAGE) */}
+      {/* DESKTOP & TABLET HERO BANNER (UNTOUCHED FOR DESKTOP SCREEN SIZES >= 768px) */}
       <section
-        className="hero-luxury-banner"
+        className="desktop-hero-banner"
         style={{
           position: 'relative',
           width: '100%',
@@ -32,14 +47,12 @@ export const Home = () => {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           paddingTop: '80px',
-          paddingBottom: '3rem',
+          paddingBottom: '3.5rem',
           boxSizing: 'border-box'
         }}
       >
-        {/* ONLY TWO CTA BUTTONS LOCATED IN LOWER-CENTER */}
         <div className="container" style={{ textAlign: 'center', zIndex: 2, padding: '0 1rem' }}>
           <div
-            className="hero-cta-group"
             style={{
               display: 'flex',
               flexWrap: 'wrap',
@@ -48,7 +61,6 @@ export const Home = () => {
               alignItems: 'center'
             }}
           >
-            {/* 1. SHOP NOW BUTTON */}
             <button
               onClick={() => navigateTo('collections')}
               className="hero-btn-gold"
@@ -73,7 +85,6 @@ export const Home = () => {
               Shop Now <ArrowRight size={18} />
             </button>
 
-            {/* 2. EXPLORE COLLECTIONS BUTTON */}
             <button
               onClick={() => {
                 const el = document.getElementById('shop-categories');
@@ -104,59 +115,128 @@ export const Home = () => {
             </button>
           </div>
         </div>
-
-        {/* Hero Responsive Styles & 1:1 Aspect Ratio on Mobile Phone */}
-        <style>{`
-          .hero-btn-gold:hover {
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 12px 35px rgba(212, 164, 78, 0.55) !important;
-          }
-          .hero-btn-outline:hover {
-            background-color: #D4A44E !important;
-            color: #12141D !important;
-            transform: translateY(-3px) scale(1.03);
-          }
-          @media (max-width: 768px) {
-            .hero-luxury-banner {
-              width: 100vw !important;
-              max-width: 100% !important;
-              aspect-ratio: 1 / 1 !important;
-              min-height: auto !important;
-              height: 100vw !important;
-              max-height: 520px !important;
-              padding-top: 65px !important;
-              padding-bottom: 1.4rem !important;
-              background-position: center center !important;
-            }
-            .hero-cta-group {
-              gap: 0.6rem !important;
-            }
-            .hero-btn-gold, .hero-btn-outline {
-              padding: 0.65rem 1.4rem !important;
-              font-size: 0.82rem !important;
-            }
-          }
-          @media (max-width: 480px) {
-            .hero-luxury-banner {
-              aspect-ratio: 1 / 1 !important;
-              height: 100vw !important;
-              max-height: 440px !important;
-              padding-bottom: 1.2rem !important;
-            }
-            .hero-cta-group {
-              flex-direction: row !important;
-              gap: 0.5rem !important;
-            }
-            .hero-btn-gold, .hero-btn-outline {
-              padding: 0.55rem 1rem !important;
-              font-size: 0.78rem !important;
-            }
-          }
-        `}</style>
       </section>
 
-      {/* BRAND ETHOS TICKER */}
-      <section style={{ backgroundColor: 'var(--text-charcoal)', color: '#F7F4EE', padding: '1.5rem 0', borderTop: '2px solid var(--highlight-mustard)' }}>
+      {/* MOBILE ONLY HERO BANNER (STRICT 1:1 SQUARE ASPECT RATIO, DISPLAYED ONLY ON MOBILE < 768px) */}
+      <section
+        className="mobile-hero-banner"
+        style={{
+          display: 'none',
+          position: 'relative',
+          width: '100vw',
+          height: '100vw',
+          maxHeight: '520px',
+          aspectRatio: '1 / 1',
+          overflow: 'hidden',
+          backgroundColor: '#0F0C0A',
+          boxSizing: 'border-box'
+        }}
+      >
+        {/* Mobile Background Images with Smooth Carousel Fade */}
+        {mobileHeroImages.map((imgSrc, idx) => (
+          <div
+            key={idx}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: idx === activeMobileSlide ? 1 : 0,
+              transition: 'opacity 1s ease-in-out',
+              backgroundImage: `linear-gradient(to top, rgba(12, 10, 8, 0.88) 0%, rgba(12, 10, 8, 0.25) 35%, rgba(12, 10, 8, 0) 65%), url("${imgSrc}")`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          />
+        ))}
+
+        {/* Mobile Hero Content: ONLY TWO CTA BUTTONS in Lower-Center (No Text / Badges) */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '1.2rem',
+            left: 0,
+            right: 0,
+            zIndex: 3,
+            padding: '0 1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.65rem'
+          }}
+        >
+          {/* 1. Shop Now Mobile Button */}
+          <button
+            onClick={() => navigateTo('collections')}
+            className="mobile-cta-btn-primary"
+            style={{
+              width: '100%',
+              maxWidth: '300px',
+              background: 'linear-gradient(135deg, #E2B755 0%, #D4A44E 50%, #B85C38 100%)',
+              color: '#12141D',
+              padding: '0.78rem 1.2rem',
+              borderRadius: 'var(--radius-full)',
+              fontFamily: 'var(--font-btn)',
+              fontWeight: 700,
+              fontSize: '0.88rem',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              boxShadow: '0 6px 20px rgba(212, 164, 78, 0.45)',
+              border: '1px solid #F5D77F',
+              transition: 'var(--transition-fast)'
+            }}
+          >
+            Shop Now <ArrowRight size={16} />
+          </button>
+
+          {/* 2. Explore More Collections Mobile Button */}
+          <button
+            onClick={() => {
+              const el = document.getElementById('shop-categories');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+              else navigateTo('collections');
+            }}
+            className="mobile-cta-btn-secondary"
+            style={{
+              width: '100%',
+              maxWidth: '300px',
+              backgroundColor: 'rgba(20, 16, 12, 0.72)',
+              color: '#F7F4EE',
+              border: '1.5px solid #D4A44E',
+              padding: '0.75rem 1.2rem',
+              borderRadius: 'var(--radius-full)',
+              fontFamily: 'var(--font-btn)',
+              fontWeight: 600,
+              fontSize: '0.88rem',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
+              transition: 'var(--transition-fast)'
+            }}
+          >
+            Explore More Collections
+          </button>
+        </div>
+      </section>
+
+      {/* BRAND ETHOS TICKER SECTION (VISIBLE ON DESKTOP/TABLET, HIDDEN ON MOBILE) */}
+      <section
+        className="ethos-ticker-section"
+        style={{
+          backgroundColor: 'var(--text-charcoal)',
+          color: '#F7F4EE',
+          padding: '1.5rem 0',
+          borderTop: '2px solid var(--highlight-mustard)'
+        }}
+      >
         <div className="container">
           <div style={{
             display: 'grid',
@@ -490,6 +570,38 @@ export const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* MEDIA QUERIES FOR MOBILE HERO REDESIGN (DESKTOP IS 100% UNTOUCHED) */}
+      <style>{`
+        @media (min-width: 769px) {
+          .desktop-hero-banner {
+            display: flex !important;
+          }
+          .mobile-hero-banner {
+            display: none !important;
+          }
+          .ethos-ticker-section {
+            display: block !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .desktop-hero-banner {
+            display: none !important;
+          }
+          .mobile-hero-banner {
+            display: block !important;
+          }
+          .ethos-ticker-section {
+            display: none !important;
+          }
+          .mobile-cta-btn-primary:active {
+            transform: scale(0.97);
+          }
+          .mobile-cta-btn-secondary:active {
+            transform: scale(0.97);
+          }
+        }
+      `}</style>
 
     </div>
   );
