@@ -4,13 +4,11 @@ import { categories } from '../data/categories';
 import { testimonials } from '../data/testimonials';
 import { ProductCard } from '../components/ProductCard';
 import { ArrowRight, Award, ShieldCheck, HeartHandshake } from 'lucide-react';
-import { InstagramIcon } from '../components/SocialIcons';
 
 export const Home = () => {
-  const { products, navigateTo, setQuickViewProduct } = useShop();
+  const { products, navigateTo } = useShop();
 
   const trendingProducts = products.filter((p) => p.trending).slice(0, 8);
-  const featuredProduct = products.find((p) => p.featured) || products[0];
 
   const mobileHeroImages = [
     '/gandhorbi-mobile-hero-1.jpg',
@@ -348,93 +346,6 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* FEATURED COLLECTIONS EDITORIAL SECTION */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-sage)' }}>
-        <div className="container">
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '3rem',
-            alignItems: 'center'
-          }}>
-            
-            {/* Image Banner */}
-            <div style={{ position: 'relative' }}>
-              <div style={{
-                borderRadius: 'var(--radius-lg)',
-                overflow: 'hidden',
-                boxShadow: 'var(--shadow-hover)',
-                border: '1px solid var(--border-subtle)'
-              }}>
-                <img
-                  src={featuredProduct.image}
-                  alt={featuredProduct.name}
-                  style={{ width: '100%', height: '480px', objectFit: 'cover' }}
-                />
-              </div>
-
-              {/* Floating Badge */}
-              <div style={{
-                position: 'absolute',
-                bottom: '-20px',
-                right: '20px',
-                backgroundColor: 'var(--bg-soft-ivory)',
-                padding: '1.2rem',
-                borderRadius: 'var(--radius-md)',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
-                border: '1px solid var(--border-subtle)',
-                maxWidth: '220px'
-              }}>
-                <span style={{ fontSize: '0.75rem', color: 'var(--primary-terracotta)', fontWeight: 600, textTransform: 'uppercase' }}>
-                  Atelier Highlight
-                </span>
-                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', marginTop: '2px' }}>
-                  Royal Nakshi Kantha
-                </h4>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div>
-              <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-                Editorial Collection
-              </span>
-              <h2 style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '2.8rem',
-                lineHeight: 1.2,
-                marginTop: '0.5rem',
-                marginBottom: '1.2rem'
-              }}>
-                The Soul of Murshidabad: Nakshi Kantha Heritage
-              </h2>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-                Each Nakshi Kantha saree is not merely woven; it is painted with thread by rural women of Bengal. Passing down stories of lotus ponds, palanquins, and peacocks, our artisans spend up to 4 months completing a single pure silk saree.
-              </p>
-              
-              <div style={{ display: 'flex', gap: '2rem', marginBottom: '2rem' }}>
-                <div>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', color: 'var(--primary-terracotta)' }}>100%</h4>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)' }}>Pure Silk & Organic Threads</span>
-                </div>
-                <div>
-                  <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', color: 'var(--primary-terracotta)' }}>120+</h4>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)' }}>Hours of Hand Stitching</span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setQuickViewProduct(featuredProduct)}
-                className="btn-primary"
-              >
-                Discover Heritage Piece <ArrowRight size={18} />
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
       {/* TRENDING PRODUCTS SECTION */}
       <section className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)' }}>
         <div className="container">
@@ -523,55 +434,7 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* INSTAGRAM GALLERY SECTION */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <div style={{ display: 'inline-flex', fontStyle: 'normal', alignItems: 'center', gap: '0.5rem', color: 'var(--primary-terracotta)', fontWeight: 600 }}>
-              <InstagramIcon size={20} /> @GandhorbiFolkArts
-            </div>
-            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', marginTop: '4px' }}>
-              Follow Our Atelier Journey
-            </h2>
-          </div>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '1rem'
-          }}>
-            {[
-              "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80&w=600",
-              "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=600",
-              "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=600",
-              "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&q=80&w=600",
-              "https://images.unsplash.com/photo-1597983073493-88cd35cfa3d0?auto=format&fit=crop&q=80&w=600",
-              "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&q=80&w=600"
-            ].map((img, idx) => (
-              <div
-                key={idx}
-                style={{
-                  height: '220px',
-                  borderRadius: 'var(--radius-md)',
-                  overflow: 'hidden',
-                  position: 'relative',
-                  cursor: 'pointer'
-                }}
-              >
-                <img
-                  src={img}
-                  alt={`Instagram Post ${idx}`}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'var(--transition-smooth)' }}
-                  onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
-                  onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* MEDIA QUERIES FOR MOBILE HERO REDESIGN (DESKTOP IS 100% UNTOUCHED) */}
+      {/* MEDIA QUERIES FOR MOBILE HERO REDESIGN */}
       <style>{`
         @media (min-width: 769px) {
           .desktop-hero-banner {
