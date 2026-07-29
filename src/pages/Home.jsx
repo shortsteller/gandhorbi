@@ -3,7 +3,7 @@ import { useShop } from '../context/ShopContext';
 import { categories } from '../data/categories';
 import { testimonials } from '../data/testimonials';
 import { ProductCard } from '../components/ProductCard';
-import { ArrowRight, Sparkles, Award, ShieldCheck, HeartHandshake, Mail } from 'lucide-react';
+import { ArrowRight, Award, ShieldCheck, HeartHandshake } from 'lucide-react';
 import { InstagramIcon } from '../components/SocialIcons';
 
 export const Home = () => {
@@ -15,111 +15,153 @@ export const Home = () => {
   return (
     <div className="fade-in">
       
-      {/* HERO SECTION */}
+      {/* LUXURY HERO BANNER SECTION (OFFICIAL LOGO & BRANDING BAKED INTO BACKGROUND IMAGE) */}
       <section
+        className="hero-luxury-banner"
         style={{
           position: 'relative',
-          minHeight: '100vh',
+          width: '100%',
+          minHeight: 'calc(100vh - 76px)',
           display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
           alignItems: 'center',
-          justifyContent: 'center',
           color: '#ffffff',
-          backgroundImage: 'linear-gradient(rgba(43, 43, 43, 0.45), rgba(43, 43, 43, 0.65)), url("https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80&w=2000")',
+          backgroundImage: 'linear-gradient(to top, rgba(10, 12, 20, 0.82) 0%, rgba(10, 12, 20, 0.15) 35%, rgba(10, 12, 20, 0) 65%), url("/gandhorbi-hero.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-          paddingTop: '80px'
+          backgroundRepeat: 'no-repeat',
+          paddingTop: '100px',
+          paddingBottom: '3.5rem',
+          boxSizing: 'border-box'
         }}
       >
-        <div className="container" style={{ textAlign: 'center', maxWidth: '900px', zIndex: 2 }}>
-          
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.6rem',
-            backgroundColor: 'rgba(212, 164, 78, 0.25)',
-            border: '1px solid rgba(212, 164, 78, 0.5)',
-            padding: '6px 18px',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '0.85rem',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            marginBottom: '1.5rem',
-            backdropFilter: 'blur(6px)',
-            color: '#E5DFC9'
-          }}>
-            <Sparkles size={16} color="var(--highlight-mustard)" /> Royal Craftsmanship & Modern Luxury
-          </div>
-
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: 'clamp(2.8rem, 6vw, 4.8rem)',
-            fontWeight: 700,
-            lineHeight: 1.1,
-            marginBottom: '1.2rem',
-            color: '#FFFDF8',
-            textShadow: '0 4px 20px rgba(0,0,0,0.4)'
-          }}>
-            Gandhorbi Folk Arts
-          </h1>
-
-          <p style={{
-            fontFamily: 'var(--font-subheading)',
-            fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)',
-            fontStyle: 'italic',
-            fontWeight: 400,
-            color: '#F0ECE1',
-            marginBottom: '2.5rem',
-            maxWidth: '750px',
-            margin: '0 auto 2.5rem auto',
-            lineHeight: 1.5
-          }}>
-            "Celebrating Bengal’s Timeless Heritage Through Handcrafted Kantha Sarees, Lost-Wax Dokra Sculptures & Royal Artisanal Couture."
-          </p>
-
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.2rem', justifyContent: 'center' }}>
+        {/* ONLY TWO CTA BUTTONS LOCATED IN LOWER-CENTER */}
+        <div className="container" style={{ textAlign: 'center', zIndex: 2, padding: '0 1rem' }}>
+          <div
+            className="hero-cta-group"
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1.2rem',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            {/* 1. SHOP NOW BUTTON */}
             <button
               onClick={() => navigateTo('collections')}
-              className="btn-primary"
-              style={{ padding: '1rem 2.4rem', fontSize: '1rem' }}
+              className="hero-btn-gold"
+              style={{
+                background: 'linear-gradient(135deg, #E2B755 0%, #D4A44E 50%, #B85C38 100%)',
+                color: '#12141D',
+                padding: '1rem 2.5rem',
+                borderRadius: 'var(--radius-full)',
+                fontFamily: 'var(--font-btn)',
+                fontWeight: 700,
+                fontSize: '1rem',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                transition: 'var(--transition-smooth)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                boxShadow: '0 8px 30px rgba(212, 164, 78, 0.4)',
+                border: '1px solid #F5D77F'
+              }}
             >
               Shop Now <ArrowRight size={18} />
             </button>
+
+            {/* 2. EXPLORE COLLECTIONS BUTTON */}
             <button
               onClick={() => {
                 const el = document.getElementById('shop-categories');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
+                else navigateTo('collections');
               }}
-              className="btn-secondary"
-              style={{ padding: '1rem 2.4rem', fontSize: '1rem', color: '#ffffff', borderColor: '#ffffff' }}
+              className="hero-btn-outline"
+              style={{
+                backgroundColor: 'rgba(15, 18, 28, 0.65)',
+                color: '#F7F4EE',
+                border: '1.5px solid #D4A44E',
+                padding: '1rem 2.4rem',
+                borderRadius: 'var(--radius-full)',
+                fontFamily: 'var(--font-btn)',
+                fontWeight: 600,
+                fontSize: '1rem',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                transition: 'var(--transition-smooth)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                backdropFilter: 'blur(8px)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+              }}
             >
               Explore Collections
             </button>
           </div>
+        </div>
 
-          {/* Ticker Badges */}
+        {/* Hero Bottom CSS Responsive Overrides */}
+        <style>{`
+          .hero-btn-gold:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 35px rgba(212, 164, 78, 0.55) !important;
+          }
+          .hero-btn-outline:hover {
+            background-color: #D4A44E !important;
+            color: #12141D !important;
+            transform: translateY(-3px) scale(1.03);
+          }
+          @media (max-width: 768px) {
+            .hero-luxury-banner {
+              min-height: 80vh !important;
+              padding-bottom: 2.5rem !important;
+            }
+            .hero-btn-gold, .hero-btn-outline {
+              padding: 0.85rem 1.8rem !important;
+              font-size: 0.9rem !important;
+            }
+          }
+          @media (max-width: 480px) {
+            .hero-cta-group {
+              flex-direction: column !important;
+              width: 100% !important;
+            }
+            .hero-btn-gold, .hero-btn-outline {
+              width: 100% !important;
+              justify-content: center !important;
+            }
+          }
+        `}</style>
+      </section>
+
+      {/* BRAND ETHOS TICKER */}
+      <section style={{ backgroundColor: 'var(--text-charcoal)', color: '#F7F4EE', padding: '1.5rem 0', borderTop: '2px solid var(--highlight-mustard)' }}>
+        <div className="container">
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
             gap: '1.5rem',
-            marginTop: '4.5rem',
-            paddingTop: '2rem',
-            borderTop: '1px solid rgba(255,255,255,0.2)'
+            alignItems: 'center',
+            textAlign: 'center'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}>
-              <Award color="var(--highlight-mustard)" size={24} />
-              <span style={{ fontSize: '0.9rem', textAlign: 'left', lineHeight: 1.2 }}>500+ Rural Master Craftswomen</span>
+              <Award color="var(--highlight-mustard)" size={22} />
+              <span style={{ fontSize: '0.88rem', textAlign: 'left', lineHeight: 1.3 }}>500+ Rural Master Craftswomen</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}>
-              <ShieldCheck color="var(--highlight-mustard)" size={24} />
-              <span style={{ fontSize: '0.9rem', textAlign: 'left', lineHeight: 1.2 }}>100% Authentic Handcrafted</span>
+              <ShieldCheck color="var(--highlight-mustard)" size={22} />
+              <span style={{ fontSize: '0.88rem', textAlign: 'left', lineHeight: 1.3 }}>100% Authentic Handcrafted</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}>
-              <HeartHandshake color="var(--highlight-mustard)" size={24} />
-              <span style={{ fontSize: '0.9rem', textAlign: 'left', lineHeight: 1.2 }}>Fair Trade & Ethical Living</span>
+              <HeartHandshake color="var(--highlight-mustard)" size={22} />
+              <span style={{ fontSize: '0.88rem', textAlign: 'left', lineHeight: 1.3 }}>Fair Trade & Ethical Living</span>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -215,7 +257,7 @@ export const Home = () => {
         <div className="container">
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: '3rem',
             alignItems: 'center'
           }}>
@@ -319,11 +361,7 @@ export const Home = () => {
           </div>
 
           {/* Product Grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '2rem'
-          }}>
+          <div className="product-cards-grid">
             {trendingProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
