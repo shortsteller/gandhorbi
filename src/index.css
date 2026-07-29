@@ -33,7 +33,7 @@
   --transition-fast: all 0.15s ease-in-out;
 }
 
-/* Base Styles */
+/* Base Styles & Strict Zero Horizontal Overflow */
 * {
   margin: 0;
   padding: 0;
@@ -43,6 +43,9 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
 }
 
 body {
@@ -52,7 +55,17 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+  position: relative;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+  position: relative;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -60,6 +73,11 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   color: var(--text-charcoal);
   letter-spacing: -0.01em;
+  word-break: break-word;
+}
+
+p, span, a, label {
+  word-break: break-word;
 }
 
 a {
@@ -98,7 +116,7 @@ img {
 
 /* Utility Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -113,14 +131,16 @@ img {
 }
 
 .fade-in {
-  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Layout Utilities */
 .container {
   max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
   padding: 0 1.5rem;
+  box-sizing: border-box;
 }
 
 .section-padding {
@@ -132,7 +152,7 @@ img {
     padding: 0 1rem;
   }
   .section-padding {
-    padding: 2.8rem 0;
+    padding: 2.5rem 0;
   }
 }
 
@@ -169,6 +189,7 @@ img {
   align-items: center;
   gap: 0.5rem;
   box-shadow: 0 4px 15px rgba(184, 92, 56, 0.2);
+  max-width: 100%;
 }
 
 .btn-primary:hover {
@@ -192,6 +213,7 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  max-width: 100%;
 }
 
 .btn-secondary:hover {
@@ -215,6 +237,7 @@ img {
   gap: 0.6rem;
   width: 100%;
   box-shadow: 0 4px 15px rgba(37, 211, 102, 0.25);
+  max-width: 100%;
 }
 
 .btn-whatsapp:hover {
@@ -234,6 +257,7 @@ img {
   color: var(--text-charcoal);
   transition: var(--transition-smooth);
   border: 1px solid var(--border-subtle);
+  flex-shrink: 0;
 }
 
 .btn-icon:hover {
@@ -250,6 +274,7 @@ img {
   border-radius: var(--radius-md);
   overflow: hidden;
   transition: var(--transition-smooth);
+  width: 100%;
 }
 
 .heritage-card:hover {
@@ -258,21 +283,24 @@ img {
   border-color: rgba(184, 92, 56, 0.3);
 }
 
-/* Modal Backdrops */
+/* Modal Backdrops & Mobile Fullscreen Drawers */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(43, 43, 43, 0.7);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(43, 43, 43, 0.75);
   backdrop-filter: blur(5px);
-  z-index: 1000;
+  z-index: 20000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
   animation: fadeIn 0.3s ease;
+  overflow-x: hidden;
 }
 
 /* Badge counter */
@@ -292,17 +320,36 @@ img {
   justify-content: center;
 }
 
+/* Fullscreen Mobile Drawer Styling */
+.mobile-fullscreen-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: var(--bg-soft-ivory);
+  z-index: 10000;
+  display: flex;
+  flexDirection: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease;
+}
+
 /* Mobile & Tablet Utility Classes */
 @media (max-width: 768px) {
   .modal-overlay {
     padding: 0.5rem;
   }
   .modal-card-content {
-    padding: 1.4rem !important;
+    padding: 1.2rem !important;
     max-height: 92vh !important;
   }
   .btn-primary, .btn-secondary, .btn-whatsapp {
-    padding: 0.75rem 1.2rem;
+    padding: 0.75rem 1rem;
     font-size: 0.88rem;
   }
 }
