@@ -65,24 +65,24 @@ export const Navbar = () => {
     >
       <div className="container" style={{ height: '85px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         
-        {/* Brand Logo */}
+        {/* Brand Logo & Name */}
         <div
           onClick={() => navigateTo('home')}
-          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem' }}
         >
-          <div style={{
-            width: '38px',
-            height: '38px',
-            borderRadius: '50%',
-            backgroundColor: 'var(--primary-terracotta)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            boxShadow: '0 4px 12px rgba(184, 92, 56, 0.3)'
-          }}>
-            <Sparkles size={20} />
-          </div>
+          <img
+            src="/gandhorbi-logo.png"
+            alt="Gandhorbi Official Logo"
+            style={{
+              height: '46px',
+              width: 'auto',
+              maxHeight: '48px',
+              objectFit: 'contain',
+              borderRadius: 'var(--radius-sm)',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.15)',
+              transition: 'var(--transition-fast)'
+            }}
+          />
           <div>
             <span style={{
               fontFamily: 'var(--font-heading)',

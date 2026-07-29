@@ -56,19 +56,17 @@ export const UserAccountModal = () => {
 
         {isLoggedIn ? (
           <div style={{ textAlign: 'center' }}>
-            <div style={{
-              width: '70px',
-              height: '70px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--bg-soft-sage)',
-              color: 'var(--secondary-olive)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 1.2rem auto'
-            }}>
-              <Sparkles size={36} />
-            </div>
+            <img
+              src="/gandhorbi-logo.png"
+              alt="Gandhorbi Official Logo"
+              style={{
+                height: '70px',
+                width: 'auto',
+                objectFit: 'contain',
+                margin: '0 auto 1.2rem auto',
+                borderRadius: 'var(--radius-sm)'
+              }}
+            />
             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.8rem', color: 'var(--text-charcoal)', marginBottom: '0.4rem' }}>
               Namaskar, {userProfile?.name}!
             </h3>

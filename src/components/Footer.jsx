@@ -41,20 +41,19 @@ export const Footer = () => {
           <div>
             <div
               onClick={() => navigateTo('home')}
-              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.2rem' }}
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.2rem' }}
             >
-              <div style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                backgroundColor: 'var(--primary-terracotta)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff'
-              }}>
-                <Sparkles size={18} />
-              </div>
+              <img
+                src="/gandhorbi-logo.png"
+                alt="Gandhorbi Official Logo"
+                style={{
+                  height: '48px',
+                  width: 'auto',
+                  maxHeight: '52px',
+                  objectFit: 'contain',
+                  borderRadius: 'var(--radius-sm)'
+                }}
+              />
               <span style={{
                 fontFamily: 'var(--font-heading)',
                 fontSize: '1.7rem',
