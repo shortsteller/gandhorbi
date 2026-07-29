@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useShop } from '../context/ShopContext';
-import { Search, Heart, ShoppingBag, User, Menu, X, ArrowRight, MessageCircle } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, Menu, X, ArrowRight, MessageCircle, ChevronDown, Sparkles } from 'lucide-react';
 import { categories } from '../data/categories';
 
 export const Navbar = () => {
@@ -17,6 +17,10 @@ export const Navbar = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
+  const [mobileCollectionsExpanded, setMobileCollectionsExpanded] = useState(false);
+
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +33,17 @@ export const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close desktop dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDesktopDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   // Prevent body scrolling when mobile menu drawer is open
@@ -44,7 +59,7 @@ export const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', id: 'home' },
-    { name: 'Collections', id: 'collections' },
+    { name: 'Collections', id: 'collections', hasDropdown: true },
     { name: 'About', id: 'about' },
     { name: 'Events', id: 'events' },
     { name: 'Contact Us', id: 'contact' }
@@ -85,6 +100,7 @@ export const Navbar = () => {
             onClick={() => {
               navigateTo('home');
               setMobileMenuOpen(false);
+              setDesktopDropdownOpen(false);
             }}
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}
           >
@@ -129,10 +145,179 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* Navigation Links (Desktop Only) */}
-          <nav className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '2.2rem' }}>
+          {/* Navigation Links with Collections Dropdown (Desktop Only) */}
+          <nav className="desktop-nav" ref={dropdownRef} style={{ display: 'flex', alignItems: 'center', gap: '2.2rem', position: 'relative' }}>
             {navLinks.map((link) => {
               const isActive = currentPage === link.id;
+
+              if (link.hasDropdown) {
+                return (
+                  <div
+                    key={link.id}
+                    onMouseEnter={() => setDesktopDropdownOpen(true)}
+                    style={{ position: 'relative' }}
+                  >
+                    <button
+                      onClick={() => {
+                        navigateTo('collections');
+                        setDesktopDropdownOpen(!desktopDropdownOpen);
+                      }}
+                      style={{
+                        fontFamily: 'var(--font-nav)',
+                        fontSize: '0.95rem',
+                        fontWeight: isActive ? 600 : 500,
+                        color: isHeroOverlay
+                          ? isActive ? '#D4A44E' : 'rgba(255,255,255,0.9)'
+                          : isActive ? 'var(--primary-terracotta)' : 'var(--text-charcoal)',
+                        position: 'relative',
+                        padding: '0.5rem 0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        transition: 'var(--transition-fast)'
+                      }}
+                    >
+                      <span>{link.name}</span>
+                      <ChevronDown
+                        size={14}
+                        style={{
+                          transform: desktopDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.3s ease'
+                        }}
+                      />
+                      {isActive && (
+                        <span
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: '2px',
+                            backgroundColor: isHeroOverlay ? '#D4A44E' : 'var(--primary-terracotta)',
+                            borderRadius: '2px'
+                          }}
+                        />
+                      )}
+                    </button>
+
+                    {/* DESKTOP MEGA DROPDOWN MENU */}
+                    {desktopDropdownOpen && (
+                      <div
+                        className="fade-in"
+                        onMouseLeave={() => setDesktopDropdownOpen(false)}
+                        style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: '-120px',
+                          width: '680px',
+                          backgroundColor: 'var(--bg-soft-ivory)',
+                          borderRadius: 'var(--radius-lg)',
+                          border: '1px solid var(--border-subtle)',
+                          boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+                          padding: '1.8rem',
+                          display: 'grid',
+                          gridTemplateColumns: '2fr 1fr',
+                          gap: '1.8rem',
+                          zIndex: 9999,
+                          marginTop: '8px'
+                        }}
+                      >
+                        {/* Left: Category List Grid */}
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                              Heritage Categories
+                            </span>
+                            <button
+                              onClick={() => {
+                                navigateTo('collections');
+                                setDesktopDropdownOpen(false);
+                              }}
+                              style={{ fontSize: '0.8rem', color: 'var(--primary-terracotta)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.2rem' }}
+                            >
+                              View All ({categories.length}) <ArrowRight size={12} />
+                            </button>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+                            {categories.map((cat) => (
+                              <div
+                                key={cat.id}
+                                onClick={() => {
+                                  navigateTo('collections', cat.name);
+                                  setDesktopDropdownOpen(false);
+                                }}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '0.7rem',
+                                  padding: '0.5rem',
+                                  borderRadius: 'var(--radius-sm)',
+                                  cursor: 'pointer',
+                                  transition: 'var(--transition-fast)',
+                                  backgroundColor: 'var(--bg-warm-linen)'
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-soft-sage)')}
+                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-warm-linen)')}
+                              >
+                                <img
+                                  src={cat.image}
+                                  alt={cat.name}
+                                  style={{ width: '38px', height: '38px', borderRadius: '4px', objectFit: 'cover' }}
+                                />
+                                <div>
+                                  <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-charcoal)', display: 'block', lineHeight: 1.2 }}>
+                                    {cat.name}
+                                  </span>
+                                  <span style={{ fontSize: '0.72rem', color: 'var(--text-warm-grey)' }}>
+                                    {cat.count} Items
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Right: Featured Craft Highlight Card */}
+                        <div style={{
+                          backgroundColor: 'var(--bg-warm-linen)',
+                          borderRadius: 'var(--radius-md)',
+                          padding: '1.2rem',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          border: '1px solid var(--border-subtle)'
+                        }}>
+                          <div>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                              Atelier Spotlight
+                            </span>
+                            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', marginTop: '4px', color: 'var(--text-charcoal)' }}>
+                              Nakshi Kantha Sarees
+                            </h4>
+                            <p style={{ fontSize: '0.8rem', color: 'var(--text-warm-grey)', marginTop: '6px', lineHeight: 1.5 }}>
+                              Hand-stitched over 4 months by master rural craftswomen of Bengal.
+                            </p>
+                          </div>
+                          
+                          <button
+                            onClick={() => {
+                              navigateTo('collections', 'Kantha Sarees');
+                              setDesktopDropdownOpen(false);
+                            }}
+                            className="btn-primary"
+                            style={{ padding: '0.55rem 1rem', fontSize: '0.78rem', marginTop: '1rem', justifyContent: 'center' }}
+                          >
+                            Explore Sarees <ArrowRight size={14} />
+                          </button>
+                        </div>
+
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
               return (
                 <button
                   key={link.id}
@@ -359,13 +544,116 @@ export const Navbar = () => {
                 <span>Search Kantha sarees, Dokra art, dhotis...</span>
               </div>
 
-              {/* Main Navigation Pages */}
+              {/* Main Navigation Pages with Mobile Accordion Dropdown for Collections */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '2rem' }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '0.4rem' }}>
                   Explore Pages
                 </span>
+                
                 {navLinks.map((link) => {
                   const isActive = currentPage === link.id;
+
+                  if (link.id === 'collections') {
+                    return (
+                      <div key={link.id} style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '0.7rem 1rem',
+                            borderRadius: 'var(--radius-md)',
+                            backgroundColor: isActive ? 'var(--bg-warm-linen)' : 'transparent'
+                          }}
+                        >
+                          <button
+                            onClick={() => {
+                              navigateTo('collections');
+                              setMobileMenuOpen(false);
+                            }}
+                            style={{
+                              fontFamily: 'var(--font-heading)',
+                              fontSize: '1.55rem',
+                              color: isActive ? 'var(--primary-terracotta)' : 'var(--text-charcoal)',
+                              fontWeight: isActive ? 700 : 500,
+                              textAlign: 'left'
+                            }}
+                          >
+                            Collections
+                          </button>
+                          
+                          <button
+                            onClick={() => setMobileCollectionsExpanded(!mobileCollectionsExpanded)}
+                            style={{
+                              padding: '6px 12px',
+                              borderRadius: 'var(--radius-sm)',
+                              backgroundColor: 'var(--bg-warm-linen)',
+                              color: 'var(--primary-terracotta)',
+                              fontSize: '0.85rem',
+                              fontWeight: 600,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.3rem'
+                            }}
+                          >
+                            <span>Categories</span>
+                            <ChevronDown
+                              size={16}
+                              style={{
+                                transform: mobileCollectionsExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                                transition: 'transform 0.3s ease'
+                              }}
+                            />
+                          </button>
+                        </div>
+
+                        {/* ACCORDION DROPDOWN CATEGORIES LIST */}
+                        {mobileCollectionsExpanded && (
+                          <div
+                            className="fade-in"
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '0.4rem',
+                              paddingLeft: '1.2rem',
+                              paddingTop: '0.5rem',
+                              paddingBottom: '0.5rem',
+                              borderLeft: '2px solid var(--primary-terracotta)',
+                              marginTop: '0.4rem',
+                              marginBottom: '0.4rem'
+                            }}
+                          >
+                            {categories.map((cat) => (
+                              <button
+                                key={cat.id}
+                                onClick={() => {
+                                  navigateTo('collections', cat.name);
+                                  setMobileMenuOpen(false);
+                                }}
+                                style={{
+                                  textAlign: 'left',
+                                  padding: '0.5rem 0.8rem',
+                                  fontSize: '0.98rem',
+                                  color: 'var(--text-charcoal)',
+                                  fontFamily: 'var(--font-nav)',
+                                  fontWeight: 500,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between'
+                                }}
+                              >
+                                <span>• {cat.name}</span>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--primary-terracotta)', fontWeight: 600 }}>
+                                  {cat.count} items
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
                   return (
                     <button
                       key={link.id}
@@ -395,7 +683,7 @@ export const Navbar = () => {
                 })}
               </div>
 
-              {/* Category Shortcuts */}
+              {/* Quick Category Shortcuts */}
               <div style={{ marginBottom: '2rem' }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'block', marginBottom: '0.8rem' }}>
                   Popular Heritage Categories
