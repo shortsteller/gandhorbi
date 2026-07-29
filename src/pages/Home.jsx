@@ -15,7 +15,7 @@ export const Home = () => {
   return (
     <div className="fade-in">
       
-      {/* LUXURY HERO BANNER SECTION (OFFICIAL LOGO & BRANDING BAKED INTO BACKGROUND IMAGE) */}
+      {/* LUXURY HERO BANNER SECTION (OFFICIAL EMBLEM & BRANDING BAKED INTO BACKGROUND IMAGE) */}
       <section
         className="hero-luxury-banner"
         style={{
@@ -27,12 +27,12 @@ export const Home = () => {
           justifyContent: 'flex-end',
           alignItems: 'center',
           color: '#ffffff',
-          backgroundImage: 'linear-gradient(to top, rgba(10, 12, 20, 0.82) 0%, rgba(10, 12, 20, 0.15) 35%, rgba(10, 12, 20, 0) 65%), url("/gandhorbi-hero.jpg")',
+          backgroundImage: 'linear-gradient(to top, rgba(15, 12, 10, 0.88) 0%, rgba(15, 12, 10, 0.2) 32%, rgba(15, 12, 10, 0) 65%), url("/gandhorbi-hero.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          paddingTop: '100px',
-          paddingBottom: '3.5rem',
+          paddingTop: '80px',
+          paddingBottom: '3rem',
           boxSizing: 'border-box'
         }}
       >
@@ -55,11 +55,11 @@ export const Home = () => {
               style={{
                 background: 'linear-gradient(135deg, #E2B755 0%, #D4A44E 50%, #B85C38 100%)',
                 color: '#12141D',
-                padding: '1rem 2.5rem',
+                padding: '0.95rem 2.4rem',
                 borderRadius: 'var(--radius-full)',
                 fontFamily: 'var(--font-btn)',
                 fontWeight: 700,
-                fontSize: '1rem',
+                fontSize: '0.98rem',
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 transition: 'var(--transition-smooth)',
@@ -82,14 +82,14 @@ export const Home = () => {
               }}
               className="hero-btn-outline"
               style={{
-                backgroundColor: 'rgba(15, 18, 28, 0.65)',
+                backgroundColor: 'rgba(20, 16, 12, 0.68)',
                 color: '#F7F4EE',
                 border: '1.5px solid #D4A44E',
-                padding: '1rem 2.4rem',
+                padding: '0.95rem 2.3rem',
                 borderRadius: 'var(--radius-full)',
                 fontFamily: 'var(--font-btn)',
                 fontWeight: 600,
-                fontSize: '1rem',
+                fontSize: '0.98rem',
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 transition: 'var(--transition-smooth)',
@@ -105,7 +105,7 @@ export const Home = () => {
           </div>
         </div>
 
-        {/* Hero Bottom CSS Responsive Overrides */}
+        {/* Hero Responsive Styles & 1:1 Aspect Ratio on Mobile Phone */}
         <style>{`
           .hero-btn-gold:hover {
             transform: translateY(-3px) scale(1.03);
@@ -118,22 +118,38 @@ export const Home = () => {
           }
           @media (max-width: 768px) {
             .hero-luxury-banner {
-              min-height: 80vh !important;
-              padding-bottom: 2.5rem !important;
+              width: 100vw !important;
+              max-width: 100% !important;
+              aspect-ratio: 1 / 1 !important;
+              min-height: auto !important;
+              height: 100vw !important;
+              max-height: 520px !important;
+              padding-top: 65px !important;
+              padding-bottom: 1.4rem !important;
+              background-position: center center !important;
+            }
+            .hero-cta-group {
+              gap: 0.6rem !important;
             }
             .hero-btn-gold, .hero-btn-outline {
-              padding: 0.85rem 1.8rem !important;
-              font-size: 0.9rem !important;
+              padding: 0.65rem 1.4rem !important;
+              font-size: 0.82rem !important;
             }
           }
           @media (max-width: 480px) {
+            .hero-luxury-banner {
+              aspect-ratio: 1 / 1 !important;
+              height: 100vw !important;
+              max-height: 440px !important;
+              padding-bottom: 1.2rem !important;
+            }
             .hero-cta-group {
-              flex-direction: column !important;
-              width: 100% !important;
+              flex-direction: row !important;
+              gap: 0.5rem !important;
             }
             .hero-btn-gold, .hero-btn-outline {
-              width: 100% !important;
-              justify-content: center !important;
+              padding: 0.55rem 1rem !important;
+              font-size: 0.78rem !important;
             }
           }
         `}</style>
