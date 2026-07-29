@@ -60,14 +60,14 @@ export const Collections = () => {
 
   return (
     <div className="fade-in" style={{ paddingTop: '100px', paddingBottom: '5rem', backgroundColor: 'var(--bg-warm-linen)', minHeight: '100vh' }}>
-      <div className="container" style={{ padding: '0 1rem' }}>
+      <div className="container" style={{ padding: '0 0.8rem' }}>
         
         {/* Page Header */}
         <div style={{ textAlign: 'center', marginBottom: '1.8rem' }}>
           <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.82rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
             Gandhorbi Heritage Collection
           </span>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.2rem, 4vw, 3.2rem)', marginTop: '4px' }}>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3.2rem)', marginTop: '4px' }}>
             Explore Handcrafted Artistry
           </h1>
         </div>
@@ -95,13 +95,13 @@ export const Collections = () => {
         </div>
 
         {/* HORIZONTAL CATEGORIES BAR (SWIPEABLE TOUCH SCROLL ON MOBILE) */}
-        <div style={{ marginBottom: '2rem' }}>
+        <div style={{ marginBottom: '1.5rem' }}>
           <div
             className="horizontal-category-scroll"
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.6rem',
+              gap: '0.5rem',
               overflowX: 'auto',
               paddingBottom: '0.6rem',
               WebkitOverflowScrolling: 'touch',
@@ -160,7 +160,7 @@ export const Collections = () => {
             onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
             style={{
               width: '100%',
-              padding: '0.8rem 1.2rem',
+              padding: '0.75rem 1.2rem',
               backgroundColor: 'var(--bg-soft-ivory)',
               border: '1px solid var(--border-subtle)',
               borderRadius: 'var(--radius-md)',
@@ -169,7 +169,7 @@ export const Collections = () => {
               justifyContent: 'space-between',
               fontFamily: 'var(--font-nav)',
               fontWeight: 600,
-              fontSize: '0.95rem',
+              fontSize: '0.92rem',
               color: 'var(--text-charcoal)'
             }}
           >
@@ -177,7 +177,7 @@ export const Collections = () => {
               <SlidersHorizontal size={18} color="var(--primary-terracotta)" />
               <span>Filter & Sort Options</span>
             </div>
-            {mobileFiltersOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            {mobileFiltersOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </button>
         </div>
 
@@ -282,10 +282,10 @@ export const Collections = () => {
             </div>
           </aside>
 
-          {/* MAIN SECTION: RESPONSIVE PRODUCT GRID */}
+          {/* MAIN SECTION: RESPONSIVE PRODUCT GRID (2 PRODUCTS PER ROW ON MOBILE VIEW) */}
           <main>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
-              <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.9rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.88rem' }}>
                 Showing <strong>{filteredProducts.length}</strong> handcrafted items
                 {selectedCategory !== 'All' && <span> in <strong>{selectedCategory}</strong></span>}
               </span>
@@ -354,14 +354,17 @@ export const Collections = () => {
             display: block !important;
           }
           .product-cards-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.8rem !important;
           }
         }
 
         @media (max-width: 580px) {
           .product-cards-grid {
-            grid-template-columns: 1fr;
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.65rem !important;
           }
         }
       `}</style>

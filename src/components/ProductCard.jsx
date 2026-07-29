@@ -8,28 +8,29 @@ export const ProductCard = ({ product }) => {
   const isWishlisted = isInWishlist(product.id);
 
   return (
-    <div className="heritage-card" style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
+    <div className="heritage-card product-card-responsive" style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
       
       {/* Image Container with Actions */}
-      <div style={{ position: 'relative', overflow: 'hidden', height: '320px', backgroundColor: '#F0ECE1' }}>
+      <div className="product-card-img-wrap" style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#F0ECE1' }}>
         
         {/* Category Tag */}
         <span
+          className="product-card-category-badge"
           style={{
             position: 'absolute',
-            top: '12px',
-            left: '12px',
+            top: '10px',
+            left: '10px',
             zIndex: 2,
             backgroundColor: 'var(--bg-soft-ivory)',
             color: 'var(--primary-terracotta)',
             fontFamily: 'var(--font-nav)',
-            fontSize: '0.75rem',
+            fontSize: '0.72rem',
             fontWeight: 600,
-            padding: '4px 10px',
+            padding: '3px 8px',
             borderRadius: 'var(--radius-sm)',
             boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
             textTransform: 'uppercase',
-            letterSpacing: '0.05em'
+            letterSpacing: '0.04em'
           }}
         >
           {product.category}
@@ -42,13 +43,12 @@ export const ProductCard = ({ product }) => {
             toggleWishlist(product);
           }}
           aria-label="Toggle Wishlist"
+          className="product-card-wishlist-btn"
           style={{
             position: 'absolute',
-            top: '12px',
-            right: '12px',
+            top: '10px',
+            right: '10px',
             zIndex: 2,
-            width: '36px',
-            height: '36px',
             borderRadius: '50%',
             backgroundColor: 'var(--bg-soft-ivory)',
             color: isWishlisted ? '#E63946' : 'var(--text-charcoal)',
@@ -59,7 +59,7 @@ export const ProductCard = ({ product }) => {
             transition: 'var(--transition-smooth)'
           }}
         >
-          <Heart size={18} fill={isWishlisted ? '#E63946' : 'none'} />
+          <Heart size={16} fill={isWishlisted ? '#E63946' : 'none'} />
         </button>
 
         {/* Product Image */}
@@ -79,45 +79,47 @@ export const ProductCard = ({ product }) => {
           onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
         />
 
-        {/* Hover Quick View Trigger */}
+        {/* Hover / Touch Quick View Trigger */}
         <div
           onClick={() => setQuickViewProduct(product)}
+          className="product-card-quickview-badge"
           style={{
             position: 'absolute',
-            bottom: '12px',
+            bottom: '10px',
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 2,
             backgroundColor: 'rgba(255, 253, 248, 0.95)',
             color: 'var(--text-charcoal)',
-            padding: '8px 16px',
+            padding: '6px 14px',
             borderRadius: 'var(--radius-full)',
             fontFamily: 'var(--font-btn)',
-            fontSize: '0.8rem',
+            fontSize: '0.78rem',
             fontWeight: 600,
             display: 'flex',
             alignItems: 'center',
-            gap: '0.4rem',
+            gap: '0.3rem',
             boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
             cursor: 'pointer',
-            backdropFilter: 'blur(4px)'
+            backdropFilter: 'blur(4px)',
+            whiteSpace: 'nowrap'
           }}
         >
-          <Eye size={16} /> Quick View
+          <Eye size={14} /> Quick View
         </div>
       </div>
 
       {/* Product Content Details */}
-      <div style={{ padding: '1.2rem', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
+      <div className="product-card-body" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
         <div>
           {/* Rating */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.4rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '0.3rem' }}>
             <div style={{ display: 'flex', color: 'var(--highlight-mustard)' }}>
               {[...Array(5)].map((_, i) => (
-                <Star key={i} size={14} fill="currentColor" />
+                <Star key={i} size={12} fill="currentColor" />
               ))}
             </div>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-warm-grey)' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-warm-grey)' }}>
               {product.rating} ({product.reviewsCount})
             </span>
           </div>
@@ -125,11 +127,11 @@ export const ProductCard = ({ product }) => {
           {/* Product Name */}
           <h3
             onClick={() => setQuickViewProduct(product)}
+            className="product-card-title"
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '1.25rem',
-              lineHeight: 1.3,
-              marginBottom: '0.6rem',
+              lineHeight: 1.25,
+              marginBottom: '0.4rem',
               cursor: 'pointer',
               color: 'var(--text-charcoal)',
               transition: 'var(--transition-fast)'
@@ -142,22 +144,20 @@ export const ProductCard = ({ product }) => {
         </div>
 
         {/* Price & Add to Cart */}
-        <div style={{ marginTop: '1rem', paddingTop: '0.8rem', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="product-card-footer" style={{ marginTop: '0.8rem', paddingTop: '0.6rem', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <span style={{
+            <span className="product-card-price" style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '1.35rem',
               fontWeight: 700,
               color: 'var(--primary-terracotta)'
             }}>
               ₹{product.price.toLocaleString('en-IN')}
             </span>
             {product.originalPrice && (
-              <span style={{
-                fontSize: '0.85rem',
+              <span className="product-card-original-price" style={{
                 color: 'var(--text-warm-grey)',
                 textDecoration: 'line-through',
-                marginLeft: '0.5rem'
+                marginLeft: '0.4rem'
               }}>
                 ₹{product.originalPrice.toLocaleString('en-IN')}
               </span>
@@ -167,10 +167,10 @@ export const ProductCard = ({ product }) => {
           <button
             onClick={() => addToCart(product)}
             aria-label="Add to Cart"
-            className="btn-icon"
+            className="btn-icon product-card-cart-btn"
             title="Add to Shopping Cart"
           >
-            <ShoppingBag size={18} />
+            <ShoppingBag size={16} />
           </button>
         </div>
 
