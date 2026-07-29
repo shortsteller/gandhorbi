@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useShop } from '../context/ShopContext';
-import { Search, Heart, ShoppingBag, User, Menu, X, ArrowRight, MessageCircle, ChevronDown, Sparkles } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, Menu, X, ArrowRight, MessageCircle, ChevronDown } from 'lucide-react';
 import { categories } from '../data/categories';
 
 export const Navbar = () => {
@@ -46,7 +46,7 @@ export const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Prevent body scrolling when mobile menu drawer is open
+  // Lock background scrolling when mobile menu drawer is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -145,7 +145,7 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* Navigation Links with Collections Dropdown (Desktop Only) */}
+          {/* Navigation Links with Desktop Dropdown */}
           <nav className="desktop-nav" ref={dropdownRef} style={{ display: 'flex', alignItems: 'center', gap: '2.2rem', position: 'relative' }}>
             {navLinks.map((link) => {
               const isActive = currentPage === link.id;
@@ -222,7 +222,6 @@ export const Navbar = () => {
                           marginTop: '8px'
                         }}
                       >
-                        {/* Left: Category List Grid */}
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.5rem' }}>
                             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
@@ -278,7 +277,6 @@ export const Navbar = () => {
                           </div>
                         </div>
 
-                        {/* Right: Featured Craft Highlight Card */}
                         <div style={{
                           backgroundColor: 'var(--bg-warm-linen)',
                           borderRadius: 'var(--radius-md)',
@@ -311,7 +309,6 @@ export const Navbar = () => {
                             Explore Sarees <ArrowRight size={14} />
                           </button>
                         </div>
-
                       </div>
                     )}
                   </div>
@@ -440,318 +437,388 @@ export const Navbar = () => {
         </div>
       </header>
 
-      {/* FULLSCREEN MOBILE HAMBURGER MENU DRAWER */}
+      {/* OFF-CANVAS SLIDE-IN MOBILE NAVIGATION DRAWER & BACKDROP */}
       {mobileMenuOpen && (
-        <div className="mobile-fullscreen-drawer">
-          
-          {/* Mobile Drawer Top Header Bar */}
+        <>
+          {/* Semi-transparent dark backdrop */}
           <div
-            style={{
-              height: '76px',
-              padding: '0 1.2rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              backgroundColor: 'var(--bg-warm-linen)',
-              borderBottom: '1px solid var(--border-subtle)',
-              flexShrink: 0
-            }}
-          >
-            <div
-              onClick={() => {
-                navigateTo('home');
-                setMobileMenuOpen(false);
-              }}
-              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
-            >
-              <img
-                src="/gandhorbi-logo.png"
-                alt="Gandhorbi Official Logo"
-                style={{ height: '40px', width: 'auto', borderRadius: 'var(--radius-sm)' }}
-              />
-              <div>
-                <span style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.4rem',
-                  fontWeight: 700,
-                  color: 'var(--text-charcoal)',
-                  textTransform: 'uppercase',
-                  lineHeight: 1,
-                  display: 'block'
-                }}>
-                  Gandhorbi
-                </span>
-                <span style={{
-                  fontFamily: 'var(--font-nav)',
-                  fontSize: '0.6rem',
-                  letterSpacing: '0.2em',
-                  color: 'var(--primary-terracotta)',
-                  textTransform: 'uppercase',
-                  marginTop: '2px',
-                  display: 'block'
-                }}>
-                  Folk Arts • Bengal
-                </span>
-              </div>
-            </div>
+            className="mobile-backdrop"
+            onClick={() => setMobileMenuOpen(false)}
+          />
 
-            {/* Mobile Close Button */}
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              aria-label="Close Mobile Menu"
+          {/* Sliding Off-Canvas Drawer (75-85% width, max-width ~360px) */}
+          <div className="mobile-drawer-content">
+            
+            {/* Drawer Fixed Header */}
+            <div
               style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: '50%',
-                backgroundColor: 'var(--bg-soft-ivory)',
-                color: 'var(--primary-terracotta)',
-                border: '1px solid var(--border-subtle)',
+                height: '76px',
+                padding: '0 1.2rem',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                justifyContent: 'space-between',
+                backgroundColor: 'var(--bg-warm-linen)',
+                borderBottom: '1px solid var(--border-subtle)',
+                flexShrink: 0,
+                width: '100%',
+                boxSizing: 'border-box'
               }}
             >
-              <X size={24} />
-            </button>
-          </div>
-
-          {/* Mobile Drawer Scrollable Content */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              
-              {/* Search Trigger Bar */}
               <div
                 onClick={() => {
+                  navigateTo('home');
                   setMobileMenuOpen(false);
-                  setIsSearchOpen(true);
                 }}
-                style={{
-                  backgroundColor: 'var(--bg-warm-linen)',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '0.85rem 1rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.8rem',
-                  color: 'var(--text-warm-grey)',
-                  fontSize: '0.95rem',
-                  marginBottom: '1.8rem',
-                  cursor: 'pointer'
-                }}
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
               >
-                <Search size={18} color="var(--primary-terracotta)" />
-                <span>Search Kantha sarees, Dokra art, dhotis...</span>
-              </div>
-
-              {/* Main Navigation Pages with Mobile Accordion Dropdown for Collections */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '2rem' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '0.4rem' }}>
-                  Explore Pages
-                </span>
-                
-                {navLinks.map((link) => {
-                  const isActive = currentPage === link.id;
-
-                  if (link.id === 'collections') {
-                    return (
-                      <div key={link.id} style={{ display: 'flex', flexDirection: 'column' }}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '0.7rem 1rem',
-                            borderRadius: 'var(--radius-md)',
-                            backgroundColor: isActive ? 'var(--bg-warm-linen)' : 'transparent'
-                          }}
-                        >
-                          <button
-                            onClick={() => {
-                              navigateTo('collections');
-                              setMobileMenuOpen(false);
-                            }}
-                            style={{
-                              fontFamily: 'var(--font-heading)',
-                              fontSize: '1.55rem',
-                              color: isActive ? 'var(--primary-terracotta)' : 'var(--text-charcoal)',
-                              fontWeight: isActive ? 700 : 500,
-                              textAlign: 'left'
-                            }}
-                          >
-                            Collections
-                          </button>
-                          
-                          <button
-                            onClick={() => setMobileCollectionsExpanded(!mobileCollectionsExpanded)}
-                            style={{
-                              padding: '6px 12px',
-                              borderRadius: 'var(--radius-sm)',
-                              backgroundColor: 'var(--bg-warm-linen)',
-                              color: 'var(--primary-terracotta)',
-                              fontSize: '0.85rem',
-                              fontWeight: 600,
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.3rem'
-                            }}
-                          >
-                            <span>Categories</span>
-                            <ChevronDown
-                              size={16}
-                              style={{
-                                transform: mobileCollectionsExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                                transition: 'transform 0.3s ease'
-                              }}
-                            />
-                          </button>
-                        </div>
-
-                        {/* ACCORDION DROPDOWN CATEGORIES LIST */}
-                        {mobileCollectionsExpanded && (
-                          <div
-                            className="fade-in"
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '0.4rem',
-                              paddingLeft: '1.2rem',
-                              paddingTop: '0.5rem',
-                              paddingBottom: '0.5rem',
-                              borderLeft: '2px solid var(--primary-terracotta)',
-                              marginTop: '0.4rem',
-                              marginBottom: '0.4rem'
-                            }}
-                          >
-                            {categories.map((cat) => (
-                              <button
-                                key={cat.id}
-                                onClick={() => {
-                                  navigateTo('collections', cat.name);
-                                  setMobileMenuOpen(false);
-                                }}
-                                style={{
-                                  textAlign: 'left',
-                                  padding: '0.5rem 0.8rem',
-                                  fontSize: '0.98rem',
-                                  color: 'var(--text-charcoal)',
-                                  fontFamily: 'var(--font-nav)',
-                                  fontWeight: 500,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'space-between'
-                                }}
-                              >
-                                <span>• {cat.name}</span>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--primary-terracotta)', fontWeight: 600 }}>
-                                  {cat.count} items
-                                </span>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <button
-                      key={link.id}
-                      onClick={() => {
-                        navigateTo(link.id);
-                        setMobileMenuOpen(false);
-                      }}
-                      style={{
-                        textAlign: 'left',
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: '1.55rem',
-                        color: isActive ? 'var(--primary-terracotta)' : 'var(--text-charcoal)',
-                        fontWeight: isActive ? 700 : 500,
-                        padding: '0.7rem 1rem',
-                        borderRadius: 'var(--radius-md)',
-                        backgroundColor: isActive ? 'var(--bg-warm-linen)' : 'transparent',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        transition: 'var(--transition-fast)'
-                      }}
-                    >
-                      <span>{link.name}</span>
-                      {isActive && <ArrowRight size={20} color="var(--primary-terracotta)" />}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Quick Category Shortcuts */}
-              <div style={{ marginBottom: '2rem' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'block', marginBottom: '0.8rem' }}>
-                  Popular Heritage Categories
-                </span>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  {categories.map((cat) => (
-                    <button
-                      key={cat.id}
-                      onClick={() => {
-                        navigateTo('collections', cat.name);
-                        setMobileMenuOpen(false);
-                      }}
-                      style={{
-                        backgroundColor: 'var(--bg-warm-linen)',
-                        border: '1px solid var(--border-subtle)',
-                        padding: '6px 14px',
-                        borderRadius: 'var(--radius-full)',
-                        fontSize: '0.85rem',
-                        fontFamily: 'var(--font-nav)',
-                        color: 'var(--text-charcoal)'
-                      }}
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
+                <img
+                  src="/gandhorbi-logo.png"
+                  alt="Gandhorbi Official Logo"
+                  style={{ height: '38px', width: 'auto', borderRadius: 'var(--radius-sm)' }}
+                />
+                <div>
+                  <span style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '1.35rem',
+                    fontWeight: 700,
+                    color: 'var(--text-charcoal)',
+                    textTransform: 'uppercase',
+                    lineHeight: 1,
+                    whiteSpace: 'nowrap'
+                  }}>
+                    Gandhorbi
+                  </span>
+                  <span style={{
+                    fontFamily: 'var(--font-nav)',
+                    fontSize: '0.58rem',
+                    letterSpacing: '0.18em',
+                    color: 'var(--primary-terracotta)',
+                    textTransform: 'uppercase',
+                    marginTop: '2px',
+                    whiteSpace: 'nowrap',
+                    display: 'block'
+                  }}>
+                    Folk Arts • Bengal
+                  </span>
                 </div>
               </div>
+
+              {/* Close (X) Button Fixed at Top-Right Inside Drawer */}
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Close Mobile Navigation Drawer"
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--bg-soft-ivory)',
+                  color: 'var(--primary-terracotta)',
+                  border: '1px solid var(--border-subtle)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  flexShrink: 0
+                }}
+              >
+                <X size={22} />
+              </button>
             </div>
 
-            {/* Bottom Actions inside Mobile Drawer */}
-            <div style={{ paddingTop: '1.5rem', borderTop: '1px solid var(--border-subtle)' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem', marginBottom: '1rem' }}>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setIsUserAccountOpen(true);
-                  }}
-                  className="btn-secondary"
-                  style={{ padding: '0.75rem', fontSize: '0.85rem', justifyContent: 'center' }}
-                >
-                  <User size={16} /> My Account
-                </button>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setIsWishlistOpen(true);
-                  }}
-                  className="btn-secondary"
-                  style={{ padding: '0.75rem', fontSize: '0.85rem', justifyContent: 'center' }}
-                >
-                  <Heart size={16} /> Wishlist ({wishlist.length})
-                </button>
+            {/* Drawer Scrollable Body Container */}
+            <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '1.4rem 1.2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%', boxSizing: 'border-box' }}>
+              <div>
+                
+                {/* 1. Main Navigation Links (One item per line, never wrapping letter-by-letter) */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', marginBottom: '1.8rem', width: '100%' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '0.5rem', display: 'block' }}>
+                    Navigation
+                  </span>
+
+                  {navLinks.map((link) => {
+                    const isActive = currentPage === link.id;
+
+                    if (link.id === 'collections') {
+                      return (
+                        <div key={link.id} style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              padding: '0.7rem 0.8rem',
+                              borderRadius: 'var(--radius-md)',
+                              backgroundColor: isActive ? 'var(--bg-warm-linen)' : 'transparent',
+                              width: '100%',
+                              boxSizing: 'border-box'
+                            }}
+                          >
+                            <button
+                              onClick={() => {
+                                navigateTo('collections');
+                                setMobileMenuOpen(false);
+                              }}
+                              style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: '1.35rem',
+                                color: isActive ? 'var(--primary-terracotta)' : 'var(--text-charcoal)',
+                                fontWeight: isActive ? 700 : 600,
+                                textAlign: 'left',
+                                whiteSpace: 'nowrap'
+                              }}
+                            >
+                              Collections
+                            </button>
+                            
+                            <button
+                              onClick={() => setMobileCollectionsExpanded(!mobileCollectionsExpanded)}
+                              aria-label="Toggle Categories Dropdown"
+                              style={{
+                                padding: '4px 8px',
+                                borderRadius: 'var(--radius-sm)',
+                                backgroundColor: 'var(--bg-warm-linen)',
+                                color: 'var(--primary-terracotta)',
+                                fontSize: '0.78rem',
+                                fontWeight: 600,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.2rem',
+                                flexShrink: 0
+                              }}
+                            >
+                              <span>Items</span>
+                              <ChevronDown
+                                size={14}
+                                style={{
+                                  transform: mobileCollectionsExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                                  transition: 'transform 0.3s ease'
+                                }}
+                              />
+                            </button>
+                          </div>
+
+                          {/* Accordion Categories List */}
+                          {mobileCollectionsExpanded && (
+                            <div
+                              className="fade-in"
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.3rem',
+                                paddingLeft: '1rem',
+                                paddingTop: '0.4rem',
+                                paddingBottom: '0.4rem',
+                                borderLeft: '2px solid var(--primary-terracotta)',
+                                marginTop: '0.3rem',
+                                marginBottom: '0.3rem'
+                              }}
+                            >
+                              {categories.map((cat) => (
+                                <button
+                                  key={cat.id}
+                                  onClick={() => {
+                                    navigateTo('collections', cat.name);
+                                    setMobileMenuOpen(false);
+                                  }}
+                                  style={{
+                                    textAlign: 'left',
+                                    padding: '0.45rem 0.6rem',
+                                    fontSize: '0.92rem',
+                                    color: 'var(--text-charcoal)',
+                                    fontFamily: 'var(--font-nav)',
+                                    fontWeight: 500,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    whiteSpace: 'nowrap'
+                                  }}
+                                >
+                                  <span>• {cat.name}</span>
+                                  <span style={{ fontSize: '0.72rem', color: 'var(--primary-terracotta)', fontWeight: 600 }}>
+                                    {cat.count}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <button
+                        key={link.id}
+                        onClick={() => {
+                          navigateTo(link.id);
+                          setMobileMenuOpen(false);
+                        }}
+                        style={{
+                          textAlign: 'left',
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '1.35rem',
+                          color: isActive ? 'var(--primary-terracotta)' : 'var(--text-charcoal)',
+                          fontWeight: isActive ? 700 : 600,
+                          padding: '0.7rem 0.8rem',
+                          borderRadius: 'var(--radius-md)',
+                          backgroundColor: isActive ? 'var(--bg-warm-linen)' : 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          whiteSpace: 'nowrap',
+                          width: '100%',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        <span>{link.name}</span>
+                        {isActive && <ArrowRight size={18} color="var(--primary-terracotta)" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Divider Line */}
+                <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '1.2rem 0' }} />
+
+                {/* 2. Utility Actions Section (Below Navigation Links: Search, Wishlist, Cart, Login) */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '0.3rem', display: 'block' }}>
+                    Quick Actions
+                  </span>
+
+                  {/* Search Link */}
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsSearchOpen(true);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.8rem',
+                      padding: '0.7rem 0.8rem',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--bg-warm-linen)',
+                      color: 'var(--text-charcoal)',
+                      fontSize: '0.95rem',
+                      fontFamily: 'var(--font-nav)',
+                      fontWeight: 500,
+                      width: '100%',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    <Search size={18} color="var(--primary-terracotta)" />
+                    <span>Search Products</span>
+                  </button>
+
+                  {/* Wishlist Link */}
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsWishlistOpen(true);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.7rem 0.8rem',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--bg-warm-linen)',
+                      color: 'var(--text-charcoal)',
+                      fontSize: '0.95rem',
+                      fontFamily: 'var(--font-nav)',
+                      fontWeight: 500,
+                      width: '100%',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <Heart size={18} color="#E63946" />
+                      <span>Wishlist</span>
+                    </div>
+                    {wishlist.length > 0 && (
+                      <span style={{ backgroundColor: 'var(--primary-terracotta)', color: '#fff', fontSize: '0.75rem', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>
+                        {wishlist.length}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Cart Link */}
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsCartOpen(true);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.7rem 0.8rem',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--bg-warm-linen)',
+                      color: 'var(--text-charcoal)',
+                      fontSize: '0.95rem',
+                      fontFamily: 'var(--font-nav)',
+                      fontWeight: 500,
+                      width: '100%',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <ShoppingBag size={18} color="var(--primary-terracotta)" />
+                      <span>Shopping Cart</span>
+                    </div>
+                    {totalCartCount > 0 && (
+                      <span style={{ backgroundColor: 'var(--primary-terracotta)', color: '#fff', fontSize: '0.75rem', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>
+                        {totalCartCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Login / Account Link */}
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsUserAccountOpen(true);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.8rem',
+                      padding: '0.7rem 0.8rem',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--bg-warm-linen)',
+                      color: 'var(--text-charcoal)',
+                      fontSize: '0.95rem',
+                      fontFamily: 'var(--font-nav)',
+                      fontWeight: 500,
+                      width: '100%',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    <User size={18} color="var(--primary-terracotta)" />
+                    <span>Login / Account</span>
+                  </button>
+                </div>
+
               </div>
 
-              <a
-                href="https://wa.me/916291261549?text=Hello%20Gandhorbi%20Folk%20Arts%2C%20I%20am%20browsing%20from%20mobile%20and%20need%20assistance."
-                target="_blank"
-                rel="noreferrer"
-                className="btn-whatsapp"
-                style={{ padding: '0.85rem', fontSize: '0.9rem', textDecoration: 'none' }}
-              >
-                <MessageCircle size={18} /> Chat with Concierge
-              </a>
+              {/* Bottom Direct WhatsApp Concierge CTA */}
+              <div style={{ paddingTop: '1.2rem', marginTop: '1.5rem', borderTop: '1px solid var(--border-subtle)' }}>
+                <a
+                  href="https://wa.me/916291261549?text=Hello%20Gandhorbi%20Folk%20Arts%2C%20I%20am%20browsing%20from%20mobile%20and%20need%20assistance."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-whatsapp"
+                  style={{ padding: '0.75rem', fontSize: '0.88rem', textDecoration: 'none' }}
+                >
+                  <MessageCircle size={18} /> Chat with Concierge
+                </a>
+              </div>
+
             </div>
 
           </div>
-
-        </div>
+        </>
       )}
 
       {/* RESPONSIVE CSS MEDIA QUERIES */}

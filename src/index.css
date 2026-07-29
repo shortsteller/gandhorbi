@@ -116,22 +116,17 @@ img {
 
 /* Utility Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(184, 92, 56, 0.4); }
-  50% { box-shadow: 0 0 0 10px rgba(184, 92, 56, 0); }
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
 .fade-in {
-  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Layout Utilities */
@@ -283,7 +278,7 @@ img {
   border-color: rgba(184, 92, 56, 0.3);
 }
 
-/* Modal Backdrops & Mobile Fullscreen Drawers */
+/* Modal Backdrops & Overlays */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -320,8 +315,8 @@ img {
   justify-content: center;
 }
 
-/* Fullscreen Mobile Drawer Styling */
-.mobile-fullscreen-drawer {
+/* Off-Canvas Mobile Drawer Components */
+.mobile-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -330,13 +325,31 @@ img {
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  background-color: var(--bg-soft-ivory);
-  z-index: 10000;
-  display: flex;
-  flexDirection: column;
-  overflow-x: hidden;
-  overflow-y: auto;
+  background-color: rgba(43, 43, 43, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 9998;
   animation: fadeIn 0.3s ease;
+}
+
+.mobile-drawer-content {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  height: 100dvh;
+  width: 82vw;
+  max-width: 360px;
+  min-width: 280px;
+  background-color: var(--bg-soft-ivory);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
+  border-left: 1px solid var(--border-subtle);
+  animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Mobile & Tablet Utility Classes */
@@ -358,5 +371,10 @@ img {
   .drawer-panel {
     max-width: 100% !important;
     width: 100% !important;
+  }
+  .mobile-drawer-content {
+    width: 85vw;
+    min-width: 280px;
+    max-width: 340px;
   }
 }
