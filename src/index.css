@@ -377,6 +377,15 @@ img {
   box-sizing: border-box;
 }
 
+/* Desktop View (>= 992px) - 4 Product Cards Per Row */
+@media (min-width: 992px) {
+  .product-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1.5rem !important;
+  }
+}
+
 /* Mobile 2-Column Product Grid Overrides (Strict 2 Items Per Row on Mobile) */
 @media (max-width: 768px) {
   .modal-overlay {
