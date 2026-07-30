@@ -1,11 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { Heart, Eye, ShoppingBag, Star } from 'lucide-react';
 
 export const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
   const { addToCart, toggleWishlist, isInWishlist, setQuickViewProduct } = useShop();
 
   const isWishlisted = isInWishlist(product.id);
+
+  const handleProductClick = () => {
+    navigate(`/product/${product.id}`);
+  };
 
   return (
     <div className="heritage-card product-card-responsive" style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
@@ -74,14 +80,17 @@ export const ProductCard = ({ product }) => {
             transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
             cursor: 'pointer'
           }}
-          onClick={() => setQuickViewProduct(product)}
+          onClick={handleProductClick}
           onMouseEnter={(e) => (e.target.style.transform = 'scale(1.08)')}
           onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
         />
 
         {/* Hover / Touch Quick View Trigger */}
         <div
-          onClick={() => setQuickViewProduct(product)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setQuickViewProduct(product);
+          }}
           className="product-card-quickview-badge"
           style={{
             position: 'absolute',
@@ -126,7 +135,7 @@ export const ProductCard = ({ product }) => {
 
           {/* Product Name */}
           <h3
-            onClick={() => setQuickViewProduct(product)}
+            onClick={handleProductClick}
             className="product-card-title"
             style={{
               fontFamily: 'var(--font-heading)',

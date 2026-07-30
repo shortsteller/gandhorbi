@@ -1,11 +1,27 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { products as initialProducts } from '../data/products';
 
 const ShopContext = createContext();
 
 export const ShopProvider = ({ children }) => {
-  // Navigation & Page State
-  const [currentPage, setCurrentPage] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Determine current page ID based on location.pathname
+  const getPageFromPath = (path) => {
+    if (path === '/') return 'home';
+    if (path.startsWith('/collections')) return 'collections';
+    if (path.startsWith('/about')) return 'about';
+    if (path.startsWith('/events')) return 'events';
+    if (path.startsWith('/contact')) return 'contact';
+    if (path.startsWith('/cart')) return 'cart';
+    if (path.startsWith('/wishlist')) return 'wishlist';
+    if (path.startsWith('/product')) return 'product';
+    return 'home';
+  };
+
+  const currentPage = getPageFromPath(location.pathname);
   
   // Cart & Wishlist State
   const [cart, setCart] = useState(() => {
@@ -19,8 +35,6 @@ export const ShopProvider = ({ children }) => {
   });
   
   // Modals & Drawers
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserAccountOpen, setIsUserAccountOpen] = useState(false);
@@ -35,6 +49,17 @@ export const ShopProvider = ({ children }) => {
   const [priceRange, setPriceRange] = useState(25000);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState('featured');
+
+  // Automatically sync category filter from URL query string (/collections?category=Kantha%20Sarees)
+  useEffect(() => {
+    if (location.pathname.startsWith('/collections')) {
+      const searchParams = new URLSearchParams(location.search);
+      const catParam = searchParams.get('category');
+      if (catParam) {
+        setSelectedCategory(catParam);
+      }
+    }
+  }, [location]);
 
   // Persist Cart & Wishlist
   useEffect(() => {
@@ -143,12 +168,52 @@ export const ShopProvider = ({ children }) => {
     showToast("Redirecting to WhatsApp to complete your order...");
   };
 
+  // Universal Navigation Helper with URL Support
   const navigateTo = (page, categoryFilter = null) => {
-    setCurrentPage(page);
-    if (categoryFilter) {
-      setSelectedCategory(categoryFilter);
+    if (page === 'home' || page === '/') {
+      navigate('/');
+    } else if (page === 'collections' || page === '/collections') {
+      if (categoryFilter) {
+        setSelectedCategory(categoryFilter);
+        navigate(`/collections?category=${encodeURIComponent(categoryFilter)}`);
+      } else {
+        navigate('/collections');
+      }
+    } else if (page === 'about' || page === '/about') {
+      navigate('/about');
+    } else if (page === 'events' || page === '/events') {
+      navigate('/events');
+    } else if (page === 'contact' || page === '/contact') {
+      navigate('/contact');
+    } else if (page === 'cart' || page === '/cart') {
+      navigate('/cart');
+    } else if (page === 'wishlist' || page === '/wishlist') {
+      navigate('/wishlist');
+    } else if (page.startsWith('/product/') || page.startsWith('product/')) {
+      const path = page.startsWith('/') ? page : `/${page}`;
+      navigate(path);
+    } else {
+      navigate(page.startsWith('/') ? page : `/${page}`);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Is Cart/Wishlist open helpers for URL routes /cart and /wishlist
+  const isCartOpen = location.pathname === '/cart';
+  const setIsCartOpen = (open) => {
+    if (open) {
+      navigate('/cart');
+    } else if (location.pathname === '/cart') {
+      navigate(-1);
+    }
+  };
+
+  const isWishlistOpen = location.pathname === '/wishlist';
+  const setIsWishlistOpen = (open) => {
+    if (open) {
+      navigate('/wishlist');
+    } else if (location.pathname === '/wishlist') {
+      navigate(-1);
+    }
   };
 
   return (
@@ -156,7 +221,6 @@ export const ShopProvider = ({ children }) => {
       value={{
         products: initialProducts,
         currentPage,
-        setCurrentPage,
         navigateTo,
         cart,
         addToCart,
