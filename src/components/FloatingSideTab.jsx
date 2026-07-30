@@ -40,9 +40,9 @@ export const FloatingSideTab = () => {
 
       {/* Section 2 (Middle): Official Facebook (Blue #1877F2) */}
       <a
-        href="https://facebook.com/gandhorbifolkarts"
+        href="https://www.facebook.com/gandhorbi.folkarts.2025"
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
         className="side-tab-btn side-tab-facebook"
         title="Official Facebook Page"
         aria-label="Facebook Page"
@@ -55,9 +55,9 @@ export const FloatingSideTab = () => {
 
       {/* Section 3 (Bottom): Official Instagram (Gradient #E4405F) */}
       <a
-        href="https://instagram.com/gandhorbifolkarts"
+        href="https://www.instagram.com/folkartsgandhorbi/"
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
         className="side-tab-btn side-tab-instagram"
         title="Official Instagram Page"
         aria-label="Instagram Page"

@@ -77,9 +77,9 @@ export const Footer = () => {
             {/* Social Links */}
             <div style={{ display: 'flex', gap: '1rem' }}>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/folkartsgandhorbi/"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
                 style={{
                   width: '38px',
@@ -96,9 +96,9 @@ export const Footer = () => {
                 <InstagramIcon size={18} />
               </a>
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/gandhorbi.folkarts.2025"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label="Facebook"
                 style={{
                   width: '38px',
