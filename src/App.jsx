@@ -15,6 +15,7 @@ import { SearchModal } from './components/SearchModal';
 import { UserAccountModal } from './components/UserAccountModal';
 import { QuickViewModal } from './components/QuickViewModal';
 import { Toast } from './components/Toast';
+import { FloatingSideTab } from './components/FloatingSideTab';
 
 const PageRenderer = () => {
   const { currentPage } = useShop();
@@ -43,6 +44,9 @@ export default function App() {
           <PageRenderer />
         </main>
         <Footer />
+
+        {/* Global Floating Side Contact Panel */}
+        <FloatingSideTab />
 
         {/* Global Drawers & Modals */}
         <CartDrawer />
