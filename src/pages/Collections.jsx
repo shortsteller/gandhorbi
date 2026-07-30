@@ -59,7 +59,7 @@ export const Collections = () => {
   };
 
   return (
-    <div className="fade-in" style={{ paddingTop: '100px', paddingBottom: '5rem', backgroundColor: 'var(--bg-warm-linen)', minHeight: '100vh' }}>
+    <div className="fade-in" style={{ paddingTop: '130px', paddingBottom: '5rem', backgroundColor: 'var(--bg-warm-linen)', minHeight: '100vh' }}>
       <div className="container" style={{ padding: '0 0.8rem' }}>
         
         {/* Page Header */}

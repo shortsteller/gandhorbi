@@ -3,6 +3,17 @@ import { useShop } from '../context/ShopContext';
 import { Search, Heart, ShoppingBag, User, Menu, X, ArrowRight, MessageCircle, ChevronDown } from 'lucide-react';
 import { categories } from '../data/categories';
 
+const marqueeCategories = [
+  'Kantha Sarees',
+  'Kantha Dupattas',
+  'Kantha Creations',
+  'Dokra Art',
+  'Wooden Crafts',
+  'Designer Dhotis',
+  'Punjabi Wear',
+  'Exclusive Apparel'
+];
+
 export const Navbar = () => {
   const {
     currentPage,
@@ -67,6 +78,9 @@ export const Navbar = () => {
 
   const isHeroOverlay = currentPage === 'home' && !isScrolled;
 
+  // Tripled array for seamless infinite marquee scrolling
+  const marqueeItems = [...marqueeCategories, ...marqueeCategories, ...marqueeCategories];
+
   return (
     <>
       <header
@@ -93,6 +107,27 @@ export const Navbar = () => {
           maxWidth: '100%'
         }}
       >
+        {/* PREMIUM STICKY CATEGORY MARQUEE BAR ABOVE NAVIGATION */}
+        <div className="category-marquee-wrapper">
+          <div className="category-marquee-track">
+            {marqueeItems.map((cat, idx) => (
+              <span
+                key={idx}
+                className="marquee-item"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateTo('collections', cat);
+                }}
+                title={`Explore ${cat} Collection`}
+              >
+                <span className="marquee-cat-name">{cat}</span>
+                <span className="marquee-dot-separator">•</span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* MAIN NAVIGATION BAR */}
         <div className="container navbar-container" style={{ height: '76px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem' }}>
           
           {/* Brand Logo & Name */}
@@ -821,7 +856,7 @@ export const Navbar = () => {
         </>
       )}
 
-      {/* RESPONSIVE CSS MEDIA QUERIES FOR NAVBAR (ZERO CUT OFF ON MOBILE) */}
+      {/* RESPONSIVE CSS MEDIA QUERIES FOR NAVBAR */}
       <style>{`
         @media (max-width: 960px) {
           .desktop-nav {
