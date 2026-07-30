@@ -97,22 +97,28 @@ export const WishlistDrawer = () => {
             onClick={handleClose}
             aria-label="Back to Previous Page"
             style={{
-              display: 'inline-flex',
+              display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              fontFamily: 'var(--font-btn)',
-              fontSize: '0.95rem',
-              fontWeight: 600,
-              color: 'var(--primary-terracotta)',
-              padding: '8px 14px',
-              borderRadius: 'var(--radius-full)',
+              justifyContent: 'center',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
               backgroundColor: 'var(--bg-warm-linen)',
               border: '1px solid var(--border-subtle)',
-              transition: 'var(--transition-fast)'
+              color: 'var(--primary-terracotta)',
+              transition: 'var(--transition-fast)',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--primary-terracotta)';
+              e.currentTarget.style.color = '#ffffff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--bg-warm-linen)';
+              e.currentTarget.style.color = 'var(--primary-terracotta)';
             }}
           >
-            <ArrowLeft size={18} />
-            <span>Back</span>
+            <ArrowLeft size={20} />
           </button>
 
           {/* Centered Page Header */}
