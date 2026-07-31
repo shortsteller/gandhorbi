@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { categories } from '../data/categories';
 import { ProductCard } from '../components/ProductCard';
@@ -20,6 +21,27 @@ export const Collections = () => {
   } = useShop();
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [searchHighlighted, setSearchHighlighted] = useState(false);
+  const searchInputRef = useRef(null);
+  const location = useLocation();
+
+  // When navbar search icon is clicked, navigate here with ?focus=search
+  // Auto-focus the input and briefly highlight it
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('focus') === 'search') {
+      // Small delay to allow page render
+      const timer = setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+          searchInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        setSearchHighlighted(true);
+        setTimeout(() => setSearchHighlighted(false), 2000);
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [location.search]);
 
   // Filtering Logic
   const filteredProducts = products
@@ -72,10 +94,12 @@ export const Collections = () => {
           </h1>
         </div>
 
-        {/* TOP SEARCH BAR */}
+        {/* TOP SEARCH BAR — auto-focused when navigated from navbar search icon */}
         <div style={{ maxWidth: '650px', margin: '0 auto 1.5rem auto', position: 'relative' }}>
-          <Search size={20} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary-terracotta)' }} />
+          <Search size={20} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary-terracotta)', pointerEvents: 'none', zIndex: 1 }} />
           <input
+            ref={searchInputRef}
+            id="collections-search-input"
             type="text"
             placeholder="Search by craft name, saree silk, Dokra statue, dhoti..."
             value={searchQuery}
@@ -84,12 +108,17 @@ export const Collections = () => {
               width: '100%',
               padding: '0.9rem 1rem 0.9rem 3rem',
               borderRadius: 'var(--radius-md)',
-              border: '1.5px solid var(--border-subtle)',
+              border: searchHighlighted
+                ? '2px solid var(--accent-gold)'
+                : '1.5px solid var(--border-subtle)',
               fontSize: '0.95rem',
               outline: 'none',
-              backgroundColor: 'var(--bg-soft-ivory)',
-              boxShadow: 'var(--shadow-card)',
-              fontFamily: 'var(--font-body)'
+              backgroundColor: searchHighlighted ? 'rgba(212, 164, 78, 0.07)' : 'var(--bg-soft-ivory)',
+              boxShadow: searchHighlighted
+                ? '0 0 0 4px rgba(212, 164, 78, 0.18), var(--shadow-card)'
+                : 'var(--shadow-card)',
+              fontFamily: 'var(--font-body)',
+              transition: 'border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease'
             }}
           />
         </div>

@@ -28,6 +28,8 @@
   --radius-lg: 16px;
   --radius-full: 9999px;
   
+  --accent-gold: #D4A44E;
+  
   /* Transitions */
   --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   --transition-fast: all 0.15s ease-in-out;
@@ -560,5 +562,60 @@ img {
   }
   .product-card-price {
     font-size: 0.98rem !important;
+  }
+}
+
+/* ============================================================
+   PRODUCT DETAILS PAGE — Mobile Responsive Layout
+   Accounts for the 52px floating left contact panel
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Shift content right so it's not hidden under the floating side tab */
+  .product-details-page .container {
+    padding-left: 60px !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Stack gallery and info into a single column on mobile */
+  .product-details-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    padding: 1rem !important;
+  }
+
+  /* Tighten the info section spacing on mobile */
+  .product-details-grid > div:last-child {
+    gap: 0.85rem !important;
+  }
+
+  /* Ensure action buttons row wraps cleanly on small screens */
+  .product-details-actions > div:first-child {
+    gap: 0.75rem !important;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-details-page .container {
+    padding-left: 58px !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .product-details-grid {
+    padding: 0.85rem !important;
+    gap: 1.2rem !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  /* Stack quantity + wishlist button vertically on very small screens */
+  .product-details-actions > div:first-child {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .product-details-actions > div:first-child > div:first-child {
+    /* Quantity control: center it */
+    align-self: flex-start;
   }
 }

@@ -79,7 +79,7 @@ export const ProductDetails = () => {
 
   return (
     <div
-      className="fade-in"
+      className="fade-in product-details-page"
       style={{
         paddingTop: '130px',
         paddingBottom: '5rem',
@@ -120,6 +120,7 @@ export const ProductDetails = () => {
 
         {/* MAIN PRODUCT LAYOUT GRID */}
         <div
+          className="product-details-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
@@ -313,9 +314,9 @@ export const ProductDetails = () => {
             )}
 
             {/* QUANTITY & PRIMARY ACTION BUTTONS */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.5rem' }}>
+            <div className="product-details-actions" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.5rem' }}>
               
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                 {/* Quantity Controls */}
                 <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--bg-warm-linen)' }}>
                   <button
@@ -337,6 +338,8 @@ export const ProductDetails = () => {
                 <button
                   onClick={() => toggleWishlist(product)}
                   style={{
+                    flex: 1,
+                    minWidth: '140px',
                     padding: '12px 16px',
                     borderRadius: 'var(--radius-sm)',
                     border: '1.5px solid var(--border-subtle)',
@@ -344,6 +347,7 @@ export const ProductDetails = () => {
                     color: inWishlist ? '#E63946' : 'var(--text-charcoal)',
                     display: 'flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                     gap: '0.5rem',
                     fontWeight: 600,
                     fontSize: '0.9rem',
@@ -351,7 +355,7 @@ export const ProductDetails = () => {
                   }}
                 >
                   <Heart size={20} fill={inWishlist ? '#E63946' : 'none'} color={inWishlist ? '#E63946' : 'currentColor'} />
-                  <span>{inWishlist ? 'Saved in Wishlist' : 'Add to Wishlist'}</span>
+                  <span>{inWishlist ? 'Saved' : 'Add to Wishlist'}</span>
                 </button>
               </div>
 

@@ -26,6 +26,12 @@ export const Navbar = () => {
     setIsUserAccountOpen
   } = useShop();
 
+  const handleSearchClick = () => {
+    // Navigate to Collections page and focus the existing search bar
+    navigateTo('/collections?focus=search');
+    setMobileMenuOpen(false);
+  };
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
@@ -388,9 +394,9 @@ export const Navbar = () => {
           {/* Right Action Icons & Hamburger */}
           <div className="navbar-actions-group" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0 }}>
             
-            {/* Search Button */}
+            {/* Search Button — navigates to Collections page and focuses the existing search bar */}
             <button
-              onClick={() => setIsSearchOpen(true)}
+              onClick={handleSearchClick}
               aria-label="Search Products"
               className="nav-action-icon-btn"
               style={{
