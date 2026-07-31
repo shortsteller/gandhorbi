@@ -566,56 +566,429 @@ img {
 }
 
 /* ============================================================
-   PRODUCT DETAILS PAGE — Mobile Responsive Layout
-   Accounts for the 52px floating left contact panel
+   PRODUCT DETAILS PAGE — Full Premium Layout (pd-* classes)
+   Mobile: True full-width, Amazon/Flipkart style
+   Desktop: Centered max-width two-column grid
    ============================================================ */
 
+/* ── OUTER WRAPPER ────────────────────────────────────────── */
+.pd-outer-wrapper {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+}
+
+/* ── BREADCRUMB ───────────────────────────────────────────── */
+.pd-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-warm-grey);
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* ── MAIN GRID (desktop: 2-col, mobile: 1-col) ────────────── */
+.pd-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+  background-color: var(--bg-soft-ivory);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+/* ── GALLERY COLUMN ───────────────────────────────────────── */
+.pd-main-img-wrap {
+  width: 100%;
+  height: 460px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.pd-main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-smooth);
+}
+
+.pd-thumbs-row {
+  display: flex;
+  gap: 0.8rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+
+.pd-thumb-btn {
+  width: 76px;
+  height: 76px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  opacity: 0.7;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.pd-thumb-active {
+  border: 2px solid var(--primary-terracotta) !important;
+  opacity: 1 !important;
+}
+
+/* ── INFO COLUMN ──────────────────────────────────────────── */
+.pd-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Category badge + rating */
+.pd-badge-rating-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pd-category-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-terracotta);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  background-color: var(--bg-warm-linen);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.pd-rating-block {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.pd-rating-text {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-charcoal);
+}
+
+/* Title */
+.pd-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  color: var(--text-charcoal);
+  line-height: 1.2;
+  margin-top: 0.1rem;
+}
+
+/* Price row */
+.pd-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.2rem;
+}
+
+.pd-price {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--primary-terracotta);
+  line-height: 1;
+}
+
+.pd-original-price {
+  font-size: 1.1rem;
+  text-decoration: line-through;
+  color: var(--text-warm-grey);
+}
+
+.pd-save-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #25D366;
+  background-color: rgba(37, 211, 102, 0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* Stock badge */
+.pd-stock-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.pd-in-stock { color: #25D366; }
+.pd-out-stock { color: #E63946; }
+
+/* Description */
+.pd-description {
+  color: var(--text-charcoal);
+  line-height: 1.75;
+  font-size: 0.96rem;
+}
+
+/* Specifications box */
+.pd-specs-box {
+  background-color: var(--bg-warm-linen);
+  padding: 1.2rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.pd-specs-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-charcoal);
+}
+
+.pd-specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  font-size: 0.84rem;
+}
+
+.pd-spec-label {
+  color: var(--text-warm-grey);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.pd-spec-value {
+  color: var(--text-charcoal);
+  display: block;
+}
+
+/* Quantity + Wishlist row */
+.pd-qty-wish-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.pd-qty-ctrl {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-warm-linen);
+  overflow: hidden;
+}
+
+.pd-qty-btn {
+  padding: 9px 15px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-charcoal);
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  transition: background-color 0.15s ease;
+}
+
+.pd-qty-btn:hover {
+  background-color: var(--border-subtle);
+}
+
+.pd-qty-value {
+  padding: 9px 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-charcoal);
+  min-width: 36px;
+  text-align: center;
+}
+
+.pd-wish-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 11px 16px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-subtle);
+  background-color: var(--bg-warm-linen);
+  color: var(--text-charcoal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.pd-wish-active {
+  background-color: rgba(230, 57, 70, 0.1) !important;
+  color: #E63946 !important;
+  border-color: rgba(230, 57, 70, 0.3) !important;
+}
+
+/* CTA buttons row */
+.pd-cta-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.pd-cta-btn {
+  padding: 0.9rem !important;
+  justify-content: center !important;
+  width: 100%;
+}
+
+/* Trust badges */
+.pd-trust-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+  font-size: 0.76rem;
+  color: var(--text-warm-grey);
+}
+
+.pd-trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Related section */
+.pd-related-section {
+  margin-top: 4rem;
+}
+
+/* ── MOBILE OVERRIDES (≤ 768px) ───────────────────────────── */
 @media (max-width: 768px) {
-  /* Shift content right so it's not hidden under the floating side tab */
-  .product-details-page .container {
-    padding-left: 60px !important;
-    padding-right: 1rem !important;
+  /* Break out of centered container — go full-width like Amazon/Flipkart */
+  .pd-outer-wrapper {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  /* Stack gallery and info into a single column on mobile */
-  .product-details-grid {
+  /* Breadcrumb: add left padding to clear floating panel */
+  .pd-breadcrumb {
+    padding: 0 1rem 0 62px;
+    font-size: 0.78rem;
+    margin-bottom: 0;
+    gap: 0.25rem;
+  }
+
+  /* Main grid: single column, edge-to-edge, no card shadow wrapper */
+  .pd-main-grid {
     grid-template-columns: 1fr !important;
-    gap: 1.5rem !important;
-    padding: 1rem !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
   }
 
-  /* Tighten the info section spacing on mobile */
-  .product-details-grid > div:last-child {
+  /* Image fills full width, natural height */
+  .pd-main-img-wrap {
+    height: auto !important;
+    aspect-ratio: 3 / 4;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Thumbnails: left-padded to clear floating panel */
+  .pd-thumbs-row {
+    padding: 0 1rem 0.75rem 62px;
+  }
+
+  /* Info column: card-style white panel, left-padded for panel clearance */
+  .pd-info-col {
+    background-color: var(--bg-soft-ivory);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 1.25rem 1rem 1.25rem 62px;
     gap: 0.85rem !important;
+    margin-top: -0.5rem;
   }
 
-  /* Ensure action buttons row wraps cleanly on small screens */
-  .product-details-actions > div:first-child {
-    gap: 0.75rem !important;
-    flex-wrap: wrap;
+  /* Title responsive size on mobile */
+  .pd-title {
+    font-size: clamp(1.4rem, 5.5vw, 2rem) !important;
+  }
+
+  /* Price slightly smaller on mobile */
+  .pd-price {
+    font-size: 1.8rem !important;
+  }
+
+  /* Specs grid stays 2-col but more compact */
+  .pd-specs-grid {
+    gap: 0.5rem !important;
+  }
+
+  /* Related section padding */
+  .pd-related-section {
+    padding: 0 1rem 0 62px;
+    margin-top: 2rem;
   }
 }
 
 @media (max-width: 480px) {
-  .product-details-page .container {
-    padding-left: 58px !important;
-    padding-right: 0.75rem !important;
+  /* Info column: tighter left pad on very narrow phones */
+  .pd-info-col {
+    padding: 1rem 0.85rem 1rem 58px !important;
   }
 
-  .product-details-grid {
-    padding: 0.85rem !important;
-    gap: 1.2rem !important;
-    border-radius: var(--radius-md) !important;
+  .pd-thumbs-row {
+    padding-left: 58px;
   }
 
-  /* Stack quantity + wishlist button vertically on very small screens */
-  .product-details-actions > div:first-child {
-    flex-direction: column !important;
-    align-items: stretch !important;
+  .pd-breadcrumb {
+    padding-left: 58px;
   }
 
-  .product-details-actions > div:first-child > div:first-child {
-    /* Quantity control: center it */
-    align-self: flex-start;
+  /* Qty + wishlist: stack vertically on very small screens */
+  .pd-qty-wish-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pd-wish-btn {
+    min-width: unset;
+    width: 100%;
+  }
+
+  /* CTA buttons full-width stacked */
+  .pd-cta-row {
+    grid-template-columns: 1fr !important;
+    gap: 0.6rem;
+  }
+
+  .pd-related-section {
+    padding: 0 0.85rem 0 58px;
   }
 }

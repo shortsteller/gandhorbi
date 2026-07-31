@@ -87,20 +87,13 @@ export const ProductDetails = () => {
         minHeight: '100vh'
       }}
     >
-      <div className="container">
-        
+      {/* Full-width wrapper — on mobile this is the full viewport width */}
+      <div className="pd-outer-wrapper">
+
         {/* BREADCRUMB NAVIGATION */}
         <nav
           aria-label="Breadcrumb"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            fontSize: '0.85rem',
-            color: 'var(--text-warm-grey)',
-            marginBottom: '2rem',
-            flexWrap: 'wrap'
-          }}
+          className="pd-breadcrumb"
         >
           <Link to="/" style={{ color: 'var(--text-warm-grey)' }}>Home</Link>
           <ChevronRight size={14} />
@@ -118,64 +111,29 @@ export const ProductDetails = () => {
           </span>
         </nav>
 
-        {/* MAIN PRODUCT LAYOUT GRID */}
-        <div
-          className="product-details-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '3rem',
-            alignItems: 'start',
-            backgroundColor: 'var(--bg-soft-ivory)',
-            padding: '2rem',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-subtle)',
-            boxShadow: 'var(--shadow-card)'
-          }}
-        >
-          {/* LEFT: GALLERY & IMAGES */}
-          <div>
+        {/* MAIN PRODUCT LAYOUT — two-col on desktop, single-col on mobile */}
+        <div className="pd-main-grid">
+
+          {/* ── LEFT / TOP: IMAGE GALLERY ── */}
+          <div className="pd-gallery-col">
+
             {/* Main Featured Image */}
-            <div
-              style={{
-                width: '100%',
-                height: '460px',
-                borderRadius: 'var(--radius-md)',
-                overflow: 'hidden',
-                marginBottom: '1.2rem',
-                border: '1px solid var(--border-subtle)',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.06)'
-              }}
-            >
+            <div className="pd-main-img-wrap">
               <img
                 src={selectedImage || product.image}
                 alt={product.name}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  transition: 'var(--transition-smooth)'
-                }}
+                className="pd-main-img"
               />
             </div>
 
-            {/* Thumbnail Carousel Selector */}
+            {/* Thumbnail Carousel */}
             {images.length > 1 && (
-              <div style={{ display: 'flex', gap: '0.8rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+              <div className="pd-thumbs-row">
                 {images.map((imgUrl, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(imgUrl)}
-                    style={{
-                      width: '76px',
-                      height: '76px',
-                      borderRadius: 'var(--radius-sm)',
-                      overflow: 'hidden',
-                      border: selectedImage === imgUrl ? '2px solid var(--primary-terracotta)' : '1px solid var(--border-subtle)',
-                      opacity: selectedImage === imgUrl ? 1 : 0.7,
-                      transition: 'var(--transition-fast)',
-                      flexShrink: 0
-                    }}
+                    className={`pd-thumb-btn${selectedImage === imgUrl ? ' pd-thumb-active' : ''}`}
                   >
                     <img
                       src={imgUrl}
@@ -188,214 +146,148 @@ export const ProductDetails = () => {
             )}
           </div>
 
-          {/* RIGHT: DETAILS, SPECS & BUYING ACTIONS */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-            
-            {/* Category Tag & Ratings */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <span
-                style={{
-                  fontSize: '0.78rem',
-                  fontWeight: 700,
-                  color: 'var(--primary-terracotta)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  backgroundColor: 'var(--bg-warm-linen)',
-                  padding: '4px 10px',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--border-light)'
-                }}
-              >
+          {/* ── RIGHT / BOTTOM: PRODUCT INFO ── */}
+          <div className="pd-info-col">
+
+            {/* Category Badge + Rating row */}
+            <div className="pd-badge-rating-row">
+              <span className="pd-category-badge">
                 {product.category}
               </span>
-
-              {/* Star Rating */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <div className="pd-rating-block">
                 <div style={{ display: 'flex', color: '#D4A44E' }}>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={16} fill="#D4A44E" />
+                    <Star key={i} size={15} fill="#D4A44E" />
                   ))}
                 </div>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-charcoal)' }}>
-                  {product.rating} ({product.reviewsCount} Patron Reviews)
+                <span className="pd-rating-text">
+                  {product.rating} ({product.reviewsCount} Reviews)
                 </span>
               </div>
             </div>
 
-            {/* Title */}
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(1.8rem, 3vw, 2.5rem)',
-                color: 'var(--text-charcoal)',
-                lineHeight: 1.2,
-                marginTop: '0.2rem'
-              }}
-            >
-              {product.name}
-            </h1>
+            {/* Product Title */}
+            <h1 className="pd-title">{product.name}</h1>
 
             {/* Price & Savings */}
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', marginTop: '0.4rem' }}>
-              <span
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '2.2rem',
-                  fontWeight: 700,
-                  color: 'var(--primary-terracotta)'
-                }}
-              >
+            <div className="pd-price-row">
+              <span className="pd-price">
                 ₹{product.price.toLocaleString('en-IN')}
               </span>
               {product.originalPrice && (
-                <span
-                  style={{
-                    fontSize: '1.2rem',
-                    textDecoration: 'line-through',
-                    color: 'var(--text-warm-grey)'
-                  }}
-                >
+                <span className="pd-original-price">
                   ₹{product.originalPrice.toLocaleString('en-IN')}
                 </span>
               )}
               {product.originalPrice && (
-                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#25D366', backgroundColor: 'rgba(37, 211, 102, 0.1)', padding: '2px 8px', borderRadius: '4px' }}>
+                <span className="pd-save-badge">
                   Save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')}
                 </span>
               )}
             </div>
 
             {/* Stock Badge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.88rem', color: product.inStock ? '#25D366' : '#E63946' }}>
-              <ShieldCheck size={18} />
-              <span style={{ fontWeight: 600 }}>
-                {product.inStock ? '100% Authentic Handcrafted Artifact in Stock' : 'Out of Stock - Contact Concierge for Custom Stitching'}
+            <div className={`pd-stock-badge${product.inStock ? ' pd-in-stock' : ' pd-out-stock'}`}>
+              <ShieldCheck size={17} />
+              <span>
+                {product.inStock
+                  ? '100% Authentic Handcrafted Artifact in Stock'
+                  : 'Out of Stock — Contact Concierge'}
               </span>
             </div>
 
             {/* Description */}
-            <p style={{ color: 'var(--text-charcoal)', lineHeight: 1.7, fontSize: '0.98rem' }}>
-              {product.description}
-            </p>
+            <p className="pd-description">{product.description}</p>
 
-            {/* Specifications Table */}
+            {/* Artisan Specifications */}
             {product.specifications && (
-              <div
-                style={{
-                  backgroundColor: 'var(--bg-warm-linen)',
-                  padding: '1.2rem',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-subtle)',
-                  margin: '0.5rem 0'
-                }}
-              >
-                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', marginBottom: '0.8rem', color: 'var(--text-charcoal)' }}>
-                  Artisan Specifications
-                </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', fontSize: '0.85rem' }}>
+              <div className="pd-specs-box">
+                <h4 className="pd-specs-title">Artisan Specifications</h4>
+                <div className="pd-specs-grid">
                   <div>
-                    <span style={{ color: 'var(--text-warm-grey)', display: 'block' }}>Material:</span>
-                    <strong style={{ color: 'var(--text-charcoal)' }}>{product.specifications.material}</strong>
+                    <span className="pd-spec-label">Material:</span>
+                    <strong className="pd-spec-value">{product.specifications.material}</strong>
                   </div>
                   <div>
-                    <span style={{ color: 'var(--text-warm-grey)', display: 'block' }}>Craft Technique:</span>
-                    <strong style={{ color: 'var(--text-charcoal)' }}>{product.specifications.craftType}</strong>
+                    <span className="pd-spec-label">Craft Technique:</span>
+                    <strong className="pd-spec-value">{product.specifications.craftType}</strong>
                   </div>
                   <div>
-                    <span style={{ color: 'var(--text-warm-grey)', display: 'block' }}>Origin:</span>
-                    <strong style={{ color: 'var(--text-charcoal)' }}>{product.specifications.origin}</strong>
+                    <span className="pd-spec-label">Origin:</span>
+                    <strong className="pd-spec-value">{product.specifications.origin}</strong>
                   </div>
                   <div>
-                    <span style={{ color: 'var(--text-warm-grey)', display: 'block' }}>Care Instructions:</span>
-                    <strong style={{ color: 'var(--text-charcoal)' }}>{product.specifications.care}</strong>
+                    <span className="pd-spec-label">Care Instructions:</span>
+                    <strong className="pd-spec-value">{product.specifications.care}</strong>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* QUANTITY & PRIMARY ACTION BUTTONS */}
-            <div className="product-details-actions" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.5rem' }}>
-              
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                {/* Quantity Controls */}
-                <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--bg-warm-linen)' }}>
-                  <button
-                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    style={{ padding: '8px 14px', fontSize: '1.1rem', fontWeight: 700 }}
-                  >
-                    -
-                  </button>
-                  <span style={{ padding: '8px 14px', fontSize: '0.98rem', fontWeight: 700 }}>{quantity}</span>
-                  <button
-                    onClick={() => setQuantity((q) => q + 1)}
-                    style={{ padding: '8px 14px', fontSize: '1.1rem', fontWeight: 700 }}
-                  >
-                    +
-                  </button>
-                </div>
-
-                {/* Wishlist Button */}
+            {/* QUANTITY + WISHLIST */}
+            <div className="pd-qty-wish-row">
+              {/* Quantity Controls */}
+              <div className="pd-qty-ctrl">
                 <button
-                  onClick={() => toggleWishlist(product)}
-                  style={{
-                    flex: 1,
-                    minWidth: '140px',
-                    padding: '12px 16px',
-                    borderRadius: 'var(--radius-sm)',
-                    border: '1.5px solid var(--border-subtle)',
-                    backgroundColor: inWishlist ? 'rgba(230, 57, 70, 0.1)' : 'var(--bg-warm-linen)',
-                    color: inWishlist ? '#E63946' : 'var(--text-charcoal)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.5rem',
-                    fontWeight: 600,
-                    fontSize: '0.9rem',
-                    transition: 'var(--transition-fast)'
-                  }}
-                >
-                  <Heart size={20} fill={inWishlist ? '#E63946' : 'none'} color={inWishlist ? '#E63946' : 'currentColor'} />
-                  <span>{inWishlist ? 'Saved' : 'Add to Wishlist'}</span>
-                </button>
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  className="pd-qty-btn"
+                >−</button>
+                <span className="pd-qty-value">{quantity}</span>
+                <button
+                  onClick={() => setQuantity((q) => q + 1)}
+                  className="pd-qty-btn"
+                >+</button>
               </div>
 
-              {/* Add to Cart & Instant WhatsApp Order */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <button
-                  onClick={() => {
-                    addToCart(product, quantity);
-                    setIsCartOpen(true);
-                  }}
-                  className="btn-primary"
-                  style={{ padding: '0.9rem', justifyContent: 'center' }}
-                >
-                  <ShoppingBag size={18} /> Add to Cart
-                </button>
-
-                <button
-                  onClick={handleWhatsAppOrder}
-                  className="btn-whatsapp"
-                  style={{ padding: '0.9rem', justifyContent: 'center' }}
-                >
-                  <MessageCircle size={18} /> Instant Order
-                </button>
-              </div>
-
+              {/* Wishlist Button */}
+              <button
+                onClick={() => toggleWishlist(product)}
+                className={`pd-wish-btn${inWishlist ? ' pd-wish-active' : ''}`}
+              >
+                <Heart
+                  size={19}
+                  fill={inWishlist ? '#E63946' : 'none'}
+                  color={inWishlist ? '#E63946' : 'currentColor'}
+                />
+                <span>{inWishlist ? 'Saved' : 'Add to Wishlist'}</span>
+              </button>
             </div>
 
-            {/* Trust Assurances */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginTop: '1rem', paddingTop: '1.2rem', borderTop: '1px solid var(--border-subtle)', textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-warm-grey)' }}>
-              <div>
-                <Truck size={20} color="var(--primary-terracotta)" style={{ margin: '0 auto 4px auto' }} />
-                <span>Complimentary Shipping</span>
+            {/* ADD TO CART + INSTANT ORDER */}
+            <div className="pd-cta-row">
+              <button
+                onClick={() => {
+                  addToCart(product, quantity);
+                  setIsCartOpen(true);
+                }}
+                className="btn-primary pd-cta-btn"
+              >
+                <ShoppingBag size={18} />
+                <span>ADD TO CART</span>
+              </button>
+
+              <button
+                onClick={handleWhatsAppOrder}
+                className="btn-whatsapp pd-cta-btn"
+              >
+                <MessageCircle size={18} />
+                <span>Instant Order</span>
+              </button>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="pd-trust-row">
+              <div className="pd-trust-item">
+                <Truck size={20} color="var(--primary-terracotta)" />
+                <span>Free Shipping</span>
               </div>
-              <div>
-                <Award size={20} color="var(--primary-terracotta)" style={{ margin: '0 auto 4px auto' }} />
-                <span>100% Authentic Handcraft</span>
+              <div className="pd-trust-item">
+                <Award size={20} color="var(--primary-terracotta)" />
+                <span>100% Authentic</span>
               </div>
-              <div>
-                <RotateCcw size={20} color="var(--primary-terracotta)" style={{ margin: '0 auto 4px auto' }} />
-                <span>Fair Trade Artisans</span>
+              <div className="pd-trust-item">
+                <RotateCcw size={20} color="var(--primary-terracotta)" />
+                <span>Fair Trade</span>
               </div>
             </div>
 
@@ -404,16 +296,15 @@ export const ProductDetails = () => {
 
         {/* RELATED HERITAGE PRODUCTS */}
         {relatedProducts.length > 0 && (
-          <div style={{ marginTop: '4rem' }}>
+          <div className="pd-related-section">
             <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
               <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
                 You May Also Admire
               </span>
-              <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', marginTop: '6px' }}>
+              <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', marginTop: '6px' }}>
                 Related Heritage Creations
               </h2>
             </div>
-
             <div className="product-cards-grid">
               {relatedProducts.map((relProduct) => (
                 <ProductCard key={relProduct.id} product={relProduct} />
