@@ -8,6 +8,7 @@ export const ProductCard = ({ product }) => {
   const { addToCart, toggleWishlist, isInWishlist, setQuickViewProduct } = useShop();
 
   const isWishlisted = isInWishlist(product.id);
+  const isOutOfStock = product.inStock === false || (product.stock !== undefined && Number(product.stock) <= 0);
 
   const handleProductClick = () => {
     navigate(`/product/${product.id}`);
@@ -68,7 +69,36 @@ export const ProductCard = ({ product }) => {
           <Heart size={16} fill={isWishlisted ? '#E63946' : 'none'} />
         </button>
 
-        {/* Product Image */}
+        {/* Out of Stock Overlay Badge */}
+        {isOutOfStock && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 3,
+              backgroundColor: 'rgba(28, 24, 21, 0.88)',
+              color: '#ffffff',
+              fontFamily: 'var(--font-nav)',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              padding: '6px 14px',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+              pointerEvents: 'none',
+              backdropFilter: 'blur(4px)',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            Out of Stock
+          </div>
+        )}
+
+        {/* Product Image (Hazy if Out of Stock) */}
         <img
           src={product.image}
           alt={product.name}
@@ -78,11 +108,16 @@ export const ProductCard = ({ product }) => {
             height: '100%',
             objectFit: 'cover',
             transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            filter: isOutOfStock ? 'blur(2.5px) grayscale(35%) opacity(0.75)' : 'none'
           }}
           onClick={handleProductClick}
-          onMouseEnter={(e) => (e.target.style.transform = 'scale(1.08)')}
-          onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
+          onMouseEnter={(e) => {
+            if (!isOutOfStock) e.target.style.transform = 'scale(1.08)';
+          }}
+          onMouseLeave={(e) => {
+            if (!isOutOfStock) e.target.style.transform = 'scale(1)';
+          }}
         />
 
         {/* Hover / Touch Quick View Trigger */}
@@ -174,10 +209,15 @@ export const ProductCard = ({ product }) => {
           </div>
 
           <button
-            onClick={() => addToCart(product)}
-            aria-label="Add to Cart"
+            onClick={() => !isOutOfStock && addToCart(product)}
+            disabled={isOutOfStock}
+            aria-label={isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
             className="btn-icon product-card-cart-btn"
-            title="Add to Shopping Cart"
+            title={isOutOfStock ? 'Currently Out of Stock' : 'Add to Shopping Cart'}
+            style={{
+              opacity: isOutOfStock ? 0.5 : 1,
+              cursor: isOutOfStock ? 'not-allowed' : 'pointer'
+            }}
           >
             <ShoppingBag size={16} />
           </button>

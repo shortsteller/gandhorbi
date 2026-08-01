@@ -12,13 +12,13 @@ import { categories } from '../../data/categories';
 
 const INITIAL_FORM = {
   name: '', category: '', description: '',
-  price: '', originalPrice: '', stock: '',
-  featured: false, trending: false, hidden: false,
+  price: '', originalPrice: '', stock: '5',
+  inStock: true, featured: false, trending: false,
 };
 
 export const AddProduct = () => {
   const navigate = useNavigate();
-  const { id }   = useParams(); // Present if editing
+  const { id }   = useParams();
   const isEditMode = Boolean(id);
 
   const [form, setForm]         = useState(INITIAL_FORM);
@@ -33,23 +33,23 @@ export const AddProduct = () => {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // If in edit mode, fetch existing product data from Firestore
   useEffect(() => {
     if (!id) return;
     setLoadingProduct(true);
     getProductById(id).then((res) => {
       if (res.success && res.data) {
         const p = res.data;
+        const isInStock = p.inStock !== false && (p.stock === undefined || Number(p.stock) > 0);
         setForm({
           name:          p.name          || '',
           category:      p.category      || '',
           description:   p.description   || '',
           price:         p.price         !== undefined ? String(p.price) : '',
           originalPrice: p.originalPrice ? String(p.originalPrice) : '',
-          stock:         p.stock         !== undefined ? String(p.stock) : '0',
+          stock:         p.stock         !== undefined ? String(p.stock) : '5',
+          inStock:       isInStock,
           featured:      Boolean(p.featured),
           trending:      Boolean(p.trending),
-          hidden:        Boolean(p.hidden),
         });
         setExistingImages(p.images || []);
       } else {
@@ -74,23 +74,24 @@ export const AddProduct = () => {
 
     setSubmitting(true);
     try {
+      const stockNum = form.inStock ? (form.stock ? Number(form.stock) : 5) : 0;
+
       const productData = {
         name:          form.name.trim(),
         category:      form.category,
         description:   form.description.trim(),
         price:         Number(form.price),
         originalPrice: form.originalPrice ? Number(form.originalPrice) : null,
-        stock:         form.stock ? Number(form.stock) : 0,
+        stock:         stockNum,
+        inStock:       form.inStock,
         featured:      form.featured,
         trending:      form.trending,
-        hidden:        form.hidden,
         discount:      form.originalPrice
           ? Math.round(((Number(form.originalPrice) - Number(form.price)) / Number(form.originalPrice)) * 100)
           : null,
       };
 
       if (isEditMode) {
-        // Edit mode
         const result = await updateProduct(id, productData, imageFiles);
         if (result.success) {
           showToast('success', `Product "${form.name}" updated successfully!`);
@@ -99,7 +100,6 @@ export const AddProduct = () => {
           showToast('error', result.error || 'Failed to update product.');
         }
       } else {
-        // Add mode
         const result = await addProduct(productData, imageFiles);
         if (result.success) {
           showToast('success', `Product "${form.name}" added successfully!`);
@@ -209,10 +209,10 @@ export const AddProduct = () => {
             </div>
 
             <div className="admin-field-group">
-              <label className="admin-field-label" htmlFor="prod-stock">Stock (units)</label>
+              <label className="admin-field-label" htmlFor="prod-stock">Stock Units</label>
               <input id="prod-stock" name="stock" type="number" min="0" className="admin-field-input"
                 placeholder="e.g. 5"
-                value={form.stock} onChange={handleChange} />
+                value={form.stock} onChange={handleChange} disabled={!form.inStock} />
             </div>
           </div>
 
@@ -224,10 +224,15 @@ export const AddProduct = () => {
           )}
         </div>
 
-        {/* ── Visibility & Status ─────────────────────────────────────────── */}
+        {/* ── Availability & Badges ───────────────────────────────────────── */}
         <div className="admin-form-card">
-          <h3 className="admin-form-section-title">Visibility & Badges</h3>
+          <h3 className="admin-form-section-title">Availability & Badges</h3>
           <div className="admin-checkbox-row">
+            <label className="admin-checkbox-label">
+              <input type="checkbox" name="inStock" checked={form.inStock} onChange={handleChange} className="admin-checkbox" />
+              <span>📦 In Stock / Available</span>
+              <span className="admin-checkbox-hint">Uncheck to mark Out of Stock (product stays in Collections, image appears hazy)</span>
+            </label>
             <label className="admin-checkbox-label">
               <input type="checkbox" name="featured" checked={form.featured} onChange={handleChange} className="admin-checkbox" />
               <span>⭐ Feature on Homepage</span>
@@ -237,11 +242,6 @@ export const AddProduct = () => {
               <input type="checkbox" name="trending" checked={form.trending} onChange={handleChange} className="admin-checkbox" />
               <span>🔥 Trending Product</span>
               <span className="admin-checkbox-hint">Shown in Trending section</span>
-            </label>
-            <label className="admin-checkbox-label">
-              <input type="checkbox" name="hidden" checked={form.hidden} onChange={handleChange} className="admin-checkbox" />
-              <span>👁 Hide Product from Website</span>
-              <span className="admin-checkbox-hint">If checked, hidden from public catalog</span>
             </label>
           </div>
         </div>

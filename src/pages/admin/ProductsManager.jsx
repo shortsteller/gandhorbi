@@ -1,13 +1,13 @@
 /**
  * ProductsManager.jsx
  * Dedicated Products Management page for the Admin Portal.
- * Displays all products from Firestore as responsive cards with interactive toggles and actions.
+ * Displays all products from Firestore as responsive cards with In Stock / Out of Stock toggles and actions.
  */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Package, PlusCircle, Edit3, Trash2, Eye, EyeOff, Star, TrendingUp,
-  PackageCheck, PackageX, Search, RefreshCw, CheckCircle, AlertCircle
+  Package, PlusCircle, Edit3, Trash2, Star, TrendingUp,
+  PackageCheck, PackageX, Search, CheckCircle, AlertCircle
 } from 'lucide-react';
 import { db, updateDocument, deleteDocument } from '../../services/firestore';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
@@ -59,20 +59,20 @@ export const ProductsManager = () => {
     }
   };
 
-  const handleToggleStock = async (id, currentStock) => {
-    const newStock = (currentStock ?? 0) > 0 ? 0 : 5;
-    const res = await updateDocument('products', id, { stock: newStock });
+  const handleToggleStock = async (id, isCurrentlyOutOfStock) => {
+    const newInStock = isCurrentlyOutOfStock; // If currently out of stock, set inStock to true
+    const newStock   = newInStock ? 5 : 0;
+    const res = await updateDocument('products', id, { inStock: newInStock, stock: newStock });
     if (res.success) {
-      showToast('success', newStock > 0 ? 'Marked as In Stock (5 units).' : 'Marked as Out of Stock.');
+      showToast('success', newInStock ? 'Marked as In Stock (5 units).' : 'Marked as Out of Stock (image will appear hazy on website).');
     } else {
-      showToast('error', 'Failed to update stock.');
+      showToast('error', 'Failed to update stock status.');
     }
   };
 
   const handleDelete = async (product) => {
     if (!window.confirm(`Are you sure you want to delete "${product.name}"?`)) return;
 
-    // Log Cloudinary publicId for deletion reference
     if (product.images && product.images.length > 0) {
       const publicIds = product.images.map(img => img.publicId).filter(Boolean);
       console.log('[Cloudinary Delete Reference] Public IDs to destroy:', publicIds);
@@ -105,7 +105,7 @@ export const ProductsManager = () => {
           <div>
             <h1 className="admin-page-title">Products Management</h1>
             <p className="admin-page-subtitle">
-              Manage live inventory, features, visibility, and details
+              Manage inventory stock status, feature flags, pricing, and details
             </p>
           </div>
         </div>
@@ -168,23 +168,29 @@ export const ProductsManager = () => {
         /* Products Grid: Desktop 4, Tablet 3, Mobile 2 */
         <div className="admin-products-grid">
           {filteredProducts.map((p) => {
-            const isOutOfStock = (p.stock ?? 0) <= 0;
+            const isOutOfStock = p.inStock === false || (p.stock !== undefined && Number(p.stock) <= 0);
             const mainImg = p.images?.[0]?.url || p.image || '';
 
             return (
-              <div key={p.id} className={`admin-prod-card${p.hidden ? ' admin-card-hidden' : ''}`}>
+              <div key={p.id} className={`admin-prod-card${isOutOfStock ? ' admin-card-out-of-stock' : ''}`}>
 
                 {/* Card Top Banner / Badges */}
                 <div className="admin-prod-img-wrap">
                   {mainImg ? (
-                    <img src={mainImg} alt={p.name} className="admin-prod-img" />
+                    <img
+                      src={mainImg}
+                      alt={p.name}
+                      className="admin-prod-img"
+                      style={{
+                        filter: isOutOfStock ? 'blur(2px) grayscale(30%) opacity(0.75)' : 'none'
+                      }}
+                    />
                   ) : (
                     <div className="admin-prod-no-img">No Image</div>
                   )}
 
                   {/* Status overlay badges */}
                   <div className="admin-card-badges">
-                    {p.hidden && <span className="admin-badge admin-badge-hidden">Hidden</span>}
                     {p.featured && <span className="admin-badge admin-badge-featured">⭐ Featured</span>}
                     {p.trending && <span className="admin-badge admin-badge-trending">🔥 Trending</span>}
                   </div>
@@ -207,14 +213,15 @@ export const ProductsManager = () => {
                 </div>
 
                 {/* Card Controls */}
-                <div className="admin-prod-controls">
+                <div className="admin-prod-controls" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+                  {/* Stock Toggle Button */}
                   <button
-                    className={`admin-ctrl-btn${p.hidden ? ' admin-ctrl-active' : ''}`}
-                    onClick={() => handleToggleField(p.id, 'hidden', p.hidden)}
-                    title={p.hidden ? 'Show Product on Website' : 'Hide Product from Website'}
+                    className={`admin-ctrl-btn${isOutOfStock ? ' admin-ctrl-active' : ''}`}
+                    onClick={() => handleToggleStock(p.id, isOutOfStock)}
+                    title={isOutOfStock ? 'Click to mark In Stock' : 'Click to mark Out of Stock'}
                   >
-                    {p.hidden ? <EyeOff size={15} color="#e63946" /> : <Eye size={15} color="#25D366" />}
-                    <span>{p.hidden ? 'Hidden' : 'Visible'}</span>
+                    {isOutOfStock ? <PackageX size={15} color="#e63946" /> : <PackageCheck size={15} color="#25D366" />}
+                    <span>{isOutOfStock ? 'Out of Stock' : 'In Stock'}</span>
                   </button>
 
                   <button
@@ -233,15 +240,6 @@ export const ProductsManager = () => {
                   >
                     <TrendingUp size={15} color={p.trending ? '#25D366' : 'var(--text-warm-grey)'} />
                     <span>Trending</span>
-                  </button>
-
-                  <button
-                    className="admin-ctrl-btn"
-                    onClick={() => handleToggleStock(p.id, p.stock)}
-                    title="Toggle In Stock / Out of Stock"
-                  >
-                    {isOutOfStock ? <PackageX size={15} color="#e63946" /> : <PackageCheck size={15} color="#25D366" />}
-                    <span>Stock</span>
                   </button>
                 </div>
 

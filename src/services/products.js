@@ -82,6 +82,7 @@ export const addProduct = async (productData, imageFiles = []) => {
       originalPrice: productData.originalPrice ?? null,
       discount:      productData.discount      ?? null,
       stock:         productData.stock         ?? 0,
+      inStock:       productData.inStock       ?? (productData.stock > 0),
       featured:      productData.featured      ?? false,
       trending:      productData.trending      ?? false,
       images, // contains [{ url, publicId, ... }]
