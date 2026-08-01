@@ -3,8 +3,8 @@
  * ─────────────────────────────────────────────────────────────────────────────
  * Firebase Authentication service — Email / Password.
  *
- * Exports:
- *   auth          — the Auth instance (usable in React hooks like onAuthStateChanged)
+ * Safe exports:
+ *   auth          — the Auth instance (or null if Firebase is not initialized)
  *   signUp        — create a new account
  *   signIn        — sign in with email & password
  *   signOut       — sign the current user out
@@ -22,18 +22,15 @@ import {
 } from 'firebase/auth';
 import { app } from './firebase';
 
-/** Shared Auth instance */
-export const auth = getAuth(app);
+/** Shared Auth instance (null if app init failed) */
+export const auth = app ? getAuth(app) : null;
 
 // ─── Sign-Up ─────────────────────────────────────────────────────────────────
 
-/**
- * Register a new user with email & password.
- * @param {string} email
- * @param {string} password
- * @returns {Promise<import('firebase/auth').UserCredential>}
- */
 export const signUp = async (email, password) => {
+  if (!auth) {
+    return { success: false, error: 'Firebase Auth is not configured. Please check environment variables.' };
+  }
   try {
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     return { success: true, user: credential.user };
@@ -44,13 +41,10 @@ export const signUp = async (email, password) => {
 
 // ─── Sign-In ─────────────────────────────────────────────────────────────────
 
-/**
- * Sign in an existing user.
- * @param {string} email
- * @param {string} password
- * @returns {Promise<{ success: boolean, user?: User, error?: string }>}
- */
 export const signIn = async (email, password) => {
+  if (!auth) {
+    return { success: false, error: 'Firebase Auth is not configured. Please check environment variables.' };
+  }
   try {
     const credential = await signInWithEmailAndPassword(auth, email, password);
     return { success: true, user: credential.user };
@@ -59,13 +53,10 @@ export const signIn = async (email, password) => {
   }
 };
 
-// ─── Sign-Out ─────────────────────────────────────────────────────────────────
+// ─── Sign-Out ────────────────────────────────────────────────────────────────
 
-/**
- * Sign out the current user.
- * @returns {Promise<{ success: boolean, error?: string }>}
- */
 export const signOut = async () => {
+  if (!auth) return { success: true };
   try {
     await firebaseSignOut(auth);
     return { success: true };
@@ -74,38 +65,22 @@ export const signOut = async () => {
   }
 };
 
-// ─── Current User ─────────────────────────────────────────────────────────────
+// ─── Current User ────────────────────────────────────────────────────────────
 
-/**
- * Returns the currently authenticated Firebase user, or null if not signed in.
- * @returns {import('firebase/auth').User | null}
- */
-export const getCurrentUser = () => auth.currentUser;
+export const getCurrentUser = () => (auth ? auth.currentUser : null);
 
-// ─── Auth State Observer ──────────────────────────────────────────────────────
+// ─── Auth State Observer ─────────────────────────────────────────────────────
 
-/**
- * Subscribe to auth state changes.
- * Call this in a React effect or context provider.
- *
- * @param {(user: import('firebase/auth').User | null) => void} callback
- * @returns {() => void} unsubscribe function
- *
- * @example
- *   useEffect(() => {
- *     const unsubscribe = onAuthChanged((user) => setUser(user));
- *     return unsubscribe;
- *   }, []);
- */
-export const onAuthChanged = (callback) => onAuthStateChanged(auth, callback);
+export const onAuthChanged = (callback) => {
+  if (!auth) {
+    callback(null);
+    return () => {};
+  }
+  return onAuthStateChanged(auth, callback);
+};
 
-// ─── Internal Helpers ─────────────────────────────────────────────────────────
+// ─── Internal Helpers ────────────────────────────────────────────────────────
 
-/**
- * Maps Firebase error codes to human-readable messages.
- * @param {string} code - Firebase error code
- * @returns {string}
- */
 const _authErrorMessage = (code) => {
   const messages = {
     'auth/email-already-in-use':    'An account with this email already exists.',
@@ -116,6 +91,7 @@ const _authErrorMessage = (code) => {
     'auth/wrong-password':          'Incorrect password. Please try again.',
     'auth/too-many-requests':       'Too many failed attempts. Please try again later.',
     'auth/network-request-failed':  'Network error. Please check your connection.',
+    'auth/invalid-credential':      'Invalid login credentials. Please check email and password.',
   };
   return messages[code] ?? `Authentication failed (${code}).`;
 };

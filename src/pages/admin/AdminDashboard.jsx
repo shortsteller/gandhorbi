@@ -10,9 +10,8 @@ import {
   PlusCircle, CalendarPlus, LayoutDashboard, RefreshCw
 } from 'lucide-react';
 import { db } from '../../services/firestore';
-import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { StatCard } from '../../components/admin/StatCard';
-import { categories } from '../../data/categories';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -23,45 +22,76 @@ export const AdminDashboard = () => {
 
   // ── Live Firestore listeners ────────────────────────────────────────────────
   useEffect(() => {
-    // Products listener
-    const unsubProducts = onSnapshot(
-      query(collection(db, 'products'), orderBy('createdAt', 'desc')),
-      (snap) => {
-        setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-        setLoading(false);
-      },
-      (err) => { console.error('Products listener error:', err); setLoading(false); }
-    );
+    if (!db) {
+      setLoading(false);
+      return;
+    }
 
-    // Events listener
-    const unsubEvents = onSnapshot(
-      query(collection(db, 'events'), orderBy('createdAt', 'desc')),
-      (snap) => setEvents(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
-      (err) => console.error('Events listener error:', err)
-    );
+    let unsubProducts = () => {};
+    let unsubEvents   = () => {};
 
-    return () => { unsubProducts(); unsubEvents(); };
+    try {
+      // Products listener
+      unsubProducts = onSnapshot(
+        query(collection(db, 'products'), orderBy('createdAt', 'desc')),
+        (snap) => {
+          setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+          setLoading(false);
+        },
+        (err) => {
+          console.warn('[AdminDashboard] Products listener notice:', err.message);
+          setLoading(false);
+        }
+      );
+    } catch (e) {
+      console.warn('[AdminDashboard] Unable to subscribe to products:', e.message);
+      setLoading(false);
+    }
+
+    try {
+      // Events listener
+      unsubEvents = onSnapshot(
+        query(collection(db, 'events'), orderBy('createdAt', 'desc')),
+        (snap) => {
+          setEvents(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        },
+        (err) => {
+          console.warn('[AdminDashboard] Events listener notice:', err.message);
+        }
+      );
+    } catch (e) {
+      console.warn('[AdminDashboard] Unable to subscribe to events:', e.message);
+    }
+
+    return () => {
+      unsubProducts();
+      unsubEvents();
+    };
   }, []);
 
   // ── Derived stats ────────────────────────────────────────────────────────────
-  const totalProducts  = products.length;
-  const totalCategories = [...new Set(products.map(p => p.category))].length;
-  const featured       = products.filter(p => p.featured).length;
-  const trending       = products.filter(p => p.trending).length;
+  const totalProducts   = products.length;
+  const totalCategories = [...new Set(products.map(p => p.category).filter(Boolean))].length;
+  const featured        = products.filter(p => p.featured).length;
+  const trending        = products.filter(p => p.trending).length;
 
-  const totalEvents    = events.length;
-  const upcoming       = events.filter(e => e.status === 'Upcoming').length;
-  const ongoing        = events.filter(e => e.status === 'Ongoing').length;
-  const completed      = events.filter(e => e.status === 'Completed').length;
+  const totalEvents     = events.length;
+  const upcoming        = events.filter(e => e.status === 'Upcoming').length;
+  const ongoing         = events.filter(e => e.status === 'Ongoing').length;
+  const completed       = events.filter(e => e.status === 'Completed').length;
 
-  const recentProducts = products.slice(0, 5);
-  const recentEvents   = events.slice(0, 5);
+  const recentProducts  = products.slice(0, 5);
+  const recentEvents    = events.slice(0, 5);
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
   const formatDate = (ts) => {
     if (!ts) return '—';
-    const date = ts.toDate ? ts.toDate() : new Date(ts);
-    return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    try {
+      const date = ts.toDate ? ts.toDate() : new Date(ts);
+      return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    } catch {
+      return '—';
+    }
   };
 
   return (

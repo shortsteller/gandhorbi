@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { ShopProvider } from './context/ShopContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
@@ -31,15 +31,45 @@ import { AddProduct }     from './pages/admin/AddProduct';
 import { AddEvent }       from './pages/admin/AddEvent';
 import { ProtectedRoute } from './components/admin/ProtectedRoute';
 
+// Public layout wrapper — renders Navbar, Outlet (page content), Footer & floating tools
+const PublicLayout = () => {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Navbar />
+      <main style={{ flex: 1 }}>
+        <Outlet />
+      </main>
+      <Footer />
+      <FloatingSideTab />
+      <CheckoutModal />
+      <SearchModal />
+      <UserAccountModal />
+      <QuickViewModal />
+      <Toast />
+    </div>
+  );
+};
+
 export default function App() {
   return (
     <BrowserRouter>
       <ShopProvider>
         <ScrollToTop />
-
         <Routes>
 
-          {/* ── Admin routes (no Footer, no FloatingSideTab) ─────────────── */}
+          {/* ── Public routes layout ────────────────────────────────────────── */}
+          <Route element={<PublicLayout />}>
+            <Route path="/"            element={<Home />} />
+            <Route path="/collections" element={<Collections />} />
+            <Route path="/about"       element={<About />} />
+            <Route path="/events"      element={<Events />} />
+            <Route path="/contact"     element={<Contact />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/cart"        element={<CartDrawer />} />
+            <Route path="/wishlist"    element={<WishlistDrawer />} />
+          </Route>
+
+          {/* ── Admin Login (with Navbar, no Footer/SideTab) ────────────────── */}
           <Route path="/admin/login" element={
             <>
               <Navbar />
@@ -47,6 +77,7 @@ export default function App() {
             </>
           } />
 
+          {/* ── Protected Admin Portal ────────────────────────────────────── */}
           <Route path="/admin" element={
             <ProtectedRoute>
               <>
@@ -55,39 +86,14 @@ export default function App() {
               </>
             </ProtectedRoute>
           }>
-            {/* /admin → redirect to dashboard */}
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard"    element={<AdminDashboard />} />
             <Route path="products/add" element={<AddProduct />} />
             <Route path="events/add"   element={<AddEvent />} />
           </Route>
 
-          {/* ── Public routes (with Footer + FloatingSideTab) ─────────────── */}
-          <Route path="/*" element={
-            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-              <Navbar />
-              <main style={{ flex: 1 }}>
-                <Routes>
-                  <Route path="/"            element={<Home />} />
-                  <Route path="/collections" element={<Collections />} />
-                  <Route path="/about"       element={<About />} />
-                  <Route path="/events"      element={<Events />} />
-                  <Route path="/contact"     element={<Contact />} />
-                  <Route path="/product/:id" element={<ProductDetails />} />
-                  <Route path="/cart"        element={<CartDrawer />} />
-                  <Route path="/wishlist"    element={<WishlistDrawer />} />
-                  <Route path="*"            element={<Home />} />
-                </Routes>
-              </main>
-              <Footer />
-              <FloatingSideTab />
-              <CheckoutModal />
-              <SearchModal />
-              <UserAccountModal />
-              <QuickViewModal />
-              <Toast />
-            </div>
-          } />
+          {/* ── Catch-all fallback ────────────────────────────────────────── */}
+          <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>
       </ShopProvider>

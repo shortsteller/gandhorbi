@@ -5,10 +5,6 @@
  *
  * Provides generic CRUD helpers (get, add, update, delete, query) that higher-
  * level service modules (products.js, etc.) build on top of.
- *
- * All functions are async/await and return a consistent shape:
- *   { success: true,  data: <result>  }  — on success
- *   { success: false, error: <string> }  — on failure
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -30,23 +26,16 @@ import {
 } from 'firebase/firestore';
 import { app } from './firebase';
 
-/** Shared Firestore instance */
-export const db = getFirestore(app);
+/** Shared Firestore instance (null if app init failed) */
+export const db = app ? getFirestore(app) : null;
 
-// Re-export Firestore utilities so callers don't need to import firebase/firestore directly
+// Re-export Firestore utilities
 export { serverTimestamp, Timestamp, where, orderBy, limit, query, collection, doc };
 
 // ─── Generic Helpers ──────────────────────────────────────────────────────────
 
-/**
- * Add a new document to a collection.
- * Automatically injects `createdAt` and `updatedAt` server timestamps.
- *
- * @param {string} collectionName
- * @param {object} data
- * @returns {Promise<{ success: boolean, id?: string, error?: string }>}
- */
 export const addDocument = async (collectionName, data) => {
+  if (!db) return { success: false, error: 'Firestore is not initialized.' };
   try {
     const ref = await addDoc(collection(db, collectionName), {
       ...data,
@@ -60,14 +49,8 @@ export const addDocument = async (collectionName, data) => {
   }
 };
 
-/**
- * Fetch a single document by its ID.
- *
- * @param {string} collectionName
- * @param {string} documentId
- * @returns {Promise<{ success: boolean, data?: object, error?: string }>}
- */
 export const getDocument = async (collectionName, documentId) => {
+  if (!db) return { success: false, error: 'Firestore is not initialized.' };
   try {
     const snap = await getDoc(doc(db, collectionName, documentId));
     if (!snap.exists()) {
@@ -80,13 +63,8 @@ export const getDocument = async (collectionName, documentId) => {
   }
 };
 
-/**
- * Fetch all documents in a collection.
- *
- * @param {string} collectionName
- * @returns {Promise<{ success: boolean, data?: object[], error?: string }>}
- */
 export const getDocuments = async (collectionName) => {
+  if (!db) return { success: false, error: 'Firestore is not initialized.' };
   try {
     const snap = await getDocs(collection(db, collectionName));
     const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -97,14 +75,8 @@ export const getDocuments = async (collectionName) => {
   }
 };
 
-/**
- * Run a Firestore query with optional constraints.
- *
- * @param {string} collectionName
- * @param {import('firebase/firestore').QueryConstraint[]} constraints
- * @returns {Promise<{ success: boolean, data?: object[], error?: string }>}
- */
 export const queryDocuments = async (collectionName, constraints = []) => {
+  if (!db) return { success: false, error: 'Firestore is not initialized.' };
   try {
     const ref = collection(db, collectionName);
     const q   = query(ref, ...constraints);
@@ -117,16 +89,8 @@ export const queryDocuments = async (collectionName, constraints = []) => {
   }
 };
 
-/**
- * Update specific fields of an existing document.
- * Automatically refreshes `updatedAt`.
- *
- * @param {string} collectionName
- * @param {string} documentId
- * @param {object} updates   — only the fields to change
- * @returns {Promise<{ success: boolean, error?: string }>}
- */
 export const updateDocument = async (collectionName, documentId, updates) => {
+  if (!db) return { success: false, error: 'Firestore is not initialized.' };
   try {
     await updateDoc(doc(db, collectionName, documentId), {
       ...updates,
@@ -139,20 +103,8 @@ export const updateDocument = async (collectionName, documentId, updates) => {
   }
 };
 
-/**
- * Delete a document permanently.
- *
- * ⚠️  IMPORTANT for image deletion workflow:
- *   Always retrieve the product's `images` array (which contains Cloudinary
- *   public_id values) BEFORE calling this function.  Delete all Cloudinary
- *   images via the secure backend FIRST, then call deleteDocument.
- *   This ensures Firestore and Cloudinary stay in sync with no orphaned assets.
- *
- * @param {string} collectionName
- * @param {string} documentId
- * @returns {Promise<{ success: boolean, error?: string }>}
- */
 export const deleteDocument = async (collectionName, documentId) => {
+  if (!db) return { success: false, error: 'Firestore is not initialized.' };
   try {
     await deleteDoc(doc(db, collectionName, documentId));
     return { success: true };
