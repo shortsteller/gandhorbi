@@ -18,6 +18,7 @@ export const ShopProvider = ({ children }) => {
     if (path.startsWith('/cart')) return 'cart';
     if (path.startsWith('/wishlist')) return 'wishlist';
     if (path.startsWith('/product')) return 'product';
+    if (path.startsWith('/admin')) return 'admin';
     return 'home';
   };
 

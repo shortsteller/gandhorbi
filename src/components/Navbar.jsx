@@ -79,7 +79,8 @@ export const Navbar = () => {
     { name: 'Collections', id: 'collections', hasDropdown: true },
     { name: 'About', id: 'about' },
     { name: 'Events', id: 'events' },
-    { name: 'Contact Us', id: 'contact' }
+    { name: 'Contact Us', id: 'contact' },
+    { name: 'Admin', id: 'admin' }
   ];
 
   const isHeroOverlay = currentPage === 'home' && !isScrolled;
