@@ -1,13 +1,65 @@
-import React, { useState } from 'react';
-import { events } from '../data/events';
-import { Calendar, MapPin, Clock, UserCheck, MessageCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { events as initialEvents } from '../data/events';
+import { Calendar, MapPin, Clock, MessageCircle } from 'lucide-react';
+import { db } from '../services/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 export const Events = () => {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [liveEvents, setLiveEvents]         = useState(initialEvents);
+
+  // Real-Time Events Sync from Firestore
+  useEffect(() => {
+    if (!db) return;
+    let unsub = () => {};
+    try {
+      unsub = onSnapshot(collection(db, 'events'), (snap) => {
+        if (snap.docs) {
+          const firestoreEvents = snap.docs.map((docItem) => {
+            const data = docItem.data();
+            const dateStr = data.startDate && data.endDate && data.startDate !== data.endDate
+              ? `${data.startDate} to ${data.endDate}`
+              : data.startDate || 'Upcoming';
+
+            const timingStr = data.startTime && data.endTime
+              ? `${data.startTime} - ${data.endTime}`
+              : data.startTime || 'Full Day';
+
+            return {
+              id: docItem.id,
+              title: data.title,
+              category: data.category || 'Cultural Events',
+              date: dateStr,
+              time: timingStr,
+              venue: `${data.venue || ''}${data.city ? `, ${data.city}` : ''}`,
+              description: data.description,
+              banner: data.banner?.url || data.banner || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1000',
+              hidden: Boolean(data.hidden),
+              featured: Boolean(data.featured),
+              status: data.status || 'Upcoming',
+            };
+          });
+
+          const firestoreIds = new Set(firestoreEvents.map((e) => e.id));
+          const merged = [
+            ...firestoreEvents,
+            ...initialEvents.filter((e) => !firestoreIds.has(e.id)),
+          ];
+          setLiveEvents(merged);
+        }
+      });
+    } catch (e) {
+      console.warn('[Events] Firestore snapshot error:', e);
+    }
+    return () => unsub();
+  }, []);
+
+  // Filter out hidden events for the public website
+  const publicEvents = liveEvents.filter((e) => !e.hidden);
 
   const filteredEvents = activeCategory === 'All'
-    ? events
-    : events.filter((e) => e.category === activeCategory);
+    ? publicEvents
+    : publicEvents.filter((e) => e.category === activeCategory);
 
   const handleRSVP = (eventItem) => {
     const message = `Hello Gandhorbi Folk Arts,\n\nI would like to RSVP / inquire about attending the following event:\n\n• Event: ${eventItem.title}\n• Date: ${eventItem.date}\n• Venue: ${eventItem.venue}\n\nPlease share registration details.`;
@@ -24,7 +76,7 @@ export const Events = () => {
             Atelier Calendar
           </span>
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '3rem', marginTop: '4px' }}>
-            Cultural Exhibitions & Workshops
+            Cultural Exhibitions &amp; Workshops
           </h1>
           <p style={{ color: 'var(--text-warm-grey)', marginTop: '0.8rem', maxWidth: '650px', margin: '0.8rem auto 0 auto' }}>
             Join Gandhorbi Folk Arts at major craft expos, hands-on Kantha masterclasses, and lost-wax metal casting live demonstrations.

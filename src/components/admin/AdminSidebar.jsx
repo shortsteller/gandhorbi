@@ -1,17 +1,17 @@
 /**
  * AdminSidebar.jsx
  * Hamburger-triggered slide-in sidebar for the Admin Portal.
- * Contains: Dashboard, Add Products, Add Events, Logout.
+ * Contains: Dashboard, Products, Events, Logout.
  */
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, PackagePlus, CalendarPlus, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, LogOut, Menu, X } from 'lucide-react';
 import { signOut } from '../../services/auth';
 
 const MENU_ITEMS = [
-  { label: 'Dashboard',    icon: LayoutDashboard, path: '/admin/dashboard' },
-  { label: 'Add Products', icon: PackagePlus,      path: '/admin/products/add' },
-  { label: 'Add Events',   icon: CalendarPlus,     path: '/admin/events/add' },
+  { label: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
+  { label: 'Products',  icon: Package,         path: '/admin/products' },
+  { label: 'Events',    icon: Calendar,        path: '/admin/events' },
 ];
 
 export const AdminSidebar = ({ open, onToggle }) => {
@@ -67,7 +67,7 @@ export const AdminSidebar = ({ open, onToggle }) => {
         {/* Navigation items */}
         <nav className="admin-sidebar-nav">
           {MENU_ITEMS.map(({ label, icon: Icon, path }) => {
-            const isActive = location.pathname === path;
+            const isActive = location.pathname.startsWith(path);
             return (
               <button
                 key={path}

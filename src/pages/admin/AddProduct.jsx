@@ -1,32 +1,63 @@
 /**
  * AddProduct.jsx
- * Admin form to add a new product.
- * Uploads images to Cloudinary, then saves {url, publicId} pairs in Firestore.
+ * Admin form to add a new product or edit an existing product.
+ * Uploads images to Cloudinary, then saves/updates in Firestore.
  */
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PackagePlus, CheckCircle, AlertCircle, ChevronLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { PackagePlus, CheckCircle, AlertCircle, ChevronLeft, Edit3 } from 'lucide-react';
 import { ImageUploader } from '../../components/admin/ImageUploader';
-import { addProduct } from '../../services/products';
+import { addProduct, getProductById, updateProduct } from '../../services/products';
 import { categories } from '../../data/categories';
 
 const INITIAL_FORM = {
   name: '', category: '', description: '',
   price: '', originalPrice: '', stock: '',
-  featured: false, trending: false,
+  featured: false, trending: false, hidden: false,
 };
 
 export const AddProduct = () => {
   const navigate = useNavigate();
+  const { id }   = useParams(); // Present if editing
+  const isEditMode = Boolean(id);
+
   const [form, setForm]         = useState(INITIAL_FORM);
   const [imageFiles, setImages] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
   const [submitting, setSubmitting] = useState(false);
-  const [toast, setToast]       = useState(null); // { type: 'success'|'error', msg }
+  const [loadingProduct, setLoadingProduct] = useState(isEditMode);
+  const [toast, setToast]       = useState(null);
 
   const showToast = (type, msg) => {
     setToast({ type, msg });
     setTimeout(() => setToast(null), 4000);
   };
+
+  // If in edit mode, fetch existing product data from Firestore
+  useEffect(() => {
+    if (!id) return;
+    setLoadingProduct(true);
+    getProductById(id).then((res) => {
+      if (res.success && res.data) {
+        const p = res.data;
+        setForm({
+          name:          p.name          || '',
+          category:      p.category      || '',
+          description:   p.description   || '',
+          price:         p.price         !== undefined ? String(p.price) : '',
+          originalPrice: p.originalPrice ? String(p.originalPrice) : '',
+          stock:         p.stock         !== undefined ? String(p.stock) : '0',
+          featured:      Boolean(p.featured),
+          trending:      Boolean(p.trending),
+          hidden:        Boolean(p.hidden),
+        });
+        setExistingImages(p.images || []);
+      } else {
+        showToast('error', 'Product not found.');
+      }
+      setLoadingProduct(false);
+    });
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -36,11 +67,10 @@ export const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!form.name.trim())     return showToast('error', 'Product name is required.');
-    if (!form.category)        return showToast('error', 'Please select a category.');
+    if (!form.name.trim()) return showToast('error', 'Product name is required.');
+    if (!form.category)    return showToast('error', 'Please select a category.');
     if (!form.price || isNaN(Number(form.price))) return showToast('error', 'Enter a valid price.');
-    if (imageFiles.length === 0) return showToast('error', 'Please upload at least one product image.');
+    if (!isEditMode && imageFiles.length === 0) return showToast('error', 'Please upload at least one product image.');
 
     setSubmitting(true);
     try {
@@ -53,22 +83,32 @@ export const AddProduct = () => {
         stock:         form.stock ? Number(form.stock) : 0,
         featured:      form.featured,
         trending:      form.trending,
+        hidden:        form.hidden,
         discount:      form.originalPrice
           ? Math.round(((Number(form.originalPrice) - Number(form.price)) / Number(form.originalPrice)) * 100)
           : null,
       };
 
-      const result = await addProduct(productData, imageFiles);
-
-      if (result.success) {
-        showToast('success', `Product "${form.name}" added successfully!`);
-        setForm(INITIAL_FORM);
-        setImages([]);
-        if (result.uploadErrors?.length > 0) {
-          console.warn('Some images failed to upload:', result.uploadErrors);
+      if (isEditMode) {
+        // Edit mode
+        const result = await updateProduct(id, productData, imageFiles);
+        if (result.success) {
+          showToast('success', `Product "${form.name}" updated successfully!`);
+          setTimeout(() => navigate('/admin/products'), 1200);
+        } else {
+          showToast('error', result.error || 'Failed to update product.');
         }
       } else {
-        showToast('error', result.error || 'Failed to add product. Please try again.');
+        // Add mode
+        const result = await addProduct(productData, imageFiles);
+        if (result.success) {
+          showToast('success', `Product "${form.name}" added successfully!`);
+          setForm(INITIAL_FORM);
+          setImages([]);
+          setTimeout(() => navigate('/admin/products'), 1200);
+        } else {
+          showToast('error', result.error || 'Failed to add product.');
+        }
       }
     } catch (err) {
       showToast('error', 'Unexpected error. Please try again.');
@@ -78,20 +118,31 @@ export const AddProduct = () => {
     }
   };
 
+  if (loadingProduct) {
+    return (
+      <div className="admin-page fade-in" style={{ padding: '3rem', textAlign: 'center' }}>
+        <div className="admin-spinner" style={{ margin: '0 auto 1rem auto' }} />
+        <p style={{ color: 'var(--text-warm-grey)' }}>Loading product details…</p>
+      </div>
+    );
+  }
+
   return (
     <div className="admin-page fade-in">
 
       {/* Header */}
       <div className="admin-page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <PackagePlus size={22} color="var(--primary-terracotta)" />
+          {isEditMode ? <Edit3 size={22} color="var(--primary-terracotta)" /> : <PackagePlus size={22} color="var(--primary-terracotta)" />}
           <div>
-            <h1 className="admin-page-title">Add Product</h1>
-            <p className="admin-page-subtitle">Upload to Cloudinary · Save to Firestore</p>
+            <h1 className="admin-page-title">{isEditMode ? 'Edit Product' : 'Add Product'}</h1>
+            <p className="admin-page-subtitle">
+              {isEditMode ? `Updating ${form.name || 'product'}` : 'Upload to Cloudinary · Save to Firestore'}
+            </p>
           </div>
         </div>
-        <button className="admin-back-btn" onClick={() => navigate('/admin/dashboard')}>
-          <ChevronLeft size={16} /> Dashboard
+        <button className="admin-back-btn" onClick={() => navigate('/admin/products')}>
+          <ChevronLeft size={16} /> Back to Products
         </button>
       </div>
 
@@ -173,49 +224,64 @@ export const AddProduct = () => {
           )}
         </div>
 
-        {/* ── Visibility ──────────────────────────────────────────────────── */}
+        {/* ── Visibility & Status ─────────────────────────────────────────── */}
         <div className="admin-form-card">
-          <h3 className="admin-form-section-title">Visibility Flags</h3>
+          <h3 className="admin-form-section-title">Visibility & Badges</h3>
           <div className="admin-checkbox-row">
             <label className="admin-checkbox-label">
               <input type="checkbox" name="featured" checked={form.featured} onChange={handleChange} className="admin-checkbox" />
-              <span>⭐ Featured Product</span>
-              <span className="admin-checkbox-hint">Shown in the Featured section on Homepage</span>
+              <span>⭐ Feature on Homepage</span>
+              <span className="admin-checkbox-hint">Shown in Featured section</span>
             </label>
             <label className="admin-checkbox-label">
               <input type="checkbox" name="trending" checked={form.trending} onChange={handleChange} className="admin-checkbox" />
               <span>🔥 Trending Product</span>
-              <span className="admin-checkbox-hint">Shown in the Trending section on Homepage</span>
+              <span className="admin-checkbox-hint">Shown in Trending section</span>
+            </label>
+            <label className="admin-checkbox-label">
+              <input type="checkbox" name="hidden" checked={form.hidden} onChange={handleChange} className="admin-checkbox" />
+              <span>👁 Hide Product from Website</span>
+              <span className="admin-checkbox-hint">If checked, hidden from public catalog</span>
             </label>
           </div>
         </div>
 
         {/* ── Images ──────────────────────────────────────────────────────── */}
         <div className="admin-form-card">
+          {isEditMode && existingImages.length > 0 && (
+            <div style={{ marginBottom: '1rem' }}>
+              <label className="admin-field-label">Current Product Images</label>
+              <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                {existingImages.map((img, idx) => (
+                  <div key={idx} className="img-uploader-thumb">
+                    <img src={img.url} alt={`existing-${idx}`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <ImageUploader
-            label="Product Images * (uploaded to Cloudinary)"
+            label={isEditMode ? 'Add New Images (optional)' : 'Product Images * (uploaded to Cloudinary)'}
             files={imageFiles}
             onFilesChange={setImages}
             multiple={true}
             maxFiles={8}
           />
-          {imageFiles.length > 0 && (
-            <p className="admin-img-count">{imageFiles.length} image{imageFiles.length > 1 ? 's' : ''} selected — both secure_url and public_id will be stored in Firestore.</p>
-          )}
         </div>
 
         {/* ── Actions ─────────────────────────────────────────────────────── */}
         <div className="admin-form-actions">
-          <button type="button" className="admin-btn-ghost" onClick={() => { setForm(INITIAL_FORM); setImages([]); }}>
-            Reset Form
+          <button type="button" className="admin-btn-ghost" onClick={() => navigate('/admin/products')}>
+            Cancel
           </button>
           <button type="submit" className="admin-btn-primary" disabled={submitting}>
             {submitting ? (
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span className="admin-btn-spinner" />
-                Uploading &amp; Saving…
+                {isEditMode ? 'Updating Product…' : 'Uploading & Saving…'}
               </span>
-            ) : '📦 Add Product'}
+            ) : isEditMode ? 'Save Changes' : '📦 Add Product'}
           </button>
         </div>
 

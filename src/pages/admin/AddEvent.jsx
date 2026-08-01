@@ -1,34 +1,71 @@
 /**
  * AddEvent.jsx
- * Admin form to add a new event.
- * Uploads the banner to Cloudinary, then saves {url, publicId} in Firestore.
+ * Admin form to add a new event or edit an existing event.
+ * Uploads banner to Cloudinary, then saves/updates in Firestore.
  */
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CalendarPlus, CheckCircle, AlertCircle, ChevronLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { CalendarPlus, CheckCircle, AlertCircle, ChevronLeft, Edit3 } from 'lucide-react';
 import { ImageUploader } from '../../components/admin/ImageUploader';
-import { addEvent, EVENT_STATUS } from '../../services/events';
+import { addEvent, getEventById, updateEvent, EVENT_STATUS } from '../../services/events';
 
 const INITIAL_FORM = {
   title: '', description: '', venue: '',
   address: '', city: '', state: '',
   startDate: '', endDate: '', startTime: '', endTime: '',
   status: EVENT_STATUS.UPCOMING,
-  featured: false,
+  featured: false, hidden: false,
   organizer: '', contactNumber: '', registrationLink: '',
 };
 
 export const AddEvent = () => {
   const navigate = useNavigate();
+  const { id }   = useParams();
+  const isEditMode = Boolean(id);
+
   const [form, setForm]           = useState(INITIAL_FORM);
   const [bannerFiles, setBanner]  = useState([]);
+  const [existingBanner, setExistingBanner] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [loadingEvent, setLoadingEvent] = useState(isEditMode);
   const [toast, setToast]         = useState(null);
 
   const showToast = (type, msg) => {
     setToast({ type, msg });
     setTimeout(() => setToast(null), 4000);
   };
+
+  useEffect(() => {
+    if (!id) return;
+    setLoadingEvent(true);
+    getEventById(id).then((res) => {
+      if (res.success && res.data) {
+        const ev = res.data;
+        setForm({
+          title:            ev.title            || '',
+          description:      ev.description      || '',
+          venue:            ev.venue            || '',
+          address:          ev.address          || '',
+          city:             ev.city             || '',
+          state:            ev.state            || '',
+          startDate:        ev.startDate        || '',
+          endDate:          ev.endDate          || '',
+          startTime:        ev.startTime        || '',
+          endTime:          ev.endTime          || '',
+          status:           ev.status           || EVENT_STATUS.UPCOMING,
+          featured:         Boolean(ev.featured),
+          hidden:           Boolean(ev.hidden),
+          organizer:        ev.organizer        || '',
+          contactNumber:    ev.contactNumber    || '',
+          registrationLink: ev.registrationLink || '',
+        });
+        setExistingBanner(ev.banner || null);
+      } else {
+        showToast('error', 'Event not found.');
+      }
+      setLoadingEvent(false);
+    });
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -38,10 +75,10 @@ export const AddEvent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.title.trim())     return showToast('error', 'Event title is required.');
-    if (!form.venue.trim())     return showToast('error', 'Venue is required.');
-    if (!form.startDate)        return showToast('error', 'Start date is required.');
-    if (!form.endDate)          return showToast('error', 'End date is required.');
+    if (!form.title.trim()) return showToast('error', 'Event title is required.');
+    if (!form.venue.trim()) return showToast('error', 'Venue is required.');
+    if (!form.startDate)    return showToast('error', 'Start date is required.');
+    if (!form.endDate)      return showToast('error', 'End date is required.');
 
     setSubmitting(true);
     try {
@@ -58,20 +95,32 @@ export const AddEvent = () => {
         endTime:          form.endTime || null,
         status:           form.status,
         featured:         form.featured,
+        hidden:           form.hidden,
         organizer:        form.organizer.trim() || null,
         contactNumber:    form.contactNumber.trim() || null,
         registrationLink: form.registrationLink.trim() || null,
       };
 
       const bannerFile = bannerFiles[0] ?? null;
-      const result = await addEvent(eventData, bannerFile);
 
-      if (result.success) {
-        showToast('success', `Event "${form.title}" added successfully!`);
-        setForm(INITIAL_FORM);
-        setBanner([]);
+      if (isEditMode) {
+        const result = await updateEvent(id, eventData, bannerFile);
+        if (result.success) {
+          showToast('success', `Event "${form.title}" updated successfully!`);
+          setTimeout(() => navigate('/admin/events'), 1200);
+        } else {
+          showToast('error', result.error || 'Failed to update event.');
+        }
       } else {
-        showToast('error', result.error || 'Failed to add event. Please try again.');
+        const result = await addEvent(eventData, bannerFile);
+        if (result.success) {
+          showToast('success', `Event "${form.title}" added successfully!`);
+          setForm(INITIAL_FORM);
+          setBanner([]);
+          setTimeout(() => navigate('/admin/events'), 1200);
+        } else {
+          showToast('error', result.error || 'Failed to add event.');
+        }
       }
     } catch (err) {
       showToast('error', 'Unexpected error. Please try again.');
@@ -81,20 +130,31 @@ export const AddEvent = () => {
     }
   };
 
+  if (loadingEvent) {
+    return (
+      <div className="admin-page fade-in" style={{ padding: '3rem', textAlign: 'center' }}>
+        <div className="admin-spinner" style={{ margin: '0 auto 1rem auto' }} />
+        <p style={{ color: 'var(--text-warm-grey)' }}>Loading event details…</p>
+      </div>
+    );
+  }
+
   return (
     <div className="admin-page fade-in">
 
       {/* Header */}
       <div className="admin-page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <CalendarPlus size={22} color="var(--primary-terracotta)" />
+          {isEditMode ? <Edit3 size={22} color="var(--primary-terracotta)" /> : <CalendarPlus size={22} color="var(--primary-terracotta)" />}
           <div>
-            <h1 className="admin-page-title">Add Event</h1>
-            <p className="admin-page-subtitle">Banner uploaded to Cloudinary · Event saved to Firestore</p>
+            <h1 className="admin-page-title">{isEditMode ? 'Edit Event' : 'Add Event'}</h1>
+            <p className="admin-page-subtitle">
+              {isEditMode ? `Updating ${form.title || 'event'}` : 'Banner uploaded to Cloudinary · Event saved to Firestore'}
+            </p>
           </div>
         </div>
-        <button className="admin-back-btn" onClick={() => navigate('/admin/dashboard')}>
-          <ChevronLeft size={16} /> Dashboard
+        <button className="admin-back-btn" onClick={() => navigate('/admin/events')}>
+          <ChevronLeft size={16} /> Back to Events
         </button>
       </div>
 
@@ -236,34 +296,45 @@ export const AddEvent = () => {
               <span>⭐ Featured Event</span>
               <span className="admin-checkbox-hint">Highlighted on the Events page</span>
             </label>
+            <label className="admin-checkbox-label">
+              <input type="checkbox" name="hidden" checked={form.hidden} onChange={handleChange} className="admin-checkbox" />
+              <span>👁 Hide Event from Website</span>
+              <span className="admin-checkbox-hint">Hidden from public Events calendar</span>
+            </label>
           </div>
         </div>
 
         {/* ── Banner Image ─────────────────────────────────────────────────── */}
         <div className="admin-form-card">
+          {isEditMode && existingBanner?.url && (
+            <div style={{ marginBottom: '1rem' }}>
+              <label className="admin-field-label">Current Event Banner</label>
+              <div className="img-uploader-thumb" style={{ width: '180px', height: '100px', marginTop: '0.5rem' }}>
+                <img src={existingBanner.url} alt="Current banner" style={{ objectFit: 'cover' }} />
+              </div>
+            </div>
+          )}
+
           <ImageUploader
-            label="Event Banner (uploaded to Cloudinary)"
+            label={isEditMode ? 'Replace Banner Image (optional)' : 'Event Banner (uploaded to Cloudinary)'}
             files={bannerFiles}
             onFilesChange={setBanner}
             multiple={false}
           />
-          {bannerFiles.length > 0 && (
-            <p className="admin-img-count">Banner selected — both secure_url and public_id will be stored in Firestore.</p>
-          )}
         </div>
 
         {/* ── Actions ─────────────────────────────────────────────────────── */}
         <div className="admin-form-actions">
-          <button type="button" className="admin-btn-ghost" onClick={() => { setForm(INITIAL_FORM); setBanner([]); }}>
-            Reset Form
+          <button type="button" className="admin-btn-ghost" onClick={() => navigate('/admin/events')}>
+            Cancel
           </button>
           <button type="submit" className="admin-btn-primary" disabled={submitting}>
             {submitting ? (
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span className="admin-btn-spinner" />
-                Uploading &amp; Saving…
+                {isEditMode ? 'Updating Event…' : 'Uploading & Saving…'}
               </span>
-            ) : '📅 Add Event'}
+            ) : isEditMode ? 'Save Changes' : '📅 Add Event'}
           </button>
         </div>
 

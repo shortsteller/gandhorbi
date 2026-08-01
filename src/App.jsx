@@ -24,12 +24,14 @@ import { Toast }            from './components/Toast';
 import { FloatingSideTab }  from './components/FloatingSideTab';
 
 // Admin pages
-import { AdminLogin }     from './pages/admin/AdminLogin';
-import { AdminLayout }    from './pages/admin/AdminLayout';
-import { AdminDashboard } from './pages/admin/AdminDashboard';
-import { AddProduct }     from './pages/admin/AddProduct';
-import { AddEvent }       from './pages/admin/AddEvent';
-import { ProtectedRoute } from './components/admin/ProtectedRoute';
+import { AdminLogin }      from './pages/admin/AdminLogin';
+import { AdminLayout }     from './pages/admin/AdminLayout';
+import { AdminDashboard }  from './pages/admin/AdminDashboard';
+import { ProductsManager } from './pages/admin/ProductsManager';
+import { EventsManager }   from './pages/admin/EventsManager';
+import { AddProduct }      from './pages/admin/AddProduct';
+import { AddEvent }        from './pages/admin/AddEvent';
+import { ProtectedRoute }  from './components/admin/ProtectedRoute';
 
 // Public layout wrapper — renders Navbar, Outlet (page content), Footer & floating tools
 const PublicLayout = () => {
@@ -87,9 +89,17 @@ export default function App() {
             </ProtectedRoute>
           }>
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
-            <Route path="dashboard"    element={<AdminDashboard />} />
-            <Route path="products/add" element={<AddProduct />} />
-            <Route path="events/add"   element={<AddEvent />} />
+            <Route path="dashboard"        element={<AdminDashboard />} />
+
+            {/* Products Management */}
+            <Route path="products"         element={<ProductsManager />} />
+            <Route path="products/add"     element={<AddProduct />} />
+            <Route path="products/edit/:id" element={<AddProduct />} />
+
+            {/* Events Management */}
+            <Route path="events"           element={<EventsManager />} />
+            <Route path="events/add"       element={<AddEvent />} />
+            <Route path="events/edit/:id"   element={<AddEvent />} />
           </Route>
 
           {/* ── Catch-all fallback ────────────────────────────────────────── */}

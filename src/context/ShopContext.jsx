@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { products as initialProducts } from '../data/products';
+import { db } from '../services/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 const ShopContext = createContext();
 
@@ -24,6 +26,56 @@ export const ShopProvider = ({ children }) => {
 
   const currentPage = getPageFromPath(location.pathname);
   
+  // Real-Time Products Sync from Firestore
+  const [liveProducts, setLiveProducts] = useState(initialProducts);
+
+  useEffect(() => {
+    if (!db) return;
+    let unsub = () => {};
+    try {
+      unsub = onSnapshot(collection(db, 'products'), (snap) => {
+        if (snap.docs) {
+          const firestoreProducts = snap.docs.map((docItem) => {
+            const data = docItem.data();
+            const mainImg = data.images?.[0]?.url || data.image || '';
+            const gallery = data.images?.map((i) => i.url) || [mainImg];
+
+            return {
+              id: docItem.id,
+              name: data.name,
+              category: data.category,
+              price: data.price,
+              originalPrice: data.originalPrice,
+              description: data.description,
+              inStock: (data.stock ?? 0) > 0,
+              stock: data.stock ?? 0,
+              featured: Boolean(data.featured),
+              trending: Boolean(data.trending),
+              hidden: Boolean(data.hidden),
+              image: mainImg,
+              gallery,
+              rating: data.rating || 4.9,
+              reviewsCount: data.reviewsCount || 12,
+            };
+          });
+
+          const firestoreIds = new Set(firestoreProducts.map((p) => p.id));
+          const merged = [
+            ...firestoreProducts,
+            ...initialProducts.filter((p) => !firestoreIds.has(p.id)),
+          ];
+          setLiveProducts(merged);
+        }
+      });
+    } catch (e) {
+      console.warn('[ShopContext] Firestore snapshot error:', e);
+    }
+    return () => unsub();
+  }, []);
+
+  // Filter out hidden products for the public website
+  const publicProducts = liveProducts.filter((p) => !p.hidden);
+
   // Cart & Wishlist State
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem('gandhorbi_cart');
@@ -220,7 +272,7 @@ export const ShopProvider = ({ children }) => {
   return (
     <ShopContext.Provider
       value={{
-        products: initialProducts,
+        products: publicProducts,
         currentPage,
         navigateTo,
         cart,
