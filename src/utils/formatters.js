@@ -53,6 +53,6 @@ export const buildCloudinaryUrl = (
   publicId,
   { width = 400, height = 400, crop = 'fill', quality = 'auto' } = {}
 ) => {
-  const cloud = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const cloud = 'wh7ywcjv';
   return `https://res.cloudinary.com/${cloud}/image/upload/w_${width},h_${height},c_${crop},q_${quality}/${publicId}`;
 };

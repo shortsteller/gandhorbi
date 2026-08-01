@@ -3,33 +3,14 @@
  * ─────────────────────────────────────────────────────────────────────────────
  * Cloudinary image upload service — unsigned upload via the Upload API.
  *
- * Key design decisions:
- *  • Uses unsigned uploads (no server secret required for uploads).
- *  • Always returns BOTH `secure_url` AND `public_id` — the public_id is
- *    essential for future deletion via a secure backend (Cloud Functions, etc.).
- *  • Never stores credentials server-side; the unsigned preset is safe for
- *    client-side code.
- *  • Does NOT use Firebase Storage — all product images live in Cloudinary.
- *
- * Exports:
- *   uploadImage    — upload a single File / Blob
- *   uploadImages   — upload an array of File / Blob (returns array of results)
- *
- * Returned image object shape (stored in Firestore):
- *   {
- *     url:       string   // secure_url  — use this to display the image
- *     publicId:  string   // public_id   — use this to delete the image later
- *     width:     number
- *     height:    number
- *     format:    string
- *     bytes:     number
- *     createdAt: string   // ISO timestamp from Cloudinary
- *   }
+ * Cloud Name:      wh7ywcjv
+ * Upload Preset:   gandhorbi_uploads (Unsigned)
+ * Upload Endpoint: https://api.cloudinary.com/v1_1/wh7ywcjv/image/upload
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-const CLOUD_NAME    = "wh7ywcjv";
-const UPLOAD_PRESET = "gandhorbi_uploads";
+const CLOUD_NAME    = 'wh7ywcjv';
+const UPLOAD_PRESET = 'gandhorbi_uploads';
 const UPLOAD_URL    = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
 // ─── Single Upload ────────────────────────────────────────────────────────────
@@ -54,9 +35,11 @@ export const uploadImage = async (file, folder = 'gandhorbi/products') => {
   }
 
   const formData = new FormData();
-  formData.append('file',         file);
+  formData.append('file',          file);
   formData.append('upload_preset', UPLOAD_PRESET);
-  formData.append('folder',        folder);
+  if (folder) {
+    formData.append('folder',      folder);
+  }
 
   try {
     const response = await fetch(UPLOAD_URL, {
@@ -66,6 +49,8 @@ export const uploadImage = async (file, folder = 'gandhorbi/products') => {
 
     if (!response.ok) {
       const errBody = await response.json().catch(() => ({}));
+      console.error('[Cloudinary] Upload failed with HTTP status:', response.status);
+      console.error('[Cloudinary] Response error body:', JSON.stringify(errBody, null, 2));
       const message = errBody?.error?.message ?? `HTTP ${response.status}`;
       return { success: false, error: `Cloudinary upload failed: ${message}` };
     }
@@ -86,7 +71,7 @@ export const uploadImage = async (file, folder = 'gandhorbi/products') => {
     return { success: true, image };
 
   } catch (error) {
-    console.error('[Cloudinary] uploadImage error:', error);
+    console.error('[Cloudinary] uploadImage Exception / Network Error:', error);
     return { success: false, error: error.message ?? 'Unknown upload error.' };
   }
 };
@@ -129,24 +114,3 @@ export const uploadImages = async (files, folder = 'gandhorbi/products') => {
     allSucceeded,
   };
 };
-
-// ─── Future Delete Reference ──────────────────────────────────────────────────
-
-/**
- * deleteCloudinaryImages (NOT implemented here — requires a secure backend)
- * ─────────────────────────────────────────────────────────────────────────────
- * Cloudinary image deletion MUST happen server-side (Firebase Cloud Functions
- * or another API) because it requires the API SECRET, which must never be
- * exposed in client-side code.
- *
- * Future workflow when an Admin deletes a product:
- *   1. Retrieve the product document from Firestore.
- *   2. Extract all `images[].publicId` values.
- *   3. POST those public_ids to your secure backend endpoint
- *      (e.g. Firebase Cloud Function).
- *   4. The backend calls Cloudinary's Destroy API with the API SECRET.
- *   5. On Cloudinary confirmation, the backend (or client) deletes the
- *      Firestore document via deleteDocument().
- *
- * This ensures Firestore and Cloudinary stay perfectly in sync.
- */
