@@ -179,7 +179,11 @@ export const EventsManager = () => {
             const isMenuOpen = activeMenuId === ev.id;
 
             return (
-              <div key={ev.id} className={`admin-ev-card${ev.hidden ? ' admin-card-hidden' : ''}`}>
+              <div
+                key={ev.id}
+                className={`admin-ev-card${ev.hidden ? ' admin-card-hidden' : ''}`}
+                style={{ position: 'relative', zIndex: isMenuOpen ? 100 : 1 }}
+              >
 
                 {/* Event Banner */}
                 <div className="admin-ev-img-wrap">

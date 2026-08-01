@@ -192,7 +192,11 @@ export const ProductsManager = () => {
             const isMenuOpen = activeMenuId === p.id;
 
             return (
-              <div key={p.id} className={`admin-prod-card${isOutOfStock ? ' admin-card-out-of-stock' : ''}`}>
+              <div
+                key={p.id}
+                className={`admin-prod-card${isOutOfStock ? ' admin-card-out-of-stock' : ''}`}
+                style={{ position: 'relative', zIndex: isMenuOpen ? 100 : 1 }}
+              >
 
                 {/* Card Top Image & Badges */}
                 <div className="admin-prod-img-wrap">

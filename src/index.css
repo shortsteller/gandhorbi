@@ -1337,9 +1337,9 @@ img {
   background: rgba(230, 57, 70, 0.18);
 }
 
-/* Main Content Area */
+/* Main Content Area — Overlay floating button does not occupy layout space */
 .admin-main {
-  padding: 1.5rem 1.5rem 4rem 4.5rem; /* 4.5rem left pad to account for hamburger button */
+  padding: 1.5rem 1.5rem 4rem 1.5rem;
   max-width: 1280px;
   margin: 0 auto;
   transition: var(--transition-smooth);
@@ -1894,7 +1894,7 @@ img {
   background-color: var(--bg-soft-ivory);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-card);
@@ -1919,6 +1919,8 @@ img {
   padding-top: 100%; /* 1:1 Aspect Ratio */
   background-color: var(--bg-warm-linen);
   overflow: hidden;
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
 }
 
 .admin-ev-img-wrap {
@@ -1927,6 +1929,8 @@ img {
   height: 180px;
   background-color: var(--bg-warm-linen);
   overflow: hidden;
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
 }
 
 .admin-prod-img,
@@ -2129,7 +2133,7 @@ img {
 /* ── Mobile Layout Fine-Tuning ── */
 @media (max-width: 768px) {
   .admin-main {
-    padding: 1rem 0.85rem 3rem 3.8rem;
+    padding: 1rem 0.85rem 3rem 0.85rem;
   }
 
   .admin-page {
