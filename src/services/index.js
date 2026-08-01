@@ -5,7 +5,7 @@
  * single location instead of multiple deep paths.
  *
  * Usage:
- *   import { addProduct, signIn, uploadImage } from '../services';
+ *   import { addProduct, addEvent, signIn, uploadImage } from '../services';
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -48,3 +48,17 @@ export {
   updateProduct,
   deleteProduct,
 } from './products';
+
+// Events (combines Cloudinary banner upload + Firestore)
+export {
+  EVENT_STATUS,
+  addEvent,
+  getEvents,
+  getEventById,
+  getEventsByStatus,
+  getUpcomingEvents,
+  getFeaturedEvents,
+  getEventsByCity,
+  updateEvent,
+  deleteEvent,
+} from './events';
