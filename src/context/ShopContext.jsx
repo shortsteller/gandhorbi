@@ -59,12 +59,7 @@ export const ShopProvider = ({ children }) => {
             };
           });
 
-          const firestoreIds = new Set(firestoreProducts.map((p) => p.id));
-          const merged = [
-            ...firestoreProducts,
-            ...initialProducts.filter((p) => !firestoreIds.has(p.id)),
-          ];
-          setLiveProducts(merged);
+          setLiveProducts(firestoreProducts);
         }
       });
     } catch (e) {
