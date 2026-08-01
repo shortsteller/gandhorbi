@@ -1,13 +1,13 @@
 /**
  * EventsManager.jsx
  * Dedicated Events Management page for the Admin Portal.
- * Displays all events from Firestore as responsive cards with interactive toggles and actions.
+ * Compact cards with a clean Material/Drive 3-dots overflow action menu.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Calendar, CalendarPlus, Edit3, Trash2, Eye, EyeOff, MapPin, Clock,
-  CheckCircle, AlertCircle, Search, Star
+  CheckCircle, AlertCircle, Search, Star, MoreVertical
 } from 'lucide-react';
 import { db, updateDocument, deleteDocument } from '../../services/firestore';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
@@ -15,15 +15,33 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 export const EventsManager = () => {
   const navigate = useNavigate();
 
-  const [events, setEvents]   = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch]   = useState('');
-  const [toast, setToast]     = useState(null);
+  const [events, setEvents]           = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [search, setSearch]           = useState('');
+  const [toast, setToast]             = useState(null);
+  const [activeMenuId, setActiveMenuId] = useState(null);
+  const menuRef                       = useRef(null);
 
   const showToast = (type, msg) => {
     setToast({ type, msg });
     setTimeout(() => setToast(null), 3000);
   };
+
+  // Close dropdown menu when clicking outside
+  useEffect(() => {
+    if (!activeMenuId) return;
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setActiveMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [activeMenuId]);
 
   // Real-time Firestore listener
   useEffect(() => {
@@ -158,6 +176,7 @@ export const EventsManager = () => {
         <div className="admin-events-grid">
           {filteredEvents.map((ev) => {
             const bannerUrl = ev.banner?.url || ev.image || '';
+            const isMenuOpen = activeMenuId === ev.id;
 
             return (
               <div key={ev.id} className={`admin-ev-card${ev.hidden ? ' admin-card-hidden' : ''}`}>
@@ -179,10 +198,80 @@ export const EventsManager = () => {
                   <span className={`admin-status-badge admin-status-${(ev.status || 'upcoming').toLowerCase()}`} style={{ position: 'absolute', bottom: '8px', left: '8px' }}>
                     {ev.status || 'Upcoming'}
                   </span>
+
+                  {/* Three-dots menu trigger */}
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 20 }} ref={isMenuOpen ? menuRef : null}>
+                    <button
+                      className="admin-card-menu-trigger"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveMenuId(isMenuOpen ? null : ev.id);
+                      }}
+                      aria-label="Event options"
+                      title="Event options"
+                    >
+                      <MoreVertical size={18} />
+                    </button>
+
+                    {/* Material Dropdown Menu */}
+                    {isMenuOpen && (
+                      <div className="admin-card-dropdown fade-in">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            navigate(`/admin/events/edit/${ev.id}`);
+                          }}
+                          className="admin-dropdown-item"
+                        >
+                          <Edit3 size={15} color="var(--primary-terracotta)" />
+                          <span>✏️ Edit Event</span>
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            handleToggleField(ev.id, 'featured', ev.featured);
+                          }}
+                          className="admin-dropdown-item"
+                        >
+                          <Star size={15} color={ev.featured ? 'var(--highlight-mustard)' : 'var(--text-warm-grey)'} />
+                          <span>⭐ {ev.featured ? 'Unfeature Event' : 'Feature Event'}</span>
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            handleToggleField(ev.id, 'hidden', ev.hidden);
+                          }}
+                          className="admin-dropdown-item"
+                        >
+                          {ev.hidden ? <Eye size={15} color="#25D366" /> : <EyeOff size={15} color="#e63946" />}
+                          <span>👁 {ev.hidden ? 'Show on Website' : 'Hide from Website'}</span>
+                        </button>
+
+                        <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)', margin: '4px 0' }} />
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            handleDelete(ev);
+                          }}
+                          className="admin-dropdown-item admin-dropdown-danger"
+                        >
+                          <Trash2 size={15} color="#e63946" />
+                          <span style={{ color: '#e63946' }}>🗑 Delete Event</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Event Details */}
-                <div className="admin-ev-body">
+                <div className="admin-ev-body" style={{ padding: '0.85rem 1rem' }}>
                   <h3 className="admin-ev-title">{ev.title}</h3>
 
                   <div className="admin-ev-meta">
@@ -197,49 +286,6 @@ export const EventsManager = () => {
                       </span>
                     )}
                   </div>
-
-                  {ev.description && (
-                    <p className="admin-ev-desc">
-                      {ev.description.length > 120 ? `${ev.description.substring(0, 120)}…` : ev.description}
-                    </p>
-                  )}
-                </div>
-
-                {/* Card Controls */}
-                <div className="admin-ev-controls">
-                  <button
-                    className={`admin-ctrl-btn${ev.hidden ? ' admin-ctrl-active' : ''}`}
-                    onClick={() => handleToggleField(ev.id, 'hidden', ev.hidden)}
-                    title={ev.hidden ? 'Show Event on Website' : 'Hide Event from Website'}
-                  >
-                    {ev.hidden ? <EyeOff size={15} color="#e63946" /> : <Eye size={15} color="#25D366" />}
-                    <span>{ev.hidden ? 'Hidden' : 'Visible'}</span>
-                  </button>
-
-                  <button
-                    className={`admin-ctrl-btn${ev.featured ? ' admin-ctrl-gold' : ''}`}
-                    onClick={() => handleToggleField(ev.id, 'featured', ev.featured)}
-                    title="Toggle Featured Status"
-                  >
-                    <Star size={15} color={ev.featured ? 'var(--highlight-mustard)' : 'var(--text-warm-grey)'} />
-                    <span>Featured</span>
-                  </button>
-                </div>
-
-                {/* Action Buttons: Edit & Delete */}
-                <div className="admin-prod-actions">
-                  <button
-                    className="admin-action-btn admin-edit-btn"
-                    onClick={() => navigate(`/admin/events/edit/${ev.id}`)}
-                  >
-                    <Edit3 size={15} /> Edit
-                  </button>
-                  <button
-                    className="admin-action-btn admin-delete-btn"
-                    onClick={() => handleDelete(ev)}
-                  >
-                    <Trash2 size={15} /> Delete
-                  </button>
                 </div>
 
               </div>

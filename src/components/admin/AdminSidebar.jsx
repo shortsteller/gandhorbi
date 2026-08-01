@@ -1,11 +1,11 @@
 /**
  * AdminSidebar.jsx
  * Hamburger-triggered slide-in sidebar for the Admin Portal.
- * Contains: Dashboard, Products, Events, Logout.
+ * Trigger button uses a glassmorphism circular vertical three-dots (⋮) button on mobile.
  */
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, LogOut, MoreVertical, X } from 'lucide-react';
 import { signOut } from '../../services/auth';
 
 const MENU_ITEMS = [
@@ -43,14 +43,14 @@ export const AdminSidebar = ({ open, onToggle }) => {
 
   return (
     <>
-      {/* Hamburger toggle button */}
+      {/* Floating vertical three-dots (⋮) trigger button */}
       <button
         className="admin-hamburger"
         onClick={() => onToggle(!open)}
-        aria-label={open ? 'Close menu' : 'Open menu'}
-        title={open ? 'Close menu' : 'Open menu'}
+        aria-label={open ? 'Close menu' : 'Open admin navigation'}
+        title={open ? 'Close menu' : 'Open admin navigation'}
       >
-        {open ? <X size={22} /> : <Menu size={22} />}
+        {open ? <X size={22} /> : <MoreVertical size={22} />}
       </button>
 
       {/* Overlay backdrop */}

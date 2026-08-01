@@ -1,13 +1,14 @@
 /**
  * ProductsManager.jsx
  * Dedicated Products Management page for the Admin Portal.
- * Displays all products from Firestore as responsive cards with In Stock / Out of Stock toggles and actions.
+ * Compact cards with a clean Material/Drive 3-dots overflow action menu.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Package, PlusCircle, Edit3, Trash2, Star, TrendingUp,
-  PackageCheck, PackageX, Search, CheckCircle, AlertCircle
+  PackageCheck, PackageX, Search, CheckCircle, AlertCircle,
+  MoreVertical, Eye, EyeOff
 } from 'lucide-react';
 import { db, updateDocument, deleteDocument } from '../../services/firestore';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
@@ -15,15 +16,33 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 export const ProductsManager = () => {
   const navigate = useNavigate();
 
-  const [products, setProducts]   = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [search, setSearch]       = useState('');
-  const [toast, setToast]         = useState(null);
+  const [products, setProducts]       = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [search, setSearch]           = useState('');
+  const [toast, setToast]             = useState(null);
+  const [activeMenuId, setActiveMenuId] = useState(null);
+  const menuRef                       = useRef(null);
 
   const showToast = (type, msg) => {
     setToast({ type, msg });
     setTimeout(() => setToast(null), 3000);
   };
+
+  // Close dropdown menu when clicking outside
+  useEffect(() => {
+    if (!activeMenuId) return;
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setActiveMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [activeMenuId]);
 
   // Real-time Firestore listener
   useEffect(() => {
@@ -60,11 +79,11 @@ export const ProductsManager = () => {
   };
 
   const handleToggleStock = async (id, isCurrentlyOutOfStock) => {
-    const newInStock = isCurrentlyOutOfStock; // If currently out of stock, set inStock to true
+    const newInStock = isCurrentlyOutOfStock;
     const newStock   = newInStock ? 5 : 0;
     const res = await updateDocument('products', id, { inStock: newInStock, stock: newStock });
     if (res.success) {
-      showToast('success', newInStock ? 'Marked as In Stock (5 units).' : 'Marked as Out of Stock (image will appear hazy on website).');
+      showToast('success', newInStock ? 'Marked as In Stock (5 units).' : 'Marked as Out of Stock.');
     } else {
       showToast('error', 'Failed to update stock status.');
     }
@@ -170,11 +189,12 @@ export const ProductsManager = () => {
           {filteredProducts.map((p) => {
             const isOutOfStock = p.inStock === false || (p.stock !== undefined && Number(p.stock) <= 0);
             const mainImg = p.images?.[0]?.url || p.image || '';
+            const isMenuOpen = activeMenuId === p.id;
 
             return (
               <div key={p.id} className={`admin-prod-card${isOutOfStock ? ' admin-card-out-of-stock' : ''}`}>
 
-                {/* Card Top Banner / Badges */}
+                {/* Card Top Image & Badges */}
                 <div className="admin-prod-img-wrap">
                   {mainImg ? (
                     <img
@@ -191,6 +211,7 @@ export const ProductsManager = () => {
 
                   {/* Status overlay badges */}
                   <div className="admin-card-badges">
+                    {p.hidden && <span className="admin-badge admin-badge-hidden">Hidden</span>}
                     {p.featured && <span className="admin-badge admin-badge-featured">⭐ Featured</span>}
                     {p.trending && <span className="admin-badge admin-badge-trending">🔥 Trending</span>}
                   </div>
@@ -198,10 +219,104 @@ export const ProductsManager = () => {
                   <span className={`admin-stock-badge ${isOutOfStock ? 'admin-stock-out' : 'admin-stock-in'}`}>
                     {isOutOfStock ? 'Out of Stock' : `In Stock (${p.stock ?? 1})`}
                   </span>
+
+                  {/* Top-Right Three-Dots Action Menu Trigger */}
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 20 }} ref={isMenuOpen ? menuRef : null}>
+                    <button
+                      className="admin-card-menu-trigger"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveMenuId(isMenuOpen ? null : p.id);
+                      }}
+                      aria-label="Product options"
+                      title="Product options"
+                    >
+                      <MoreVertical size={18} />
+                    </button>
+
+                    {/* Material Dropdown Menu */}
+                    {isMenuOpen && (
+                      <div className="admin-card-dropdown fade-in">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            navigate(`/admin/products/edit/${p.id}`);
+                          }}
+                          className="admin-dropdown-item"
+                        >
+                          <Edit3 size={15} color="var(--primary-terracotta)" />
+                          <span>✏️ Edit Product</span>
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            handleToggleStock(p.id, isOutOfStock);
+                          }}
+                          className="admin-dropdown-item"
+                        >
+                          {isOutOfStock ? <PackageCheck size={15} color="#25D366" /> : <PackageX size={15} color="#e63946" />}
+                          <span>📦 {isOutOfStock ? 'Mark In Stock' : 'Mark Out of Stock'}</span>
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            handleToggleField(p.id, 'featured', p.featured);
+                          }}
+                          className="admin-dropdown-item"
+                        >
+                          <Star size={15} color={p.featured ? 'var(--highlight-mustard)' : 'var(--text-warm-grey)'} />
+                          <span>⭐ {p.featured ? 'Unfeature Product' : 'Feature Product'}</span>
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            handleToggleField(p.id, 'trending', p.trending);
+                          }}
+                          className="admin-dropdown-item"
+                        >
+                          <TrendingUp size={15} color={p.trending ? '#25D366' : 'var(--text-warm-grey)'} />
+                          <span>🔥 {p.trending ? 'Untrend Product' : 'Trend Product'}</span>
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            handleToggleField(p.id, 'hidden', p.hidden);
+                          }}
+                          className="admin-dropdown-item"
+                        >
+                          {p.hidden ? <Eye size={15} color="#25D366" /> : <EyeOff size={15} color="#e63946" />}
+                          <span>👁 {p.hidden ? 'Show on Website' : 'Hide from Website'}</span>
+                        </button>
+
+                        <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)', margin: '4px 0' }} />
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuId(null);
+                            handleDelete(p);
+                          }}
+                          className="admin-dropdown-item admin-dropdown-danger"
+                        >
+                          <Trash2 size={15} color="#e63946" />
+                          <span style={{ color: '#e63946' }}>🗑 Delete Product</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Card Body */}
-                <div className="admin-prod-body">
+                {/* Compact Card Body */}
+                <div className="admin-prod-body" style={{ padding: '0.75rem 0.85rem' }}>
                   <span className="admin-prod-cat">{p.category || 'General'}</span>
                   <h3 className="admin-prod-title">{p.name}</h3>
                   <div className="admin-prod-price-row">
@@ -210,53 +325,6 @@ export const ProductsManager = () => {
                       <span className="admin-prod-orig-price">₹{Number(p.originalPrice).toLocaleString('en-IN')}</span>
                     )}
                   </div>
-                </div>
-
-                {/* Card Controls */}
-                <div className="admin-prod-controls" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
-                  {/* Stock Toggle Button */}
-                  <button
-                    className={`admin-ctrl-btn${isOutOfStock ? ' admin-ctrl-active' : ''}`}
-                    onClick={() => handleToggleStock(p.id, isOutOfStock)}
-                    title={isOutOfStock ? 'Click to mark In Stock' : 'Click to mark Out of Stock'}
-                  >
-                    {isOutOfStock ? <PackageX size={15} color="#e63946" /> : <PackageCheck size={15} color="#25D366" />}
-                    <span>{isOutOfStock ? 'Out of Stock' : 'In Stock'}</span>
-                  </button>
-
-                  <button
-                    className={`admin-ctrl-btn${p.featured ? ' admin-ctrl-gold' : ''}`}
-                    onClick={() => handleToggleField(p.id, 'featured', p.featured)}
-                    title="Toggle Featured on Homepage"
-                  >
-                    <Star size={15} color={p.featured ? 'var(--highlight-mustard)' : 'var(--text-warm-grey)'} />
-                    <span>Featured</span>
-                  </button>
-
-                  <button
-                    className={`admin-ctrl-btn${p.trending ? ' admin-ctrl-fire' : ''}`}
-                    onClick={() => handleToggleField(p.id, 'trending', p.trending)}
-                    title="Toggle Trending Status"
-                  >
-                    <TrendingUp size={15} color={p.trending ? '#25D366' : 'var(--text-warm-grey)'} />
-                    <span>Trending</span>
-                  </button>
-                </div>
-
-                {/* Action Buttons: Edit & Delete */}
-                <div className="admin-prod-actions">
-                  <button
-                    className="admin-action-btn admin-edit-btn"
-                    onClick={() => navigate(`/admin/products/edit/${p.id}`)}
-                  >
-                    <Edit3 size={15} /> Edit
-                  </button>
-                  <button
-                    className="admin-action-btn admin-delete-btn"
-                    onClick={() => handleDelete(p)}
-                  >
-                    <Trash2 size={15} /> Delete
-                  </button>
                 </div>
 
               </div>

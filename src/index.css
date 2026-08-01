@@ -1204,7 +1204,7 @@ img {
   position: relative;
 }
 
-/* Hamburger button inside Admin Portal */
+/* Floating action button trigger inside Admin Portal */
 .admin-hamburger {
   position: fixed;
   top: 138px;
@@ -1212,21 +1212,25 @@ img {
   z-index: 9500;
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-sm);
-  background-color: var(--primary-terracotta);
-  color: #fff;
-  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--primary-terracotta);
+  border: 1px solid rgba(184, 92, 56, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(184, 92, 56, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: var(--transition-fast);
 }
 
 .admin-hamburger:hover {
-  background-color: var(--primary-terracotta-hover);
-  transform: scale(1.05);
+  background: #ffffff;
+  color: var(--primary-terracotta-hover);
+  transform: scale(1.06);
+  box-shadow: 0 6px 20px rgba(184, 92, 56, 0.25);
 }
 
 .admin-sidebar-overlay {
@@ -2061,92 +2065,88 @@ img {
   margin-top: 0.4rem;
 }
 
-/* Controls Grid per card */
-.admin-prod-controls,
-.admin-ev-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  padding: 0.6rem 0.85rem;
-  background-color: var(--bg-warm-linen);
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.admin-ctrl-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.5rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  background: var(--bg-soft-ivory);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
+/* Card Three-Dots Action Menu Trigger & Dropdown (Material/Drive Style) */
+.admin-card-menu-trigger {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
   color: var(--text-charcoal);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.admin-ctrl-btn:hover {
-  background: var(--bg-soft-sage);
-}
-
-.admin-ctrl-active {
-  border-color: #e63946 !important;
-}
-
-.admin-ctrl-gold {
-  border-color: var(--highlight-mustard) !important;
-}
-
-.admin-ctrl-fire {
-  border-color: #25D366 !important;
-}
-
-.admin-prod-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-  padding: 0.75rem 0.85rem;
-  background-color: var(--bg-soft-ivory);
-}
-
-.admin-action-btn {
+  border: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: 0.5rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  border-radius: var(--radius-sm);
   cursor: pointer;
-  border: 1px solid transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   transition: var(--transition-fast);
 }
 
-.admin-edit-btn {
+.admin-card-menu-trigger:hover {
+  background: #ffffff;
+  transform: scale(1.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+}
+
+.admin-card-dropdown {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  width: 195px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  padding: 6px 0;
+  z-index: 100;
+  text-align: left;
+}
+
+.admin-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-charcoal);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.admin-dropdown-item:hover {
   background-color: var(--bg-warm-linen);
-  color: var(--primary-terracotta);
-  border-color: var(--border-light);
 }
 
-.admin-edit-btn:hover {
-  background-color: var(--primary-terracotta);
-  color: #fff;
-}
-
-.admin-delete-btn {
+.admin-dropdown-danger:hover {
   background-color: rgba(230, 57, 70, 0.08);
-  color: #e63946;
-  border-color: rgba(230, 57, 70, 0.2);
 }
 
-.admin-delete-btn:hover {
-  background-color: #e63946;
-  color: #fff;
+/* ── Mobile Layout Fine-Tuning ── */
+@media (max-width: 768px) {
+  .admin-main {
+    padding: 1rem 0.85rem 3rem 3.8rem;
+  }
+
+  .admin-page {
+    gap: 1rem; /* Eliminates large empty blank space */
+  }
+
+  .admin-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .admin-events-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 0.25rem;
+  }
 }
 
 
