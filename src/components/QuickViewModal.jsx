@@ -23,7 +23,8 @@ export const QuickViewModal = () => {
     .slice(0, 3);
 
   const handleWhatsAppDirectBuy = () => {
-    const message = `Hello Gandhorbi Folk Arts,\n\nI am interested in buying the following product:\n\n• Product Name: ${product.name}\n• Category: ${product.category}\n• Quantity: ${quantity}\n• Price: ₹${(product.price * quantity).toLocaleString('en-IN')}\n\nPlease guide me on completing the purchase.`;
+    const productUrl = `${window.location.origin}/product/${product.id}`;
+    const message = `Hello!\n\nI would like to order the following product:\n\n• Product Name: ${product.name}\n• Category: ${product.category}\n• Price: ₹${(product.price * quantity).toLocaleString('en-IN')}\n\nProduct Link:\n${productUrl}\n\nThank you.`;
     
     const whatsappUrl = `https://wa.me/916291261549?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -280,13 +281,23 @@ export const QuickViewModal = () => {
               {/* CTA Action Buttons */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                  <button
-                    onClick={() => addToCart(product, quantity)}
-                    className="btn-primary"
-                    style={{ flex: 1, justifyContent: 'center' }}
-                  >
-                    <ShoppingBag size={18} /> Add to Cart
-                  </button>
+                  {(() => {
+                    const isOutOfStock = !product.inStock || (product.stock !== undefined && Number(product.stock) <= 0);
+                    return (
+                      <button
+                        disabled={isOutOfStock}
+                        onClick={() => addToCart(product, quantity)}
+                        className="btn-primary"
+                        style={
+                          isOutOfStock
+                            ? { flex: 1, justifyContent: 'center', opacity: 0.6, cursor: 'not-allowed', backgroundColor: 'var(--text-warm-grey)' }
+                            : { flex: 1, justifyContent: 'center' }
+                        }
+                      >
+                        <ShoppingBag size={18} /> {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+                      </button>
+                    );
+                  })()}
                   
                   <button
                     onClick={() => toggleWishlist(product)}

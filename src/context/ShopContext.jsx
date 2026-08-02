@@ -119,28 +119,48 @@ export const ShopProvider = ({ children }) => {
     localStorage.setItem('gandhorbi_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
-  // Automatically clean up deleted products from Cart, Wishlist, QuickView, and storage
+  // Automatically clean up deleted & out-of-stock products from Cart, Wishlist, QuickView, and storage
   useEffect(() => {
-    if (!liveProducts) return;
-    const validIds = new Set(liveProducts.map((p) => p.id));
+    if (!liveProducts || liveProducts.length === 0) return;
+
+    const productMap = new Map(liveProducts.map((p) => [p.id, p]));
 
     setCart((prevCart) => {
-      const cleaned = prevCart.filter((item) => item.product && validIds.has(item.product.id));
+      const removedNames = [];
+      const cleaned = prevCart.filter((item) => {
+        const liveP = productMap.get(item.product?.id);
+        if (!liveP) return false; // Deleted product
+        const isOutOfStock = !liveP.inStock || (liveP.stock !== undefined && Number(liveP.stock) <= 0);
+        if (isOutOfStock) {
+          removedNames.push(liveP.name);
+          return false; // Out-of-stock product
+        }
+        return true;
+      });
+
       if (cleaned.length !== prevCart.length) {
         localStorage.setItem('gandhorbi_cart', JSON.stringify(cleaned));
       }
+
+      if (removedNames.length > 0) {
+        removedNames.forEach((name) => {
+          showToast(`"${name}" has been removed from your cart because it is now out of stock.`);
+        });
+      }
+
       return cleaned;
     });
 
+    // Wishlist: remove deleted products, but KEEP out-of-stock products in wishlist!
     setWishlist((prevWishlist) => {
-      const cleaned = prevWishlist.filter((item) => item && validIds.has(item.id));
+      const cleaned = prevWishlist.filter((item) => item && productMap.has(item.id));
       if (cleaned.length !== prevWishlist.length) {
         localStorage.setItem('gandhorbi_wishlist', JSON.stringify(cleaned));
       }
       return cleaned;
     });
 
-    setQuickViewProduct((prev) => (prev && !validIds.has(prev.id) ? null : prev));
+    setQuickViewProduct((prev) => (prev && !productMap.has(prev.id) ? null : prev));
 
     ['gandhorbi_recently_viewed', 'gandhorbi_recent'].forEach((key) => {
       const raw = localStorage.getItem(key) || sessionStorage.getItem(key);
@@ -150,7 +170,7 @@ export const ShopProvider = ({ children }) => {
           if (Array.isArray(parsed)) {
             const cleaned = parsed.filter((item) => {
               const itemId = typeof item === 'string' ? item : item?.id;
-              return itemId && validIds.has(itemId);
+              return itemId && productMap.has(itemId);
             });
             localStorage.setItem(key, JSON.stringify(cleaned));
             sessionStorage.setItem(key, JSON.stringify(cleaned));
@@ -165,11 +185,18 @@ export const ShopProvider = ({ children }) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
-    }, 3000);
+    }, 3500);
   };
 
   // Cart operations
   const addToCart = (product, quantity = 1) => {
+    if (!product) return;
+    const isOutOfStock = !product.inStock || (product.stock !== undefined && Number(product.stock) <= 0);
+    if (isOutOfStock) {
+      showToast(`"${product.name}" is currently out of stock.`);
+      return;
+    }
+
     setCart((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
@@ -262,25 +289,24 @@ export const ShopProvider = ({ children }) => {
 
   // WhatsApp Order Submission
   const processWhatsAppCheckout = async (customerDetails) => {
-    const { name, phone, address, pincode, notes } = customerDetails;
-    
-    let productLines = cart
-      .map(
-        (item) =>
-          `• ${item.product.name} (x${item.quantity}) - ₹${(
-            item.product.price * item.quantity
-          ).toLocaleString('en-IN')}`
-      )
-      .join('\n');
+    const origin = window.location.origin;
 
-    let discountLine = '';
+    const itemsText = cart
+      .map((item, index) => {
+        const productUrl = `${origin}/product/${item.product.id}`;
+        const itemPrice = (item.product.price * item.quantity).toLocaleString('en-IN');
+        return `${index + 1}.\nProduct Name: ${item.product.name}${item.quantity > 1 ? ` (x${item.quantity})` : ''}\nCategory: ${item.product.category}\nPrice: ₹${itemPrice}\nProduct Link:\n${productUrl}`;
+      })
+      .join('\n\n--------------------------------\n\n');
+
+    const couponCodeText = appliedCoupon ? appliedCoupon.code : 'None';
+    const discountText = cartDiscountAmount > 0 ? cartDiscountAmount.toLocaleString('en-IN') : '0';
+
     if (appliedCoupon && cartDiscountAmount > 0) {
-      discountLine = `\nApplied Coupon: ${appliedCoupon.code} (-₹${cartDiscountAmount.toLocaleString('en-IN')})`;
-      // Record coupon usage in Firestore
       recordCouponUsage(appliedCoupon.coupon.id, cartDiscountAmount);
     }
 
-    const formattedMessage = `Hello Gandhorbi Folk Arts,\n\nI would like to place the following order.\n\nCustomer Name: ${name}\nPhone Number: ${phone}\nDelivery Address: ${address}, PIN: ${pincode}\n\nProducts:\n${productLines}\n\nSubtotal: ₹${cartSubtotal.toLocaleString('en-IN')}${discountLine}\nFinal Total: ₹${cartFinalTotal.toLocaleString('en-IN')}\n\nAdditional Notes: ${notes || 'None'}`;
+    const formattedMessage = `Hello!\n\nI would like to order the following products:\n\n${itemsText}\n\n================================\n\nCoupon Applied:\n${couponCodeText}\n\nDiscount:\n₹${discountText}\n\nSubtotal:\n₹${cartSubtotal.toLocaleString('en-IN')}\n\nFinal Total:\n₹${cartFinalTotal.toLocaleString('en-IN')}\n\nTotal Products:\n${totalCartCount}\n\nPlease let me know the next steps for placing this order.\n\nThank you.`;
 
     const whatsappUrl = `https://wa.me/916291261549?text=${encodeURIComponent(
       formattedMessage

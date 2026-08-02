@@ -266,16 +266,27 @@ export const WishlistDrawer = () => {
                           ₹{product.price.toLocaleString('en-IN')}
                         </span>
 
-                        <button
-                          onClick={() => {
-                            addToCart(product);
-                            toggleWishlist(product);
-                          }}
-                          className="btn-primary"
-                          style={{ padding: '0.55rem 1rem', fontSize: '0.82rem' }}
-                        >
-                          <ShoppingBag size={15} /> Move to Cart
-                        </button>
+                        {(() => {
+                          const isOutOfStock = !product.inStock || (product.stock !== undefined && Number(product.stock) <= 0);
+                          return (
+                            <button
+                              disabled={isOutOfStock}
+                              onClick={() => {
+                                if (isOutOfStock) return;
+                                addToCart(product);
+                                toggleWishlist(product);
+                              }}
+                              className="btn-primary"
+                              style={
+                                isOutOfStock
+                                  ? { padding: '0.55rem 1rem', fontSize: '0.82rem', opacity: 0.6, cursor: 'not-allowed', backgroundColor: 'var(--text-warm-grey)' }
+                                  : { padding: '0.55rem 1rem', fontSize: '0.82rem' }
+                              }
+                            >
+                              <ShoppingBag size={15} /> {isOutOfStock ? 'Out of Stock' : 'Move to Cart'}
+                            </button>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>

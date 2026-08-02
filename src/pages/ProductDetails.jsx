@@ -96,7 +96,8 @@ export const ProductDetails = () => {
     .slice(0, 4);
 
   const handleWhatsAppOrder = () => {
-    const formattedMessage = `Hello Gandhorbi Folk Arts,\n\nI am interested in ordering this product directly:\n\nProduct: ${product.name}\nCategory: ${product.category}\nPrice: ₹${product.price.toLocaleString('en-IN')}\nQuantity: ${quantity}\nLink: ${window.location.href}\n\nPlease assist me with placing this order.`;
+    const productUrl = `${window.location.origin}/product/${product.id}`;
+    const formattedMessage = `Hello!\n\nI would like to order the following product:\n\n• Product Name: ${product.name}\n• Category: ${product.category}\n• Price: ₹${(product.price * quantity).toLocaleString('en-IN')}\n\nProduct Link:\n${productUrl}\n\nThank you.`;
     const whatsappUrl = `https://wa.me/916291261549?text=${encodeURIComponent(formattedMessage)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -211,12 +212,12 @@ export const ProductDetails = () => {
             </div>
 
             {/* Stock Badge */}
-            <div className={`pd-stock-badge${product.inStock ? ' pd-in-stock' : ' pd-out-stock'}`}>
+            <div className={`pd-stock-badge${!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0) ? ' pd-out-stock' : ' pd-in-stock'}`}>
               <ShieldCheck size={17} />
               <span>
-                {product.inStock
-                  ? '100% Authentic Handcrafted Artifact in Stock'
-                  : 'Out of Stock — Contact Concierge'}
+                {!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0)
+                  ? 'OUT OF STOCK'
+                  : '100% Authentic Handcrafted Artifact in Stock'}
               </span>
             </div>
 
@@ -253,11 +254,13 @@ export const ProductDetails = () => {
               {/* Quantity Controls */}
               <div className="pd-qty-ctrl">
                 <button
+                  disabled={!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0)}
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   className="pd-qty-btn"
                 >−</button>
                 <span className="pd-qty-value">{quantity}</span>
                 <button
+                  disabled={!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0)}
                   onClick={() => setQuantity((q) => q + 1)}
                   className="pd-qty-btn"
                 >+</button>
@@ -280,14 +283,16 @@ export const ProductDetails = () => {
             {/* ADD TO CART + INSTANT ORDER */}
             <div className="pd-cta-row">
               <button
+                disabled={!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0)}
                 onClick={() => {
                   addToCart(product, quantity);
                   setIsCartOpen(true);
                 }}
                 className="btn-primary pd-cta-btn"
+                style={(!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0)) ? { opacity: 0.6, cursor: 'not-allowed', backgroundColor: 'var(--text-warm-grey)' } : {}}
               >
                 <ShoppingBag size={18} />
-                <span>ADD TO CART</span>
+                <span>{(!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0)) ? 'OUT OF STOCK' : 'ADD TO CART'}</span>
               </button>
 
               <button
