@@ -1,22 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useShop } from '../context/ShopContext';
-import { Sparkles, MapPin, Phone, Mail, ArrowRight, Check } from 'lucide-react';
+import { MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 import { InstagramIcon, FacebookIcon } from './SocialIcons';
 
 export const Footer = () => {
-  const { navigateTo, showToast } = useShop();
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleNewsletterSubmit = (e) => {
-    e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      showToast("Thank you for subscribing to Gandhorbi Folk Arts Gazette!");
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 5000);
-    }
-  };
+  const { navigateTo } = useShop();
 
   return (
     <footer
@@ -198,7 +186,7 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact & Gazette */}
+          {/* Contact Atelier */}
           <div>
             <h4 style={{
               fontFamily: 'var(--font-heading)',
@@ -210,7 +198,7 @@ export const Footer = () => {
               Contact Atelier
             </h4>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.8rem', fontSize: '0.95rem', color: '#D5D5D5' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.95rem', color: '#D5D5D5' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.7rem' }}>
                 <MapPin size={18} style={{ color: 'var(--primary-terracotta)', marginTop: '3px', flexShrink: 0 }} />
                 <span>14/B Heritage Crafts Avenue, Ballygunge, Kolkata, West Bengal 700019, India</span>
@@ -224,34 +212,6 @@ export const Footer = () => {
                 <a href="mailto:info@gandhorbifolkarts.com" style={{ color: 'inherit' }}>info@gandhorbifolkarts.com</a>
               </div>
             </div>
-
-            {/* Newsletter Form */}
-            <form onSubmit={handleNewsletterSubmit} style={{ display: 'flex', gap: '0.5rem' }}>
-              <input
-                type="email"
-                required
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: '0.75rem 1rem',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  backgroundColor: 'rgba(255,255,255,0.05)',
-                  color: '#ffffff',
-                  fontSize: '0.9rem',
-                  outline: 'none'
-                }}
-              />
-              <button
-                type="submit"
-                className="btn-primary"
-                style={{ padding: '0.75rem 1.2rem' }}
-              >
-                {subscribed ? <Check size={18} /> : 'Subscribe'}
-              </button>
-            </form>
           </div>
 
         </div>
