@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { events as initialEvents } from '../data/events';
-import { Calendar, MapPin, Clock, MessageCircle } from 'lucide-react';
+import { Calendar, MapPin, Clock, MessageCircle, Sparkles } from 'lucide-react';
 import { db } from '../services/firestore';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 
 export const Events = () => {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [liveEvents, setLiveEvents]         = useState(initialEvents);
+  const [liveEvents, setLiveEvents]         = useState([]);
 
   // Real-Time Events Sync from Firestore
   useEffect(() => {
@@ -40,12 +39,7 @@ export const Events = () => {
             };
           });
 
-          const firestoreIds = new Set(firestoreEvents.map((e) => e.id));
-          const merged = [
-            ...firestoreEvents,
-            ...initialEvents.filter((e) => !firestoreIds.has(e.id)),
-          ];
-          setLiveEvents(merged);
+          setLiveEvents(firestoreEvents);
         }
       });
     } catch (e) {
@@ -107,82 +101,104 @@ export const Events = () => {
           ))}
         </div>
 
-        {/* Events Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-          gap: '2.5rem'
-        }}>
-          {filteredEvents.map((evt) => (
-            <div key={evt.id} className="heritage-card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              
-              {/* Banner Image */}
-              <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-                <img
-                  src={evt.banner}
-                  alt={evt.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-                <span style={{
-                  position: 'absolute',
-                  top: '12px',
-                  left: '12px',
-                  backgroundColor: 'var(--bg-soft-ivory)',
-                  color: 'var(--primary-terracotta)',
-                  fontFamily: 'var(--font-nav)',
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
-                  padding: '4px 12px',
-                  borderRadius: 'var(--radius-sm)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>
-                  {evt.category}
-                </span>
-              </div>
+        {/* Events Grid / Empty State */}
+        {filteredEvents.length === 0 ? (
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '4rem 2rem',
+              backgroundColor: 'var(--bg-soft-ivory)',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px border var(--border-subtle)',
+              maxWidth: '600px',
+              margin: '2rem auto'
+            }}
+          >
+            <Sparkles size={40} color="var(--primary-terracotta)" style={{ opacity: 0.6, marginBottom: '1rem' }} />
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', color: 'var(--text-charcoal)', marginBottom: '0.5rem' }}>
+              No Upcoming Events Scheduled
+            </h3>
+            <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+              There are currently no scheduled exhibitions or workshops in this category. New events and exhibitions added by the atelier will appear here live.
+            </p>
+          </div>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+            gap: '2.5rem'
+          }}>
+            {filteredEvents.map((evt) => (
+              <div key={evt.id} className="heritage-card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                
+                {/* Banner Image */}
+                <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
+                  <img
+                    src={evt.banner}
+                    alt={evt.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <span style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    backgroundColor: 'var(--bg-soft-ivory)',
+                    color: 'var(--primary-terracotta)',
+                    fontFamily: 'var(--font-nav)',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    padding: '4px 12px',
+                    borderRadius: 'var(--radius-sm)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    {evt.category}
+                  </span>
+                </div>
 
-              {/* Event Content */}
-              <div style={{ padding: '1.8rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div>
-                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', lineHeight: 1.3, marginBottom: '1rem', color: 'var(--text-charcoal)' }}>
-                    {evt.title}
-                  </h3>
+                {/* Event Content */}
+                <div style={{ padding: '1.8rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div>
+                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', lineHeight: 1.3, marginBottom: '1rem', color: 'var(--text-charcoal)' }}>
+                      {evt.title}
+                    </h3>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem', color: 'var(--text-warm-grey)', marginBottom: '1.2rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <Calendar size={16} color="var(--primary-terracotta)" />
-                      <span><strong>Date:</strong> {evt.date}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem', color: 'var(--text-warm-grey)', marginBottom: '1.2rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <Calendar size={16} color="var(--primary-terracotta)" />
+                        <span><strong>Date:</strong> {evt.date}</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <Clock size={16} color="var(--primary-terracotta)" />
+                        <span><strong>Timing:</strong> {evt.time}</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
+                        <MapPin size={16} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                        <span><strong>Venue:</strong> {evt.venue}</span>
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <Clock size={16} color="var(--primary-terracotta)" />
-                      <span><strong>Timing:</strong> {evt.time}</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
-                      <MapPin size={16} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                      <span><strong>Venue:</strong> {evt.venue}</span>
-                    </div>
+
+                    <p style={{ fontSize: '0.92rem', color: 'var(--text-warm-grey)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+                      {evt.description}
+                    </p>
                   </div>
 
-                  <p style={{ fontSize: '0.92rem', color: 'var(--text-warm-grey)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-                    {evt.description}
-                  </p>
-                </div>
+                  <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
+                    <button
+                      onClick={() => handleRSVP(evt)}
+                      className="btn-whatsapp"
+                      style={{ padding: '0.75rem 1.2rem', fontSize: '0.9rem' }}
+                    >
+                      <MessageCircle size={18} /> Reserve Seat / RSVP (+91 6291261549)
+                    </button>
+                  </div>
 
-                <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
-                  <button
-                    onClick={() => handleRSVP(evt)}
-                    className="btn-whatsapp"
-                    style={{ padding: '0.75rem 1.2rem', fontSize: '0.9rem' }}
-                  >
-                    <MessageCircle size={18} /> Reserve Seat / RSVP (+91 6291261549)
-                  </button>
                 </div>
 
               </div>
-
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
       </div>
     </div>
