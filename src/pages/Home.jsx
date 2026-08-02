@@ -154,7 +154,7 @@ export const Home = () => {
         <div
           style={{
             position: 'absolute',
-            bottom: '2.5rem',
+            bottom: '1.25rem',
             left: 0,
             right: 0,
             zIndex: 3,
@@ -165,7 +165,7 @@ export const Home = () => {
             alignItems: 'center'
           }}
         >
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
             {mobileHeroImages.map((_, idx) => (
               <div
                 key={idx}
@@ -180,7 +180,7 @@ export const Home = () => {
             ))}
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '320px', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '320px' }}>
             <button
               onClick={() => navigateTo('collections')}
               className="mobile-cta-btn-primary"
@@ -205,34 +205,6 @@ export const Home = () => {
             >
               Shop Now <ArrowRight size={16} />
             </button>
-
-            <button
-              onClick={() => {
-                const el = document.getElementById('shop-categories');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-                else navigateTo('collections');
-              }}
-              className="mobile-cta-btn-secondary"
-              style={{
-                width: '100%',
-                backgroundColor: 'rgba(20, 16, 12, 0.75)',
-                color: '#F7F4EE',
-                border: '1.5px solid #D4A44E',
-                padding: '0.85rem 1.5rem',
-                borderRadius: 'var(--radius-full)',
-                fontFamily: 'var(--font-btn)',
-                fontWeight: 600,
-                fontSize: '0.9rem',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backdropFilter: 'blur(6px)'
-              }}
-            >
-              Explore Categories
-            </button>
           </div>
         </div>
       </section>
@@ -248,24 +220,24 @@ export const Home = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <Award size={36} color="var(--primary-terracotta)" style={{ flexShrink: 0 }} />
               <div>
-                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', color: 'var(--text-charcoal)' }}>100% Authentic Handloom</h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)', marginTop: '2px' }}>Directly sourced from Bengal master artisans</p>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', marginBottom: '2px' }}>100% Authentic Handcrafts</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)' }}>Directly sourced from Bengali rural master artisans</p>
               </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <ShieldCheck size={36} color="var(--primary-terracotta)" style={{ flexShrink: 0 }} />
               <div>
-                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', color: 'var(--text-charcoal)' }}>Certified Heritage Craft</h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)', marginTop: '2px' }}>Nakshi Kantha &amp; GI Tagged Dokra</p>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', marginBottom: '2px' }}>Insured Worldwide Shipping</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)' }}>Carefully packaged heritage heirlooms delivered safely</p>
               </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <HeartHandshake size={36} color="var(--primary-terracotta)" style={{ flexShrink: 0 }} />
               <div>
-                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', color: 'var(--text-charcoal)' }}>Fair Trade Artisan Support</h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)', marginTop: '2px' }}>Empowering rural women weavers &amp; smiths</p>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', marginBottom: '2px' }}>Artisan Welfare Support</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)' }}>Fair living wages & direct community empowerment</p>
               </div>
             </div>
           </div>
@@ -273,17 +245,14 @@ export const Home = () => {
       </section>
 
       {/* SHOP BY CATEGORIES SECTION */}
-      <section id="shop-categories" className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)' }}>
+      <section id="shop-categories" style={{ paddingTop: '1.5rem', paddingBottom: '3.5rem', backgroundColor: 'var(--bg-warm-linen)' }}>
         <div className="container">
           
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              Curated Heritage
-            </span>
-            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', marginTop: '6px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', marginTop: 0 }}>
               Shop by Categories
             </h2>
-            <p style={{ color: 'var(--text-warm-grey)', marginTop: '1rem', maxWidth: '600px', margin: '1rem auto 0 auto' }}>
+            <p style={{ color: 'var(--text-warm-grey)', marginTop: '0.75rem', maxWidth: '600px', margin: '0.75rem auto 0 auto' }}>
               Discover our signature collections of hand-stitched textiles, lost-wax bronzes, and artisanal apparel.
             </p>
           </div>
