@@ -98,7 +98,7 @@ export const ShopProvider = ({ children }) => {
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState('featured');
 
-  // Automatically sync category filter from URL query string (/collections?category=Kantha%20Sarees)
+  // Automatically sync category filter from URL query string (/collections?category=Kantha%20Dupattas)
   useEffect(() => {
     if (location.pathname.startsWith('/collections')) {
       const searchParams = new URLSearchParams(location.search);

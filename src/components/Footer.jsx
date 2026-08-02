@@ -171,14 +171,14 @@ export const Footer = () => {
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
               {[
-                'Kantha Sarees',
                 'Kantha Dupattas',
-                'Kantha Creations',
+                'Traditional Kantha Creations',
                 'Dokra Art',
                 'Wooden Crafts',
                 'Designer Dhotis',
-                'Punjabi Wear',
-                'Exclusive Apparel'
+                'Exclusive Designer Punjabis',
+                'Exclusive Apparels for Men & Women',
+                'Home Decor'
               ].map((cat) => (
                 <li key={cat}>
                   <button

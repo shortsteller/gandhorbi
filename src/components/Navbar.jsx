@@ -4,14 +4,14 @@ import { Search, Heart, ShoppingBag, User, Menu, X, ArrowRight, MessageCircle, C
 import { categories } from '../data/categories';
 
 const marqueeCategories = [
-  'Kantha Sarees',
   'Kantha Dupattas',
-  'Kantha Creations',
+  'Traditional Kantha Creations',
   'Dokra Art',
   'Wooden Crafts',
   'Designer Dhotis',
-  'Punjabi Wear',
-  'Exclusive Apparel'
+  'Exclusive Designer Punjabis',
+  'Exclusive Apparels for Men & Women',
+  'Home Decor'
 ];
 
 export const Navbar = () => {
@@ -333,22 +333,22 @@ export const Navbar = () => {
                               Atelier Spotlight
                             </span>
                             <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', marginTop: '4px', color: 'var(--text-charcoal)' }}>
-                              Nakshi Kantha Sarees
+                              Traditional Kantha Creations
                             </h4>
                             <p style={{ fontSize: '0.8rem', color: 'var(--text-warm-grey)', marginTop: '6px', lineHeight: 1.5 }}>
-                              Hand-stitched over 4 months by master rural craftswomen of Bengal.
+                              Hand-stitched over months by master rural craftswomen of Bengal.
                             </p>
                           </div>
                           
                           <button
                             onClick={() => {
-                              navigateTo('collections', 'Kantha Sarees');
+                              navigateTo('collections', 'Traditional Kantha Creations');
                               setDesktopDropdownOpen(false);
                             }}
                             className="btn-primary"
                             style={{ padding: '0.55rem 1rem', fontSize: '0.78rem', marginTop: '1rem', justifyContent: 'center' }}
                           >
-                            Explore Sarees <ArrowRight size={14} />
+                            Explore Kantha <ArrowRight size={14} />
                           </button>
                         </div>
                       </div>

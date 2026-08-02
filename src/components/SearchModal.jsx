@@ -60,7 +60,7 @@ export const SearchModal = () => {
           <input
             type="text"
             autoFocus
-            placeholder="Search for Kantha sarees, Dokra statues, wooden owls, dhotis..."
+            placeholder="Search for Kantha dupattas, Dokra statues, wooden crafts, dhotis, Punjabis..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             style={{
@@ -83,7 +83,7 @@ export const SearchModal = () => {
               Popular Heritage Searches:
             </span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
-              {['Nakshi Kantha Saree', 'Bikna Dokra Figurine', 'Laxmi Pencha Owl', 'Silk Dhoti', 'Terracotta Punjabi'].map((term) => (
+              {['Kantha Dupattas', 'Traditional Kantha Creations', 'Dokra Art', 'Wooden Crafts', 'Designer Dhotis', 'Exclusive Designer Punjabis', 'Home Decor'].map((term) => (
                 <button
                   key={term}
                   onClick={() => setQuery(term)}
