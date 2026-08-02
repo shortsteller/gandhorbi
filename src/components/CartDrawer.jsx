@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useShop } from '../context/ShopContext';
-import { ArrowLeft, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Tag } from 'lucide-react';
+import { ArrowLeft, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Tag, MessageCircle } from 'lucide-react';
 
 export const CartDrawer = () => {
   const {
@@ -18,6 +18,7 @@ export const CartDrawer = () => {
     removeAppliedCoupon,
     cartDiscountAmount,
     cartFinalTotal,
+    processWhatsAppCheckout,
   } = useShop();
 
   const [couponInput, setCouponInput]         = useState('');
@@ -428,12 +429,12 @@ export const CartDrawer = () => {
                 <button
                   onClick={() => {
                     handleClose();
-                    setIsCheckoutOpen(true);
+                    processWhatsAppCheckout();
                   }}
-                  className="btn-primary"
+                  className="btn-whatsapp"
                   style={{ width: '100%', padding: '0.95rem', fontSize: '0.95rem', justifyContent: 'center' }}
                 >
-                  Proceed to WhatsApp Order <ArrowRight size={18} />
+                  <MessageCircle size={20} /> Order on WhatsApp
                 </button>
               </div>
 

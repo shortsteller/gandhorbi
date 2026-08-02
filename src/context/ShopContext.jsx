@@ -288,7 +288,9 @@ export const ShopProvider = ({ children }) => {
   };
 
   // WhatsApp Order Submission
-  const processWhatsAppCheckout = async (customerDetails) => {
+  const processWhatsAppCheckout = async () => {
+    if (!cart || cart.length === 0) return;
+
     const origin = window.location.origin;
 
     const itemsText = cart
@@ -300,13 +302,13 @@ export const ShopProvider = ({ children }) => {
       .join('\n\n--------------------------------\n\n');
 
     const couponCodeText = appliedCoupon ? appliedCoupon.code : 'None';
-    const discountText = cartDiscountAmount > 0 ? cartDiscountAmount.toLocaleString('en-IN') : '0';
+    const discountText = cartDiscountAmount > 0 ? `₹${cartDiscountAmount.toLocaleString('en-IN')}` : '₹0';
 
     if (appliedCoupon && cartDiscountAmount > 0) {
       recordCouponUsage(appliedCoupon.coupon.id, cartDiscountAmount);
     }
 
-    const formattedMessage = `Hello!\n\nI would like to order the following products:\n\n${itemsText}\n\n================================\n\nCoupon Applied:\n${couponCodeText}\n\nDiscount:\n₹${discountText}\n\nSubtotal:\n₹${cartSubtotal.toLocaleString('en-IN')}\n\nFinal Total:\n₹${cartFinalTotal.toLocaleString('en-IN')}\n\nTotal Products:\n${totalCartCount}\n\nPlease let me know the next steps for placing this order.\n\nThank you.`;
+    const formattedMessage = `Hello!\n\nI would like to order the following products:\n\n${itemsText}\n\n================================\n\nCoupon Applied:\n${couponCodeText}\n\nDiscount:\n${discountText}\n\nSubtotal:\n₹${cartSubtotal.toLocaleString('en-IN')}\n\nFinal Total:\n₹${cartFinalTotal.toLocaleString('en-IN')}\n\nTotal Products:\n${totalCartCount}\n\nThank you.`;
 
     const whatsappUrl = `https://wa.me/916291261549?text=${encodeURIComponent(
       formattedMessage
