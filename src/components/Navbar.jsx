@@ -445,20 +445,6 @@ export const Navbar = () => {
               )}
             </button>
 
-            {/* User Account Button (Desktop) */}
-            <button
-              onClick={() => setIsUserAccountOpen(true)}
-              aria-label="User Account"
-              className="desktop-nav-icon nav-action-icon-btn"
-              style={{
-                padding: '8px',
-                color: isHeroOverlay ? '#ffffff' : 'var(--text-charcoal)',
-                transition: 'var(--transition-fast)'
-              }}
-            >
-              <User size={22} />
-            </button>
-
             {/* Mobile Hamburger Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(true)}
@@ -815,30 +801,6 @@ export const Navbar = () => {
                         {totalCartCount}
                       </span>
                     )}
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setIsUserAccountOpen(true);
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.8rem',
-                      padding: '0.7rem 0.8rem',
-                      borderRadius: 'var(--radius-md)',
-                      backgroundColor: 'var(--bg-warm-linen)',
-                      color: 'var(--text-charcoal)',
-                      fontSize: '0.95rem',
-                      fontFamily: 'var(--font-nav)',
-                      fontWeight: 500,
-                      width: '100%',
-                      boxSizing: 'border-box'
-                    }}
-                  >
-                    <User size={18} color="var(--primary-terracotta)" />
-                    <span>Login / Account</span>
                   </button>
                 </div>
 

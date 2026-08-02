@@ -18,7 +18,6 @@ import { CartDrawer }       from './components/CartDrawer';
 import { CheckoutModal }    from './components/CheckoutModal';
 import { WishlistDrawer }   from './components/WishlistDrawer';
 import { SearchModal }      from './components/SearchModal';
-import { UserAccountModal } from './components/UserAccountModal';
 import { QuickViewModal }   from './components/QuickViewModal';
 import { Toast }            from './components/Toast';
 import { FloatingSideTab }  from './components/FloatingSideTab';
@@ -45,7 +44,6 @@ const PublicLayout = () => {
       <FloatingSideTab />
       <CheckoutModal />
       <SearchModal />
-      <UserAccountModal />
       <QuickViewModal />
       <Toast />
     </div>
