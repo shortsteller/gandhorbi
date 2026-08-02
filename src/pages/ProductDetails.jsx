@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { ProductCard } from '../components/ProductCard';
 import {
@@ -12,11 +12,13 @@ import {
   RotateCcw,
   Star,
   ChevronRight,
-  ArrowLeft
+  ArrowLeft,
+  AlertTriangle
 } from 'lucide-react';
 
 export const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const {
     products,
     addToCart,
@@ -33,6 +35,24 @@ export const ProductDetails = () => {
     product ? product.image : ''
   );
   const [quantity, setQuantity] = useState(1);
+  const [countdown, setCountdown] = useState(4);
+
+  // Automatic redirect if product is deleted while user is on the page
+  useEffect(() => {
+    if (!product) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            navigate('/collections', { replace: true });
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [product, navigate]);
 
   if (!product) {
     return (
@@ -43,17 +63,21 @@ export const ProductDetails = () => {
           paddingBottom: '5rem',
           textAlign: 'center',
           backgroundColor: 'var(--bg-warm-linen)',
-          minHeight: '80vh'
+          minHeight: '80vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
-        <div className="container">
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', marginBottom: '1rem' }}>
-            Product Not Found
+        <div className="container" style={{ maxWidth: '580px', backgroundColor: 'var(--bg-soft-ivory)', padding: '3rem 2rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+          <AlertTriangle size={48} color="var(--primary-terracotta)" style={{ marginBottom: '1rem', display: 'inline-block' }} />
+          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', marginBottom: '0.8rem', color: 'var(--text-charcoal)' }}>
+            This product is no longer available.
           </h2>
-          <p style={{ color: 'var(--text-warm-grey)', marginBottom: '2rem' }}>
-            The artifact you are looking for may have been archived or moved to another collection.
+          <p style={{ color: 'var(--text-warm-grey)', marginBottom: '1.8rem', lineHeight: 1.6 }}>
+            This artifact has been removed from our collection. You will be automatically redirected to the Collections page in <strong>{countdown}</strong> seconds…
           </p>
-          <Link to="/collections" className="btn-primary">
+          <Link to="/collections" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
             <ArrowLeft size={16} /> Return to Collections
           </Link>
         </div>

@@ -118,6 +118,47 @@ export const ShopProvider = ({ children }) => {
     localStorage.setItem('gandhorbi_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
+  // Automatically clean up deleted products from Cart, Wishlist, QuickView, and storage
+  useEffect(() => {
+    if (!liveProducts) return;
+    const validIds = new Set(liveProducts.map((p) => p.id));
+
+    setCart((prevCart) => {
+      const cleaned = prevCart.filter((item) => item.product && validIds.has(item.product.id));
+      if (cleaned.length !== prevCart.length) {
+        localStorage.setItem('gandhorbi_cart', JSON.stringify(cleaned));
+      }
+      return cleaned;
+    });
+
+    setWishlist((prevWishlist) => {
+      const cleaned = prevWishlist.filter((item) => item && validIds.has(item.id));
+      if (cleaned.length !== prevWishlist.length) {
+        localStorage.setItem('gandhorbi_wishlist', JSON.stringify(cleaned));
+      }
+      return cleaned;
+    });
+
+    setQuickViewProduct((prev) => (prev && !validIds.has(prev.id) ? null : prev));
+
+    ['gandhorbi_recently_viewed', 'gandhorbi_recent'].forEach((key) => {
+      const raw = localStorage.getItem(key) || sessionStorage.getItem(key);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            const cleaned = parsed.filter((item) => {
+              const itemId = typeof item === 'string' ? item : item?.id;
+              return itemId && validIds.has(itemId);
+            });
+            localStorage.setItem(key, JSON.stringify(cleaned));
+            sessionStorage.setItem(key, JSON.stringify(cleaned));
+          }
+        } catch (e) {}
+      }
+    });
+  }, [liveProducts]);
+
   // Show temporary toast message
   const showToast = (msg) => {
     setToastMessage(msg);

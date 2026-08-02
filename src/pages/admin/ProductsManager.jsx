@@ -90,18 +90,19 @@ export const ProductsManager = () => {
   };
 
   const handleDelete = async (product) => {
-    if (!window.confirm(`Are you sure you want to delete "${product.name}"?`)) return;
+    if (!window.confirm("Are you sure you want to permanently delete this product? This action cannot be undone.")) return;
 
-    if (product.images && product.images.length > 0) {
-      const publicIds = product.images.map(img => img.publicId).filter(Boolean);
-      console.log('[Cloudinary Delete Reference] Public IDs to destroy:', publicIds);
-    }
-
-    const res = await deleteDocument('products', product.id);
-    if (res.success) {
-      showToast('success', `Deleted "${product.name}".`);
-    } else {
-      showToast('error', res.error || 'Failed to delete product.');
+    try {
+      const res = await deleteDocument('products', product.id);
+      if (res.success) {
+        showToast('success', 'Product deleted successfully.');
+      } else {
+        console.error('[ProductsManager] Product deletion failed:', res.error);
+        showToast('error', res.error || 'Failed to delete product.');
+      }
+    } catch (err) {
+      console.error('[ProductsManager] Delete exception:', err);
+      showToast('error', 'Error deleting product from database.');
     }
   };
 
