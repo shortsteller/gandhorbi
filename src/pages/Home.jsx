@@ -43,7 +43,8 @@ export const Home = () => {
         style={{
           position: 'relative',
           width: '100%',
-          minHeight: 'calc(100vh - 76px)',
+          aspectRatio: '1 / 1',
+          maxHeight: 'calc(100vh - 76px)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-end',
@@ -53,7 +54,7 @@ export const Home = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          paddingTop: '80px',
+          paddingTop: '60px',
           paddingBottom: '3.5rem',
           boxSizing: 'border-box'
         }}
@@ -129,7 +130,8 @@ export const Home = () => {
         style={{
           position: 'relative',
           width: '100%',
-          height: 'calc(100vh - 60px)',
+          aspectRatio: '1 / 1',
+          maxHeight: 'calc(100vh - 60px)',
           overflow: 'hidden',
           backgroundColor: '#14100C'
         }}
