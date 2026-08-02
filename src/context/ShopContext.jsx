@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { products as initialProducts } from '../data/products';
 import { db } from '../services/firestore';
 import { collection, onSnapshot } from 'firebase/firestore';
+import { validateCoupon, recordCouponUsage } from '../services/coupons';
 
 const ShopContext = createContext();
 
@@ -222,6 +223,9 @@ export const ShopProvider = ({ children }) => {
     return wishlist.some((p) => p.id === productId);
   };
 
+  // Coupon state
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+
   // Totals calculations
   const cartSubtotal = cart.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -230,8 +234,34 @@ export const ShopProvider = ({ children }) => {
 
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  const cartDiscountAmount = appliedCoupon ? appliedCoupon.discountAmount : 0;
+  const cartFinalTotal = Math.max(0, cartSubtotal - cartDiscountAmount);
+
+  // Apply Coupon method
+  const applyCoupon = async (rawCode) => {
+    const res = await validateCoupon(rawCode, cart, cartSubtotal);
+
+    if (res.valid) {
+      setAppliedCoupon({
+        code: res.code,
+        coupon: res.coupon,
+        discountAmount: res.discountAmount,
+      });
+      showToast(`Coupon "${res.code}" applied! You save ₹${res.discountAmount.toLocaleString('en-IN')}.`);
+      return { success: true, discountAmount: res.discountAmount };
+    } else {
+      showToast(res.error || 'Invalid coupon.');
+      return { success: false, error: res.error };
+    }
+  };
+
+  const removeAppliedCoupon = () => {
+    setAppliedCoupon(null);
+    showToast("Coupon removed.");
+  };
+
   // WhatsApp Order Submission
-  const processWhatsAppCheckout = (customerDetails) => {
+  const processWhatsAppCheckout = async (customerDetails) => {
     const { name, phone, address, pincode, notes } = customerDetails;
     
     let productLines = cart
@@ -243,9 +273,14 @@ export const ShopProvider = ({ children }) => {
       )
       .join('\n');
 
-    const formattedMessage = `Hello Gandhorbi Folk Arts,\n\nI would like to place the following order.\n\nCustomer Name: ${name}\n\nPhone Number: ${phone}\n\nDelivery Address: ${address}, PIN: ${pincode}\n\nProducts:\n${productLines}\n\nTotal Amount: ₹${cartSubtotal.toLocaleString(
-      'en-IN'
-    )}\n\nAdditional Notes: ${notes || 'None'}`;
+    let discountLine = '';
+    if (appliedCoupon && cartDiscountAmount > 0) {
+      discountLine = `\nApplied Coupon: ${appliedCoupon.code} (-₹${cartDiscountAmount.toLocaleString('en-IN')})`;
+      // Record coupon usage in Firestore
+      recordCouponUsage(appliedCoupon.coupon.id, cartDiscountAmount);
+    }
+
+    const formattedMessage = `Hello Gandhorbi Folk Arts,\n\nI would like to place the following order.\n\nCustomer Name: ${name}\nPhone Number: ${phone}\nDelivery Address: ${address}, PIN: ${pincode}\n\nProducts:\n${productLines}\n\nSubtotal: ₹${cartSubtotal.toLocaleString('en-IN')}${discountLine}\nFinal Total: ₹${cartFinalTotal.toLocaleString('en-IN')}\n\nAdditional Notes: ${notes || 'None'}`;
 
     const whatsappUrl = `https://wa.me/916291261549?text=${encodeURIComponent(
       formattedMessage
@@ -253,6 +288,7 @@ export const ShopProvider = ({ children }) => {
 
     window.open(whatsappUrl, '_blank');
     clearCart();
+    setAppliedCoupon(null);
     setIsCheckoutOpen(false);
     showToast("Redirecting to WhatsApp to complete your order...");
   };
@@ -345,6 +381,11 @@ export const ShopProvider = ({ children }) => {
         setInStockOnly,
         sortBy,
         setSortBy,
+        appliedCoupon,
+        applyCoupon,
+        removeAppliedCoupon,
+        cartDiscountAmount,
+        cartFinalTotal,
         processWhatsAppCheckout
       }}
     >

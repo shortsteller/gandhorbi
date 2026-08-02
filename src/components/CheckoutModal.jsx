@@ -4,7 +4,7 @@ import { X, MessageCircle, ShieldCheck, MapPin, User, Phone, FileText } from 'lu
 import confetti from 'canvas-confetti';
 
 export const CheckoutModal = () => {
-  const { isCheckoutOpen, setIsCheckoutOpen, cart, cartSubtotal, processWhatsAppCheckout } = useShop();
+  const { isCheckoutOpen, setIsCheckoutOpen, cart, cartSubtotal, appliedCoupon, cartDiscountAmount, cartFinalTotal, processWhatsAppCheckout } = useShop();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -244,9 +244,17 @@ export const CheckoutModal = () => {
                 </div>
               ))}
             </div>
+
+            {appliedCoupon && cartDiscountAmount > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.8rem', paddingTop: '0.6rem', borderTop: '1px dashed var(--border-subtle)', color: '#25D366', fontSize: '0.9rem', fontWeight: 600 }}>
+                <span>Coupon ({appliedCoupon.code}) Discount:</span>
+                <span>-₹{cartDiscountAmount.toLocaleString('en-IN')}</span>
+              </div>
+            )}
+
             <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-light)', paddingTop: '0.8rem', marginTop: '0.8rem', fontWeight: 700, fontSize: '1.1rem', color: 'var(--primary-terracotta)' }}>
-              <span>Total Payable Amount:</span>
-              <span>₹{cartSubtotal.toLocaleString('en-IN')}</span>
+              <span>Final Total Amount:</span>
+              <span>₹{cartFinalTotal.toLocaleString('en-IN')}</span>
             </div>
           </div>
 

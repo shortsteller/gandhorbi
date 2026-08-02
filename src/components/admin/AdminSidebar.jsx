@@ -5,13 +5,14 @@
  */
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, LogOut, MoreVertical, X } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Tag, LogOut, MoreVertical, X } from 'lucide-react';
 import { signOut } from '../../services/auth';
 
 const MENU_ITEMS = [
-  { label: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
-  { label: 'Products',  icon: Package,         path: '/admin/products' },
-  { label: 'Events',    icon: Calendar,        path: '/admin/events' },
+  { label: 'Dashboard',        icon: LayoutDashboard, path: '/admin/dashboard' },
+  { label: 'Products',         icon: Package,         path: '/admin/products' },
+  { label: 'Events',           icon: Calendar,        path: '/admin/events' },
+  { label: 'Offers & Coupons', icon: Tag,             path: '/admin/coupons' },
 ];
 
 export const AdminSidebar = ({ open, onToggle }) => {

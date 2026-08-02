@@ -28,6 +28,7 @@ import { AdminLayout }     from './pages/admin/AdminLayout';
 import { AdminDashboard }  from './pages/admin/AdminDashboard';
 import { ProductsManager } from './pages/admin/ProductsManager';
 import { EventsManager }   from './pages/admin/EventsManager';
+import { CouponsManager }  from './pages/admin/CouponsManager';
 import { AddProduct }      from './pages/admin/AddProduct';
 import { AddEvent }        from './pages/admin/AddEvent';
 import { ProtectedRoute }  from './components/admin/ProtectedRoute';
@@ -98,6 +99,9 @@ export default function App() {
             <Route path="events"           element={<EventsManager />} />
             <Route path="events/add"       element={<AddEvent />} />
             <Route path="events/edit/:id"   element={<AddEvent />} />
+
+            {/* Offers & Coupons Management */}
+            <Route path="coupons"          element={<CouponsManager />} />
           </Route>
 
           {/* ── Catch-all fallback ────────────────────────────────────────── */}

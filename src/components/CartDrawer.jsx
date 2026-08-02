@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useShop } from '../context/ShopContext';
-import { ArrowLeft, Trash2, ShoppingBag, ArrowRight, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Tag } from 'lucide-react';
 
 export const CartDrawer = () => {
   const {
@@ -12,8 +12,17 @@ export const CartDrawer = () => {
     cartSubtotal,
     totalCartCount,
     setIsCheckoutOpen,
-    navigateTo
+    navigateTo,
+    appliedCoupon,
+    applyCoupon,
+    removeAppliedCoupon,
+    cartDiscountAmount,
+    cartFinalTotal,
   } = useShop();
+
+  const [couponInput, setCouponInput]         = useState('');
+  const [couponError, setCouponError]         = useState(null);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
 
   // Browser Back Button & Lock Scroll Integration
   useEffect(() => {
@@ -310,10 +319,94 @@ export const CartDrawer = () => {
                   Order Summary
                 </h3>
 
+                {/* Coupon Code Section */}
+                <div style={{ marginBottom: '1.2rem', paddingTop: '0.8rem', borderTop: '1px solid var(--border-subtle)' }}>
+                  {appliedCoupon ? (
+                    <div style={{ backgroundColor: 'var(--bg-soft-sage)', border: '1px solid var(--secondary-olive)', padding: '0.75rem 0.9rem', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.88rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Tag size={16} color="var(--primary-terracotta)" />
+                        <div>
+                          <span style={{ fontWeight: 700, color: 'var(--primary-terracotta)' }}>{appliedCoupon.code}</span>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-warm-grey)' }}>Discount applied</div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={removeAppliedCoupon}
+                        style={{ fontSize: '0.75rem', color: '#e63946', cursor: 'pointer', background: 'none', border: 'none', fontWeight: 600 }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-charcoal)', display: 'block', marginBottom: '0.4rem' }}>
+                        Have a Coupon Code?
+                      </span>
+                      <form
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          if (!couponInput.trim()) return;
+                          setValidatingCoupon(true);
+                          setCouponError(null);
+                          const res = await applyCoupon(couponInput);
+                          if (!res.success) {
+                            setCouponError(res.error);
+                          } else {
+                            setCouponInput('');
+                          }
+                          setValidatingCoupon(false);
+                        }}
+                        style={{ display: 'flex', gap: '0.5rem' }}
+                      >
+                        <input
+                          type="text"
+                          placeholder="e.g. GANDHORBI15"
+                          value={couponInput}
+                          onChange={(e) => {
+                            setCouponInput(e.target.value.toUpperCase());
+                            setCouponError(null);
+                          }}
+                          style={{
+                            flex: 1,
+                            padding: '0.55rem 0.75rem',
+                            borderRadius: 'var(--radius-sm)',
+                            border: '1px solid var(--border-subtle)',
+                            fontSize: '0.85rem',
+                            textTransform: 'uppercase',
+                            fontWeight: 700,
+                            outline: 'none',
+                            backgroundColor: '#ffffff'
+                          }}
+                        />
+                        <button
+                          type="submit"
+                          disabled={validatingCoupon || !couponInput.trim()}
+                          className="btn-primary"
+                          style={{ padding: '0.55rem 1rem', fontSize: '0.82rem', flexShrink: 0 }}
+                        >
+                          {validatingCoupon ? 'Applying…' : 'Apply'}
+                        </button>
+                      </form>
+                      {couponError && (
+                        <span style={{ color: '#e63946', fontSize: '0.78rem', marginTop: '0.4rem', display: 'block' }}>
+                          {couponError}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem', fontSize: '0.95rem' }}>
-                  <span style={{ color: 'var(--text-warm-grey)' }}>Items Total:</span>
+                  <span style={{ color: 'var(--text-warm-grey)' }}>Items Subtotal:</span>
                   <span style={{ fontWeight: 600 }}>₹{cartSubtotal.toLocaleString('en-IN')}</span>
                 </div>
+
+                {appliedCoupon && cartDiscountAmount > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem', fontSize: '0.95rem', color: '#25D366' }}>
+                    <span>Coupon Discount ({appliedCoupon.code}):</span>
+                    <span style={{ fontWeight: 700 }}>-₹{cartDiscountAmount.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', fontSize: '0.95rem' }}>
                   <span style={{ color: 'var(--text-warm-grey)' }}>Insured Express Shipping:</span>
@@ -321,9 +414,9 @@ export const CartDrawer = () => {
                 </div>
 
                 <div style={{ borderTop: '1.5px dashed var(--border-subtle)', paddingTop: '1rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Total Amount:</span>
+                  <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Final Total Amount:</span>
                   <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.6rem', color: 'var(--primary-terracotta)' }}>
-                    ₹{cartSubtotal.toLocaleString('en-IN')}
+                    ₹{cartFinalTotal.toLocaleString('en-IN')}
                   </span>
                 </div>
 
