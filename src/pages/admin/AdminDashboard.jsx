@@ -158,19 +158,13 @@ export const AdminDashboard = () => {
             Add New Event
           </button>
 
-          {/* New button to open Homepage Category Cover modal */}
+          {/* Button to open Homepage Category Cover modal */}
           <button
-            className="admin-quick-btn"
+            className="admin-quick-btn admin-quick-btn-primary"
             onClick={() => setIsCoverModalOpen(true)}
-            style={{
-              backgroundColor: 'var(--bg-soft-ivory)',
-              color: 'var(--primary-terracotta)',
-              border: '1px solid var(--border-light)',
-              fontWeight: 600
-            }}
           >
-            <ImageIcon size={20} color="var(--primary-terracotta)" />
-            Add Pictures for Homepage Category Cover
+            <ImageIcon size={20} />
+            Add Homepage Category Cover
           </button>
         </div>
       </section>
