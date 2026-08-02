@@ -296,8 +296,10 @@ export const ProductDetails = () => {
               </button>
 
               <button
-                onClick={handleWhatsAppOrder}
+                disabled={!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0)}
+                onClick={(!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0)) ? undefined : handleWhatsAppOrder}
                 className="btn-whatsapp pd-cta-btn"
+                style={(!product.inStock || (product.stock !== undefined && Number(product.stock) <= 0)) ? { opacity: 0.5, cursor: 'not-allowed', filter: 'grayscale(100%)' } : {}}
               >
                 <MessageCircle size={18} />
                 <span>Instant Order</span>

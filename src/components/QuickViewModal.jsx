@@ -309,12 +309,19 @@ export const QuickViewModal = () => {
                 </div>
 
                 {/* Direct Buy via WhatsApp */}
-                <button
-                  onClick={handleWhatsAppDirectBuy}
-                  className="btn-whatsapp"
-                >
-                  <MessageCircle size={20} /> Buy via WhatsApp (+91 6291261549)
-                </button>
+                {(() => {
+                  const isOutOfStock = !product.inStock || (product.stock !== undefined && Number(product.stock) <= 0);
+                  return (
+                    <button
+                      disabled={isOutOfStock}
+                      onClick={isOutOfStock ? undefined : handleWhatsAppDirectBuy}
+                      className="btn-whatsapp"
+                      style={isOutOfStock ? { opacity: 0.5, cursor: 'not-allowed', filter: 'grayscale(100%)' } : {}}
+                    >
+                      <MessageCircle size={20} /> Buy via WhatsApp (+91 6291261549)
+                    </button>
+                  );
+                })()}
               </div>
 
               {/* Guarantees */}
