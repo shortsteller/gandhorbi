@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
 import { categories } from '../data/categories';
-import { testimonials } from '../data/testimonials';
 import { ProductCard } from '../components/ProductCard';
 import { ArrowRight, Award, ShieldCheck, HeartHandshake } from 'lucide-react';
 
@@ -371,63 +370,6 @@ export const Home = () => {
           <div className="product-cards-grid">
             {trendingProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* TESTIMONIALS SECTION */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-ivory)', borderTop: '1px solid var(--border-subtle)' }}>
-        <div className="container">
-          
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              Patron Voices
-            </span>
-            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', marginTop: '6px' }}>
-              Words from Connoisseurs
-            </h2>
-          </div>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '2rem'
-          }}>
-            {testimonials.map((test) => (
-              <div
-                key={test.id}
-                className="heritage-card"
-                style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-              >
-                <p style={{
-                  fontFamily: 'var(--font-subheading)',
-                  fontSize: '1.1rem',
-                  fontStyle: 'italic',
-                  color: 'var(--text-charcoal)',
-                  lineHeight: 1.7,
-                  marginBottom: '1.5rem'
-                }}>
-                  "{test.quote}"
-                </p>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
-                  <img
-                    src={test.photo}
-                    alt={test.name}
-                    style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
-                  />
-                  <div>
-                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', color: 'var(--text-charcoal)' }}>
-                      {test.name}
-                    </h4>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--primary-terracotta)' }}>
-                      {test.role} • {test.location}
-                    </span>
-                  </div>
-                </div>
-              </div>
             ))}
           </div>
 
