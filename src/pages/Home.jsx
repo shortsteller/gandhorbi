@@ -130,8 +130,8 @@ export const Home = () => {
         style={{
           position: 'relative',
           width: '100%',
-          aspectRatio: '1 / 1',
-          maxHeight: 'calc(100vh - 60px)',
+          height: 'calc(100vw + 1cm)',
+          maxHeight: 'calc(100vh - 20px)',
           overflow: 'hidden',
           backgroundColor: '#14100C'
         }}
