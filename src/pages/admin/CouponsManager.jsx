@@ -13,6 +13,7 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { subscribeToCoupons, deleteCoupon, toggleCouponActive } from '../../services/coupons';
 import { StatCard } from '../../components/admin/StatCard';
 import { CouponModal } from '../../components/admin/CouponModal';
+import { AdminOverflowMenu } from '../../components/admin/AdminOverflowMenu';
 
 export const CouponsManager = () => {
   const [coupons, setCoupons]       = useState([]);
@@ -309,54 +310,45 @@ export const CouponsManager = () => {
                         </button>
 
                         {/* Three-dots menu */}
-                        <div style={{ position: 'relative' }} ref={isMenuOpen ? menuRef : null}>
-                          <button
-                            className="admin-card-menu-trigger"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setActiveMenuId(isMenuOpen ? null : c.id);
-                            }}
-                            title="Coupon Options"
+                        <div style={{ position: 'relative' }}>
+                          <AdminOverflowMenu
+                            isOpen={isMenuOpen}
+                            onToggle={(open) => setActiveMenuId(open ? c.id : null)}
+                            ariaLabel={`Options for ${c.code}`}
                           >
-                            <MoreVertical size={16} />
-                          </button>
+                            <button
+                              onClick={() => {
+                                setActiveMenuId(null);
+                                handleOpenEdit(c);
+                              }}
+                              className="admin-dropdown-item"
+                            >
+                              <Edit3 size={15} color="var(--primary-terracotta)" />
+                              <span>✏️ Edit Coupon</span>
+                            </button>
 
-                          {isMenuOpen && (
-                            <div className="admin-card-dropdown fade-in" style={{ right: 0, top: '28px', zIndex: 100 }}>
-                              <button
-                                onClick={() => {
-                                  setActiveMenuId(null);
-                                  handleOpenEdit(c);
-                                }}
-                                className="admin-dropdown-item"
-                              >
-                                <Edit3 size={15} color="var(--primary-terracotta)" />
-                                <span>✏️ Edit Coupon</span>
-                              </button>
+                            <button
+                              onClick={() => {
+                                setActiveMenuId(null);
+                                handleOpenDuplicate(c);
+                              }}
+                              className="admin-dropdown-item"
+                            >
+                              <Copy size={15} color="var(--highlight-mustard)" />
+                              <span>📋 Duplicate</span>
+                            </button>
 
-                              <button
-                                onClick={() => {
-                                  setActiveMenuId(null);
-                                  handleOpenDuplicate(c);
-                                }}
-                                className="admin-dropdown-item"
-                              >
-                                <Copy size={15} color="var(--highlight-mustard)" />
-                                <span>📋 Duplicate</span>
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  setActiveMenuId(null);
-                                  handleDelete(c);
-                                }}
-                                className="admin-dropdown-item admin-dropdown-delete"
-                              >
-                                <Trash2 size={15} color="#e63946" />
-                                <span>🗑️ Delete</span>
-                              </button>
-                            </div>
-                          )}
+                            <button
+                              onClick={() => {
+                                setActiveMenuId(null);
+                                handleDelete(c);
+                              }}
+                              className="admin-dropdown-item admin-dropdown-delete"
+                            >
+                              <Trash2 size={15} color="#e63946" />
+                              <span>🗑️ Delete</span>
+                            </button>
+                          </AdminOverflowMenu>
                         </div>
                       </div>
                     </td>

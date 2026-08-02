@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { db, updateDocument, deleteDocument } from '../../services/firestore';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { AdminOverflowMenu } from '../../components/admin/AdminOverflowMenu';
 
 export const EventsManager = () => {
   const navigate = useNavigate();
@@ -204,73 +205,62 @@ export const EventsManager = () => {
                   </span>
 
                   {/* Three-dots menu trigger */}
-                  <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 20 }} ref={isMenuOpen ? menuRef : null}>
-                    <button
-                      className="admin-card-menu-trigger"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveMenuId(isMenuOpen ? null : ev.id);
-                      }}
-                      aria-label="Event options"
-                      title="Event options"
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 20 }}>
+                    <AdminOverflowMenu
+                      isOpen={isMenuOpen}
+                      onToggle={(open) => setActiveMenuId(open ? ev.id : null)}
+                      ariaLabel={`Options for ${ev.title}`}
                     >
-                      <MoreVertical size={18} />
-                    </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveMenuId(null);
+                          navigate(`/admin/events/edit/${ev.id}`);
+                        }}
+                        className="admin-dropdown-item"
+                      >
+                        <Edit3 size={15} color="var(--primary-terracotta)" />
+                        <span>✏️ Edit Event</span>
+                      </button>
 
-                    {/* Material Dropdown Menu */}
-                    {isMenuOpen && (
-                      <div className="admin-card-dropdown fade-in">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveMenuId(null);
-                            navigate(`/admin/events/edit/${ev.id}`);
-                          }}
-                          className="admin-dropdown-item"
-                        >
-                          <Edit3 size={15} color="var(--primary-terracotta)" />
-                          <span>✏️ Edit Event</span>
-                        </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveMenuId(null);
+                          handleToggleField(ev.id, 'featured', ev.featured);
+                        }}
+                        className="admin-dropdown-item"
+                      >
+                        <Star size={15} color={ev.featured ? 'var(--highlight-mustard)' : 'var(--text-warm-grey)'} />
+                        <span>⭐ {ev.featured ? 'Unfeature Event' : 'Feature Event'}</span>
+                      </button>
 
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveMenuId(null);
-                            handleToggleField(ev.id, 'featured', ev.featured);
-                          }}
-                          className="admin-dropdown-item"
-                        >
-                          <Star size={15} color={ev.featured ? 'var(--highlight-mustard)' : 'var(--text-warm-grey)'} />
-                          <span>⭐ {ev.featured ? 'Unfeature Event' : 'Feature Event'}</span>
-                        </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveMenuId(null);
+                          handleToggleField(ev.id, 'hidden', ev.hidden);
+                        }}
+                        className="admin-dropdown-item"
+                      >
+                        {ev.hidden ? <Eye size={15} color="#25D366" /> : <EyeOff size={15} color="#e63946" />}
+                        <span>👁 {ev.hidden ? 'Show on Website' : 'Hide from Website'}</span>
+                      </button>
 
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveMenuId(null);
-                            handleToggleField(ev.id, 'hidden', ev.hidden);
-                          }}
-                          className="admin-dropdown-item"
-                        >
-                          {ev.hidden ? <Eye size={15} color="#25D366" /> : <EyeOff size={15} color="#e63946" />}
-                          <span>👁 {ev.hidden ? 'Show on Website' : 'Hide from Website'}</span>
-                        </button>
+                      <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)', margin: '4px 0' }} />
 
-                        <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)', margin: '4px 0' }} />
-
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveMenuId(null);
-                            handleDelete(ev);
-                          }}
-                          className="admin-dropdown-item admin-dropdown-danger"
-                        >
-                          <Trash2 size={15} color="#e63946" />
-                          <span style={{ color: '#e63946' }}>🗑 Delete Event</span>
-                        </button>
-                      </div>
-                    )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveMenuId(null);
+                          handleDelete(ev);
+                        }}
+                        className="admin-dropdown-item admin-dropdown-danger"
+                      >
+                        <Trash2 size={15} color="#e63946" />
+                        <span style={{ color: '#e63946' }}>🗑 Delete Event</span>
+                      </button>
+                    </AdminOverflowMenu>
                   </div>
                 </div>
 
