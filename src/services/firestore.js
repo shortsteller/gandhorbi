@@ -15,6 +15,7 @@ import {
   addDoc,
   getDoc,
   getDocs,
+  setDoc,
   updateDoc,
   deleteDoc,
   query,
@@ -45,6 +46,20 @@ export const addDocument = async (collectionName, data) => {
     return { success: true, id: ref.id };
   } catch (error) {
     console.error(`[Firestore] addDocument(${collectionName}) error:`, error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const setDocument = async (collectionName, documentId, data) => {
+  if (!db) return { success: false, error: 'Firestore is not initialized.' };
+  try {
+    await setDoc(doc(db, collectionName, documentId), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
+    return { success: true };
+  } catch (error) {
+    console.error(`[Firestore] setDocument(${collectionName}/${documentId}) error:`, error);
     return { success: false, error: error.message };
   }
 };

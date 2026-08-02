@@ -216,7 +216,6 @@ export const ProductsManager = () => {
                   {/* Status overlay badges */}
                   <div className="admin-card-badges">
                     {p.hidden && <span className="admin-badge admin-badge-hidden">Hidden</span>}
-                    {p.featured && <span className="admin-badge admin-badge-featured">⭐ Featured</span>}
                     {p.trending && <span className="admin-badge admin-badge-trending">🔥 Trending</span>}
                   </div>
 
@@ -263,18 +262,6 @@ export const ProductsManager = () => {
                         >
                           {isOutOfStock ? <PackageCheck size={15} color="#25D366" /> : <PackageX size={15} color="#e63946" />}
                           <span>📦 {isOutOfStock ? 'Mark In Stock' : 'Mark Out of Stock'}</span>
-                        </button>
-
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveMenuId(null);
-                            handleToggleField(p.id, 'featured', p.featured);
-                          }}
-                          className="admin-dropdown-item"
-                        >
-                          <Star size={15} color={p.featured ? 'var(--highlight-mustard)' : 'var(--text-warm-grey)'} />
-                          <span>⭐ {p.featured ? 'Unfeature Product' : 'Feature Product'}</span>
                         </button>
 
                         <button

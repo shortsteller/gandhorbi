@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
 import { categories } from '../data/categories';
 import { ProductCard } from '../components/ProductCard';
-import { ArrowRight, Award, ShieldCheck, HeartHandshake } from 'lucide-react';
+import { ArrowRight, Award, ShieldCheck, HeartHandshake, Sparkles } from 'lucide-react';
+import { subscribeToCategoryCovers } from '../services/categoryCovers';
 
 export const Home = () => {
   const { products, navigateTo } = useShop();
@@ -16,6 +17,7 @@ export const Home = () => {
   ];
 
   const [activeMobileSlide, setActiveMobileSlide] = useState(0);
+  const [coversMap, setCoversMap]                 = useState({});
 
   useEffect(() => {
     const slideTimer = setInterval(() => {
@@ -24,10 +26,18 @@ export const Home = () => {
     return () => clearInterval(slideTimer);
   }, []);
 
+  // Real-time Firestore subscription to categoryCovers
+  useEffect(() => {
+    const unsub = subscribeToCategoryCovers((data) => {
+      setCoversMap(data);
+    });
+    return () => unsub();
+  }, []);
+
   return (
     <div className="fade-in">
       
-      {/* DESKTOP & TABLET HERO BANNER (UNTOUCHED FOR DESKTOP SCREEN SIZES >= 768px) */}
+      {/* DESKTOP & TABLET HERO BANNER */}
       <section
         className="desktop-hero-banner"
         style={{
@@ -104,155 +114,157 @@ export const Home = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.6rem',
-                backdropFilter: 'blur(8px)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+                backdropFilter: 'blur(4px)'
               }}
             >
-              Explore Collections
+              Explore Categories
             </button>
           </div>
         </div>
       </section>
 
-      {/* MOBILE ONLY HERO BANNER (STRICT 1:1 SQUARE ASPECT RATIO, DISPLAYED ONLY ON MOBILE < 768px) */}
+      {/* MOBILE HERO BANNER (APPLIES ONLY ON SCREEN SIZES < 769px) */}
       <section
         className="mobile-hero-banner"
         style={{
-          display: 'none',
           position: 'relative',
-          width: '100vw',
-          height: '100vw',
-          maxHeight: '520px',
-          aspectRatio: '1 / 1',
+          width: '100%',
+          height: 'calc(100vh - 60px)',
           overflow: 'hidden',
-          backgroundColor: '#0F0C0A',
-          boxSizing: 'border-box'
+          backgroundColor: '#14100C'
         }}
       >
-        {/* Mobile Background Images with Smooth Carousel Fade */}
-        {mobileHeroImages.map((imgSrc, idx) => (
+        {mobileHeroImages.map((imgUrl, index) => (
           <div
-            key={idx}
+            key={index}
             style={{
               position: 'absolute',
               inset: 0,
-              opacity: idx === activeMobileSlide ? 1 : 0,
-              transition: 'opacity 1s ease-in-out',
-              backgroundImage: `linear-gradient(to top, rgba(12, 10, 8, 0.88) 0%, rgba(12, 10, 8, 0.25) 35%, rgba(12, 10, 8, 0) 65%), url("${imgSrc}")`,
+              opacity: activeMobileSlide === index ? 1 : 0,
+              transition: 'opacity 1.2s ease-in-out',
+              backgroundImage: `linear-gradient(to top, rgba(15, 12, 10, 0.92) 0%, rgba(15, 12, 10, 0.35) 45%, rgba(15, 12, 10, 0.15) 100%), url("${imgUrl}")`,
               backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat'
+              backgroundPosition: 'center'
             }}
           />
         ))}
 
-        {/* Mobile Hero Content: ONLY TWO CTA BUTTONS in Lower-Center (No Text / Badges) */}
         <div
           style={{
             position: 'absolute',
-            bottom: '1.2rem',
+            bottom: '2.5rem',
             left: 0,
             right: 0,
             zIndex: 3,
-            padding: '0 1rem',
+            padding: '0 1.25rem',
+            textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.65rem'
+            alignItems: 'center'
           }}
         >
-          {/* 1. Shop Now Mobile Button */}
-          <button
-            onClick={() => navigateTo('collections')}
-            className="mobile-cta-btn-primary"
-            style={{
-              width: '100%',
-              maxWidth: '300px',
-              background: 'linear-gradient(135deg, #E2B755 0%, #D4A44E 50%, #B85C38 100%)',
-              color: '#12141D',
-              padding: '0.78rem 1.2rem',
-              borderRadius: 'var(--radius-full)',
-              fontFamily: 'var(--font-btn)',
-              fontWeight: 700,
-              fontSize: '0.88rem',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              boxShadow: '0 6px 20px rgba(212, 164, 78, 0.45)',
-              border: '1px solid #F5D77F',
-              transition: 'var(--transition-fast)'
-            }}
-          >
-            Shop Now <ArrowRight size={16} />
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+            {mobileHeroImages.map((_, idx) => (
+              <div
+                key={idx}
+                style={{
+                  width: activeMobileSlide === idx ? '22px' : '7px',
+                  height: '7px',
+                  borderRadius: 'var(--radius-full)',
+                  backgroundColor: activeMobileSlide === idx ? '#D4A44E' : 'rgba(255, 255, 255, 0.45)',
+                  transition: 'all 0.4s ease'
+                }}
+              />
+            ))}
+          </div>
 
-          {/* 2. Explore More Collections Mobile Button */}
-          <button
-            onClick={() => {
-              const el = document.getElementById('shop-categories');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-              else navigateTo('collections');
-            }}
-            className="mobile-cta-btn-secondary"
-            style={{
-              width: '100%',
-              maxWidth: '300px',
-              backgroundColor: 'rgba(20, 16, 12, 0.72)',
-              color: '#F7F4EE',
-              border: '1.5px solid #D4A44E',
-              padding: '0.75rem 1.2rem',
-              borderRadius: 'var(--radius-full)',
-              fontFamily: 'var(--font-btn)',
-              fontWeight: 600,
-              fontSize: '0.88rem',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              backdropFilter: 'blur(8px)',
-              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
-              transition: 'var(--transition-fast)'
-            }}
-          >
-            Explore More Collections
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '320px', gap: '0.75rem' }}>
+            <button
+              onClick={() => navigateTo('collections')}
+              className="mobile-cta-btn-primary"
+              style={{
+                width: '100%',
+                background: 'linear-gradient(135deg, #E2B755 0%, #D4A44E 50%, #B85C38 100%)',
+                color: '#12141D',
+                padding: '0.9rem 1.5rem',
+                borderRadius: 'var(--radius-full)',
+                fontFamily: 'var(--font-btn)',
+                fontWeight: 700,
+                fontSize: '0.92rem',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                boxShadow: '0 6px 20px rgba(212, 164, 78, 0.4)',
+                border: '1px solid #F5D77F'
+              }}
+            >
+              Shop Now <ArrowRight size={16} />
+            </button>
+
+            <button
+              onClick={() => {
+                const el = document.getElementById('shop-categories');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                else navigateTo('collections');
+              }}
+              className="mobile-cta-btn-secondary"
+              style={{
+                width: '100%',
+                backgroundColor: 'rgba(20, 16, 12, 0.75)',
+                color: '#F7F4EE',
+                border: '1.5px solid #D4A44E',
+                padding: '0.85rem 1.5rem',
+                borderRadius: 'var(--radius-full)',
+                fontFamily: 'var(--font-btn)',
+                fontWeight: 600,
+                fontSize: '0.9rem',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backdropFilter: 'blur(6px)'
+              }}
+            >
+              Explore Categories
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* BRAND ETHOS TICKER SECTION (VISIBLE ON DESKTOP/TABLET, HIDDEN ON MOBILE) */}
-      <section
-        className="ethos-ticker-section"
-        style={{
-          backgroundColor: 'var(--text-charcoal)',
-          color: '#F7F4EE',
-          padding: '1.5rem 0',
-          borderTop: '2px solid var(--highlight-mustard)'
-        }}
-      >
+      {/* BRAND VALUES BANNER */}
+      <section className="ethos-ticker-section" style={{ backgroundColor: 'var(--bg-soft-ivory)', borderBottom: '1px solid var(--border-subtle)', padding: '2rem 0' }}>
         <div className="container">
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1.5rem',
-            alignItems: 'center',
-            textAlign: 'center'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '2rem'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}>
-              <Award color="var(--highlight-mustard)" size={22} />
-              <span style={{ fontSize: '0.88rem', textAlign: 'left', lineHeight: 1.3 }}>500+ Rural Master Craftswomen</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <Award size={36} color="var(--primary-terracotta)" style={{ flexShrink: 0 }} />
+              <div>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', color: 'var(--text-charcoal)' }}>100% Authentic Handloom</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)', marginTop: '2px' }}>Directly sourced from Bengal master artisans</p>
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}>
-              <ShieldCheck color="var(--highlight-mustard)" size={22} />
-              <span style={{ fontSize: '0.88rem', textAlign: 'left', lineHeight: 1.3 }}>100% Authentic Handcrafted</span>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <ShieldCheck size={36} color="var(--primary-terracotta)" style={{ flexShrink: 0 }} />
+              <div>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', color: 'var(--text-charcoal)' }}>Certified Heritage Craft</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)', marginTop: '2px' }}>Nakshi Kantha &amp; GI Tagged Dokra</p>
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}>
-              <HeartHandshake color="var(--highlight-mustard)" size={22} />
-              <span style={{ fontSize: '0.88rem', textAlign: 'left', lineHeight: 1.3 }}>Fair Trade & Ethical Living</span>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <HeartHandshake size={36} color="var(--primary-terracotta)" style={{ flexShrink: 0 }} />
+              <div>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', color: 'var(--text-charcoal)' }}>Fair Trade Artisan Support</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-warm-grey)', marginTop: '2px' }}>Empowering rural women weavers &amp; smiths</p>
+              </div>
             </div>
           </div>
         </div>
@@ -279,67 +291,95 @@ export const Home = () => {
             gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))',
             gap: '1.8rem'
           }}>
-            {categories.map((cat) => (
-              <div
-                key={cat.id}
-                onClick={() => navigateTo('collections', cat.name)}
-                className="heritage-card"
-                style={{
-                  cursor: 'pointer',
-                  height: '340px',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
-              >
-                {/* Background Image */}
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  loading="lazy"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
-                  }}
-                  onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
-                  onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
-                />
+            {categories.map((cat) => {
+              const coverUrl = coversMap[cat.id]?.image?.url || null;
 
-                {/* Gradient Overlay */}
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(to top, rgba(43,43,43,0.85) 0%, rgba(43,43,43,0.1) 60%)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-end',
-                  padding: '1.5rem'
-                }}>
-                  <span style={{
-                    color: 'var(--highlight-mustard)',
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    marginBottom: '4px'
+              return (
+                <div
+                  key={cat.id}
+                  onClick={() => navigateTo('collections', cat.name)}
+                  className="heritage-card"
+                  style={{
+                    cursor: 'pointer',
+                    height: '340px',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                  {/* Background Image / Clean Placeholder */}
+                  {coverUrl ? (
+                    <img
+                      src={coverUrl}
+                      alt={cat.name}
+                      loading="lazy"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+                      }}
+                      onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
+                      onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        background: 'linear-gradient(135deg, var(--bg-soft-ivory) 0%, var(--bg-warm-linen) 60%, #E2D7C3 100%)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '2rem',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <Sparkles size={36} color="var(--primary-terracotta)" style={{ opacity: 0.6, marginBottom: '0.75rem' }} />
+                      <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--text-charcoal)', margin: 0 }}>
+                        {cat.name}
+                      </h4>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-warm-grey)', marginTop: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        Heritage Collection
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Gradient Overlay & Details */}
+                  <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: coverUrl
+                      ? 'linear-gradient(to top, rgba(43,43,43,0.88) 0%, rgba(43,43,43,0.1) 60%)'
+                      : 'linear-gradient(to top, rgba(43,43,43,0.75) 0%, rgba(43,43,43,0) 60%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    padding: '1.5rem'
                   }}>
-                    {cat.count} Artifacts
-                  </span>
-                  <h3 style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: '1.6rem',
-                    color: '#FFFDF8',
-                    marginBottom: '6px'
-                  }}>
-                    {cat.name}
-                  </h3>
-                  <p style={{ color: '#D5D5D5', fontSize: '0.85rem', lineHeight: 1.4 }}>
-                    {cat.subtitle}
-                  </p>
+                    <h3 style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '1.5rem',
+                      color: '#ffffff',
+                      lineHeight: 1.2
+                    }}>
+                      {cat.name}
+                    </h3>
+                    <p style={{
+                      fontSize: '0.85rem',
+                      color: 'rgba(255, 253, 248, 0.85)',
+                      marginTop: '4px',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden'
+                    }}>
+                      {cat.subtitle || cat.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>

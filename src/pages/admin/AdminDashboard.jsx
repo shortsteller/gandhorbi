@@ -1,17 +1,19 @@
 /**
  * AdminDashboard.jsx
  * Default landing page after admin login.
- * Shows live Firestore statistics, recent products/events, and quick actions.
+ * Shows live Firestore statistics, recent products/events, quick actions,
+ * and popup modal to manage Homepage Category Cover images.
  */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Package, Tag, Star, TrendingUp, Calendar, Clock, CheckCircle, Activity,
-  PlusCircle, CalendarPlus, LayoutDashboard, RefreshCw
+  PlusCircle, CalendarPlus, LayoutDashboard, RefreshCw, Image as ImageIcon
 } from 'lucide-react';
 import { db } from '../../services/firestore';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { StatCard } from '../../components/admin/StatCard';
+import { CategoryCoverModal } from '../../components/admin/CategoryCoverModal';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -19,6 +21,9 @@ export const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
   const [events, setEvents]     = useState([]);
   const [loading, setLoading]   = useState(true);
+
+  // Modal state for Homepage Category Covers
+  const [isCoverModalOpen, setIsCoverModalOpen] = useState(false);
 
   // ── Live Firestore listeners ────────────────────────────────────────────────
   useEffect(() => {
@@ -72,7 +77,6 @@ export const AdminDashboard = () => {
   // ── Derived stats ────────────────────────────────────────────────────────────
   const totalProducts   = products.length;
   const totalCategories = [...new Set(products.map(p => p.category).filter(Boolean))].length;
-  const featured        = products.filter(p => p.featured).length;
   const trending        = products.filter(p => p.trending).length;
 
   const totalEvents     = events.length;
@@ -120,7 +124,6 @@ export const AdminDashboard = () => {
         <div className="admin-stats-grid">
           <StatCard icon={<Package size={24} />}  label="Total Products"    value={totalProducts}  loading={loading} />
           <StatCard icon={<Tag size={24} />}       label="Categories Used"   value={totalCategories} loading={loading} color="var(--secondary-olive)" />
-          <StatCard icon={<Star size={24} />}      label="Featured Products" value={featured}       loading={loading} color="var(--highlight-mustard)" />
           <StatCard icon={<TrendingUp size={24} />} label="Trending Products" value={trending}      loading={loading} color="#25D366" />
         </div>
       </section>
@@ -139,7 +142,7 @@ export const AdminDashboard = () => {
       {/* ── Quick Actions ─────────────────────────────────────────────────── */}
       <section className="admin-section">
         <h2 className="admin-section-heading">⚡ Quick Actions</h2>
-        <div className="admin-quick-actions">
+        <div className="admin-quick-actions" style={{ flexWrap: 'wrap' }}>
           <button
             className="admin-quick-btn admin-quick-btn-primary"
             onClick={() => navigate('/admin/products/add')}
@@ -154,8 +157,29 @@ export const AdminDashboard = () => {
             <CalendarPlus size={20} />
             Add New Event
           </button>
+
+          {/* New button to open Homepage Category Cover modal */}
+          <button
+            className="admin-quick-btn"
+            onClick={() => setIsCoverModalOpen(true)}
+            style={{
+              backgroundColor: 'var(--bg-soft-ivory)',
+              color: 'var(--primary-terracotta)',
+              border: '1px solid var(--border-light)',
+              fontWeight: 600
+            }}
+          >
+            <ImageIcon size={20} color="var(--primary-terracotta)" />
+            Add Pictures for Homepage Category Cover
+          </button>
         </div>
       </section>
+
+      {/* ── Category Cover Popup Modal ────────────────────────────────────── */}
+      <CategoryCoverModal
+        isOpen={isCoverModalOpen}
+        onClose={() => setIsCoverModalOpen(false)}
+      />
 
       {/* ── Recent Products ───────────────────────────────────────────────── */}
       <section className="admin-section">

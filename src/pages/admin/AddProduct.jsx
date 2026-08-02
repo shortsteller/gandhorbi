@@ -13,7 +13,7 @@ import { categories } from '../../data/categories';
 const INITIAL_FORM = {
   name: '', category: '', description: '',
   price: '', originalPrice: '', stock: '5',
-  inStock: true, featured: false, trending: false,
+  inStock: true, trending: false,
 };
 
 export const AddProduct = () => {
@@ -48,7 +48,6 @@ export const AddProduct = () => {
           originalPrice: p.originalPrice ? String(p.originalPrice) : '',
           stock:         p.stock         !== undefined ? String(p.stock) : '5',
           inStock:       isInStock,
-          featured:      Boolean(p.featured),
           trending:      Boolean(p.trending),
         });
         setExistingImages(p.images || []);
@@ -84,7 +83,6 @@ export const AddProduct = () => {
         originalPrice: form.originalPrice ? Number(form.originalPrice) : null,
         stock:         stockNum,
         inStock:       form.inStock,
-        featured:      form.featured,
         trending:      form.trending,
         discount:      form.originalPrice
           ? Math.round(((Number(form.originalPrice) - Number(form.price)) / Number(form.originalPrice)) * 100)
@@ -232,11 +230,6 @@ export const AddProduct = () => {
               <input type="checkbox" name="inStock" checked={form.inStock} onChange={handleChange} className="admin-checkbox" />
               <span>📦 In Stock / Available</span>
               <span className="admin-checkbox-hint">Uncheck to mark Out of Stock (product stays in Collections, image appears hazy)</span>
-            </label>
-            <label className="admin-checkbox-label">
-              <input type="checkbox" name="featured" checked={form.featured} onChange={handleChange} className="admin-checkbox" />
-              <span>⭐ Feature on Homepage</span>
-              <span className="admin-checkbox-hint">Shown in Featured section</span>
             </label>
             <label className="admin-checkbox-label">
               <input type="checkbox" name="trending" checked={form.trending} onChange={handleChange} className="admin-checkbox" />
