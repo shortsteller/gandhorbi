@@ -1,19 +1,16 @@
-/**
- * AddProduct.jsx
- * Admin form to add a new product or edit an existing product.
- * Uploads images to Cloudinary, then saves/updates in Firestore.
- */
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { PackagePlus, CheckCircle, AlertCircle, ChevronLeft, Edit3 } from 'lucide-react';
+import { PackagePlus, CheckCircle, AlertCircle, ChevronLeft, Edit3, Tag } from 'lucide-react';
 import { ImageUploader } from '../../components/admin/ImageUploader';
 import { addProduct, getProductById, updateProduct } from '../../services/products';
 import { categories } from '../../data/categories';
+import { subscribeToCoupons } from '../../services/coupons';
 
 const INITIAL_FORM = {
   name: '', category: '', description: '',
   price: '', originalPrice: '', stock: '5',
   inStock: true, trending: false,
+  applicableCoupon: '',
 };
 
 export const AddProduct = () => {
@@ -22,6 +19,7 @@ export const AddProduct = () => {
   const isEditMode = Boolean(id);
 
   const [form, setForm]         = useState(INITIAL_FORM);
+  const [coupons, setCoupons]   = useState([]);
   const [imageFiles, setImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [submitting, setSubmitting] = useState(false);
@@ -34,6 +32,13 @@ export const AddProduct = () => {
   };
 
   useEffect(() => {
+    const unsub = subscribeToCoupons((list) => {
+      setCoupons(list || []);
+    });
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
     if (!id) return;
     setLoadingProduct(true);
     getProductById(id).then((res) => {
@@ -41,14 +46,15 @@ export const AddProduct = () => {
         const p = res.data;
         const isInStock = p.inStock !== false && (p.stock === undefined || Number(p.stock) > 0);
         setForm({
-          name:          p.name          || '',
-          category:      p.category      || '',
-          description:   p.description   || '',
-          price:         p.price         !== undefined ? String(p.price) : '',
-          originalPrice: p.originalPrice ? String(p.originalPrice) : '',
-          stock:         p.stock         !== undefined ? String(p.stock) : '5',
-          inStock:       isInStock,
-          trending:      Boolean(p.trending),
+          name:             p.name             || '',
+          category:         p.category         || '',
+          description:      p.description      || '',
+          price:            p.price            !== undefined ? String(p.price) : '',
+          originalPrice:    p.originalPrice    ? String(p.originalPrice) : '',
+          stock:            p.stock            !== undefined ? String(p.stock) : '5',
+          inStock:          isInStock,
+          trending:         Boolean(p.trending),
+          applicableCoupon: p.applicableCoupon || '',
         });
         setExistingImages(p.images || []);
       } else {
@@ -76,15 +82,16 @@ export const AddProduct = () => {
       const stockNum = form.inStock ? (form.stock ? Number(form.stock) : 5) : 0;
 
       const productData = {
-        name:          form.name.trim(),
-        category:      form.category,
-        description:   form.description.trim(),
-        price:         Number(form.price),
-        originalPrice: form.originalPrice ? Number(form.originalPrice) : null,
-        stock:         stockNum,
-        inStock:       form.inStock,
-        trending:      form.trending,
-        discount:      form.originalPrice
+        name:             form.name.trim(),
+        category:         form.category,
+        description:      form.description.trim(),
+        price:            Number(form.price),
+        originalPrice:    form.originalPrice ? Number(form.originalPrice) : null,
+        stock:            stockNum,
+        inStock:          form.inStock,
+        trending:         form.trending,
+        applicableCoupon: form.applicableCoupon || '',
+        discount:         form.originalPrice
           ? Math.round(((Number(form.originalPrice) - Number(form.price)) / Number(form.originalPrice)) * 100)
           : null,
       };
@@ -189,7 +196,7 @@ export const AddProduct = () => {
 
         {/* ── Pricing & Stock ─────────────────────────────────────────────── */}
         <div className="admin-form-card">
-          <h3 className="admin-form-section-title">Pricing & Stock</h3>
+          <h3 className="admin-form-section-title">Pricing &amp; Stock</h3>
 
           <div className="admin-form-row admin-form-row-3">
             <div className="admin-field-group">
@@ -212,6 +219,27 @@ export const AddProduct = () => {
                 placeholder="e.g. 5"
                 value={form.stock} onChange={handleChange} disabled={!form.inStock} />
             </div>
+          </div>
+
+          {/* Add Coupon Dropdown Option */}
+          <div className="admin-field-group" style={{ marginTop: '1.25rem' }}>
+            <label className="admin-field-label" htmlFor="prod-coupon">
+              Add Coupons
+            </label>
+            <select
+              id="prod-coupon"
+              name="applicableCoupon"
+              className="admin-field-input admin-field-select"
+              value={form.applicableCoupon}
+              onChange={handleChange}
+            >
+              <option value="">— Select Coupon (Optional) —</option>
+              {coupons.map((c) => (
+                <option key={c.id} value={c.code}>
+                  🎟️ {c.code} ({c.discountType === 'percentage' ? `${c.discountValue}% OFF` : `₹${c.discountValue} OFF`})
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Discount preview */}

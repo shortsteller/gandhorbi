@@ -428,17 +428,6 @@ export const CouponModal = ({ isOpen, onClose, editingCoupon = null, isDuplicate
                 />
                 <span>Specific Categories</span>
               </label>
-
-              <label className="admin-checkbox-label">
-                <input
-                  type="radio"
-                  name="applicability"
-                  value="products"
-                  checked={form.applicability === 'products'}
-                  onChange={handleChange}
-                />
-                <span>Specific Products</span>
-              </label>
             </div>
 
             {/* If Specific Categories */}
