@@ -1,11 +1,11 @@
 /**
  * AdminLogin.jsx
- * Firebase Email/Password login page for the Admin Portal.
+ * Username/Password login page for the Admin Portal.
  * Auto-redirects to /admin/dashboard if already authenticated.
  */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { signIn } from '../../services/auth';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -13,7 +13,7 @@ export const AdminLogin = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
-  const [email, setEmail]       = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [error, setError]       = useState('');
@@ -28,13 +28,17 @@ export const AdminLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError('Please enter both email and password.');
+    if (!username.trim() || !password) {
+      setError('Please enter both username and password.');
       return;
     }
     setSubmitting(true);
     setError('');
-    const result = await signIn(email, password);
+
+    // If entered username doesn't contain '@', append domain for Firebase Auth compatibility
+    const authEmail = username.includes('@') ? username.trim() : `${username.trim()}@gandhorbi.com`;
+
+    const result = await signIn(authEmail, password);
     if (result.success) {
       navigate('/admin/dashboard', { replace: true });
     } else {
@@ -63,21 +67,21 @@ export const AdminLogin = () => {
         {/* Form */}
         <form onSubmit={handleSubmit} className="admin-login-form" noValidate>
 
-          {/* Email */}
+          {/* Username */}
           <div className="admin-field-group">
-            <label className="admin-field-label" htmlFor="admin-email">
-              Email Address
+            <label className="admin-field-label" htmlFor="admin-username">
+              Username
             </label>
             <div className="admin-field-icon-wrap">
-              <Mail size={17} className="admin-field-icon" />
+              <User size={17} className="admin-field-icon" />
               <input
-                id="admin-email"
-                type="email"
+                id="admin-username"
+                type="text"
                 className="admin-field-input"
-                placeholder="admin@gandhorbi.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
+                placeholder=""
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"
                 required
               />
             </div>
@@ -94,7 +98,7 @@ export const AdminLogin = () => {
                 id="admin-password"
                 type={showPass ? 'text' : 'password'}
                 className="admin-field-input"
-                placeholder="••••••••"
+                placeholder=""
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
