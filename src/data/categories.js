@@ -16,10 +16,10 @@ export const categories = [
   {
     id: "traditional-kantha-creations",
     name: "Traditional Kantha Creations",
-    subtitle: "Artisanal Heritage Nakshi Kantha Tapestries & Textiles",
+    subtitle: "Kantha O Kahini",
     count: 24,
     image: null,
-    description: "Centuries-old running stitch masterpieces depicting folk narratives, motifs, and traditional art."
+    description: "Kantha O Kahini"
   },
   {
     id: "dokra-art",

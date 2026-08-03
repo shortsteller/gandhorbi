@@ -253,7 +253,7 @@ export const Home = () => {
               Shop by Categories
             </h2>
             <p style={{ color: 'var(--text-warm-grey)', marginTop: '0.75rem', maxWidth: '600px', margin: '0.75rem auto 0 auto' }}>
-              Discover our signature collections of hand-stitched textiles, lost-wax bronzes, and artisanal apparel.
+              Discover our signature collections of hand-stitched textiles, brass, bell metal and bronze, and artisanal apparel.
             </p>
           </div>
 
@@ -336,17 +336,19 @@ export const Home = () => {
                     }}>
                       {cat.name}
                     </h3>
-                    <p style={{
-                      fontSize: '0.85rem',
-                      color: 'rgba(255, 253, 248, 0.85)',
-                      marginTop: '4px',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden'
-                    }}>
-                      {cat.subtitle || cat.description}
-                    </p>
+                    {cat.name === 'Traditional Kantha Creations' && (
+                      <p style={{
+                        fontSize: '0.85rem',
+                        color: 'rgba(255, 253, 248, 0.85)',
+                        marginTop: '4px',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}>
+                        Kantha O Kahini
+                      </p>
+                    )}
                   </div>
                 </div>
               );
