@@ -201,7 +201,7 @@ export const Footer = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.95rem', color: '#D5D5D5' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.7rem' }}>
                 <MapPin size={18} style={{ color: 'var(--primary-terracotta)', marginTop: '3px', flexShrink: 0 }} />
-                <span>14/B Heritage Crafts Avenue, Ballygunge, Kolkata, West Bengal 700019, India</span>
+                <span>11/25G, Jheel Rd, Newland, Jadavpur, Kolkata, West Bengal 700075</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
                 <Phone size={18} style={{ color: 'var(--primary-terracotta)', flexShrink: 0 }} />
@@ -209,7 +209,7 @@ export const Footer = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
                 <Mail size={18} style={{ color: 'var(--primary-terracotta)', flexShrink: 0 }} />
-                <a href="mailto:info@gandhorbifolkarts.com" style={{ color: 'inherit' }}>info@gandhorbifolkarts.com</a>
+                <a href="mailto:gandhorbifolkarts@gmail.com" style={{ color: 'inherit' }}>gandhorbifolkarts@gmail.com</a>
               </div>
             </div>
           </div>
