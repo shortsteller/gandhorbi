@@ -59,7 +59,7 @@ export const Footer = () => {
               lineHeight: 1.7,
               marginBottom: '1.5rem'
             }}>
-              A premier Bengali heritage brand dedicated to preserving centuries-old royal craftsmanship—handcrafted Nakshi Kantha textiles, ancient Dokra lost-wax bronze sculptures, and traditional wooden artifacts.
+              A premier Bengali heritage brand dedicated to preserving centuries-old royal craftsmanship—handcrafted Nakshi Kantha textiles, ancient Dokra sculptures, and traditional wooden artifacts.
             </p>
 
             {/* Social Links */}

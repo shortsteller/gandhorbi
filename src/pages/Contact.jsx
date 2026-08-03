@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
 
 export const Contact = () => {
   return (
@@ -74,18 +74,6 @@ export const Contact = () => {
                     <strong style={{ color: 'var(--text-charcoal)' }}>Email Desk:</strong>
                     <p style={{ color: 'var(--text-warm-grey)', marginTop: '3px' }}>
                       <a href="mailto:gandhorbifolkarts@gmail.com" style={{ color: 'inherit', fontWeight: 600 }}>gandhorbifolkarts@gmail.com</a>
-                    </p>
-                  </div>
-                </div>
-
-                {/* Hours */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.9rem' }}>
-                  <Clock size={22} style={{ color: 'var(--primary-terracotta)', flexShrink: 0, marginTop: '3px' }} />
-                  <div>
-                    <strong style={{ color: 'var(--text-charcoal)' }}>Studio Hours:</strong>
-                    <p style={{ color: 'var(--text-warm-grey)', marginTop: '3px', lineHeight: 1.5 }}>
-                      Monday – Saturday: 10:00 AM – 8:00 PM IST<br />
-                      Sunday: 11:00 AM – 6:00 PM IST
                     </p>
                   </div>
                 </div>
