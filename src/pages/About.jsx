@@ -1,8 +1,13 @@
 /**
  * About.jsx
- * Comprehensive About Us page for Gandhorbi Folk Arts.
- * Designed with luxury heritage aesthetics matching the platform design system.
- * Based on official brand documentation & presentation archive.
+ * Remade About Us page for Gandhorbi Folk Arts.
+ * Layout and sections repositioned precisely per user directives:
+ * 1. Brand Journey
+ * 2. Brand Mission (with artisan embroidery photo)
+ * 3. Our 4 Pillars & Goals
+ * 4. Owner Section (Debjani Chatterjee - with owner photo, mobile layout zero clipping, no quote box)
+ * 5. Folk Art Forms
+ * 6. Mrittika Alliance & Community Impact
  */
 
 import React from 'react';
@@ -10,18 +15,18 @@ import { useShop } from '../context/ShopContext';
 import {
   Sparkles, Heart, Compass, ShieldCheck, ArrowRight, Award,
   UserCheck, BookOpen, Layers, Leaf, Palette, HeartHandshake,
-  Globe, Sun, CheckCircle2, Star
+  Globe, Sun, CheckCircle2, Star, Briefcase, GraduationCap, Brush
 } from 'lucide-react';
 
 export const About = () => {
   const { navigateTo } = useShop();
 
   return (
-    <div className="fade-in" style={{ paddingTop: '100px', backgroundColor: 'var(--bg-warm-linen)', minHeight: '100vh' }}>
+    <div className="fade-in" style={{ paddingTop: '100px', backgroundColor: 'var(--bg-warm-linen)', minHeight: '100vh', overflowX: 'hidden' }}>
       
       {/* ── EDITORIAL HERO SECTION ─────────────────────────────────────────── */}
-      <section className="section-padding" style={{ borderBottom: '1px solid var(--border-subtle)', position: 'relative', overflow: 'hidden' }}>
-        <div className="container" style={{ textAlign: 'center', maxWidth: '900px', position: 'relative', zIndex: 2 }}>
+      <section className="section-padding" style={{ borderBottom: '1px solid var(--border-subtle)', position: 'relative', overflow: 'hidden', padding: '3.5rem 1rem' }}>
+        <div className="container" style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
           <span style={{
             color: 'var(--primary-terracotta)',
             fontSize: '0.85rem',
@@ -35,10 +40,10 @@ export const About = () => {
           </span>
           <h1 style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: 'clamp(2.6rem, 5.5vw, 4.2rem)',
+            fontSize: 'clamp(2.4rem, 5vw, 4rem)',
             lineHeight: 1.15,
             marginTop: '0.2rem',
-            marginBottom: '1.5rem',
+            marginBottom: '1.2rem',
             color: 'var(--text-charcoal)',
             fontWeight: 700
           }}>
@@ -46,56 +51,85 @@ export const About = () => {
           </h1>
           <p style={{
             fontFamily: 'var(--font-subheading)',
-            fontSize: 'clamp(1.15rem, 2.2vw, 1.4rem)',
+            fontSize: 'clamp(1.05rem, 2vw, 1.3rem)',
             fontStyle: 'italic',
             color: 'var(--text-warm-grey)',
             lineHeight: 1.7,
             maxWidth: '800px',
             margin: '0 auto 1.5rem auto'
           }}>
-            "Named after the mythological <strong style={{ color: 'var(--primary-terracotta)', fontStyle: 'normal' }}>Gandharvas</strong>—celestial musicians celebrated for their divine artistry—Gandhorbi symbolizes a harmonious blend of creativity, heritage, and community empowerment."
+            "Drawing inspiration from the mythological <strong style={{ color: 'var(--primary-terracotta)', fontStyle: 'normal' }}>Gandharvas</strong>—celestial musicians known for their divine artistry—the name 'Gandhorbi' symbolizes a harmonious blend of creativity, heritage, and community."
           </p>
           
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-charcoal)', fontWeight: 600 }}>
-              <Sparkles size={16} color="var(--primary-terracotta)" /> Indigenous Crafts
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.2rem', marginTop: '1.8rem', flexWrap: 'wrap' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.88rem', color: 'var(--text-charcoal)', fontWeight: 600 }}>
+              <Sparkles size={16} color="var(--primary-terracotta)" /> Sustainable Crafts
             </span>
             <span style={{ color: 'var(--border-subtle)' }}>•</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-charcoal)', fontWeight: 600 }}>
-              <Heart size={16} color="var(--primary-terracotta)" /> Women Artisan Collective
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.88rem', color: 'var(--text-charcoal)', fontWeight: 600 }}>
+              <Heart size={16} color="var(--primary-terracotta)" /> Women Artisan Empowerment
             </span>
             <span style={{ color: 'var(--border-subtle)' }}>•</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-charcoal)', fontWeight: 600 }}>
-              <ShieldCheck size={16} color="var(--secondary-olive)" /> Fair Trade Certified
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.88rem', color: 'var(--text-charcoal)', fontWeight: 600 }}>
+              <ShieldCheck size={16} color="var(--secondary-olive)" /> Fair Trade Practice
             </span>
           </div>
         </div>
       </section>
 
-      {/* ── BRAND ESSENCE & CONCEPT ─────────────────────────────────────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-sage)' }}>
-        <div className="container">
+      {/* ── SECTION 1: BRAND JOURNEY ───────────────────────────────────────── */}
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-ivory)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
+        <div className="container" style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+          <span style={{ color: 'var(--secondary-olive)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+            Heritage Evolution
+          </span>
+          <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.8rem)', marginTop: '6px', marginBottom: '1.5rem', color: 'var(--text-charcoal)' }}>
+            Brand Journey
+          </h2>
+          <div style={{
+            backgroundColor: 'var(--bg-warm-linen)',
+            padding: 'clamp(1.5rem, 4vw, 2.8rem)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--border-subtle)',
+            boxShadow: 'var(--shadow-card)',
+            textAlign: 'left'
+          }}>
+            <p style={{
+              color: 'var(--text-warm-grey)',
+              fontSize: 'clamp(1rem, 1.8vw, 1.12rem)',
+              lineHeight: 1.85,
+              margin: 0
+            }}>
+              Gandhorbi Folk Arts began as a folk art documentation initiative focused on preserving Bengal’s traditional crafts and supporting rural women artisans. Over time, it evolved into a craft-based cultural brand that revived practices such as Kantha embroidery, Pattachitra painting, and terracotta work by adapting them into contemporary products. Through exhibitions, workshops, and digital platforms, the brand expanded its reach while staying rooted in authenticity, sustainability, and artisan empowerment.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION 2: BRAND MISSION ────────────────────────────────────────── */}
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-sage)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
+        <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '3.5rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '3rem',
             alignItems: 'center'
           }}>
             <div>
               <span style={{ color: 'var(--secondary-olive)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-                Brand Essence &amp; Mission
+                Cultural Initiative
               </span>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', marginTop: '6px', marginBottom: '1.2rem', color: 'var(--text-charcoal)' }}>
-                Revitalizing Traditional Indian Folk Art
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.6rem)', marginTop: '6px', marginBottom: '1.2rem', color: 'var(--text-charcoal)' }}>
+                Brand Mission
               </h2>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '1.2rem' }}>
-                Gandhorbi Folk Arts is a cultural movement rooted in preserving and revitalizing traditional Indian folk art forms, with a particular focus on empowering rural and tribal women artisans across Bengal.
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.02rem', lineHeight: 1.8, marginBottom: '1.2rem' }}>
+                Gandhorbi Folk Arts is a cultural initiative rooted in the preservation and revitalization of traditional Indian folk art forms, with a particular focus on empowering rural and tribal women artisans.
               </p>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '1.2rem' }}>
-                By reviving endangered practices such as handloom weaving, Nakshi Kantha embroidery, Pattachitra scroll painting, terracotta sculpture, and upcycled design, Gandhorbi transforms indigenous techniques into functional, wearable, and meaningful lifestyle heirlooms without compromising cultural authenticity.
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.02rem', lineHeight: 1.8, marginBottom: '1.2rem' }}>
+                This movement champions sustainable craftsmanship by reviving endangered practices such as handloom weaving, terracotta work, folk painting, and upcycled design. Through fair trade models and skill development programs, Gandhorbi fosters economic independence for artisans while ensuring that their cultural knowledge is passed down and adapted for contemporary relevance.
               </p>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.05rem', lineHeight: 1.8 }}>
-                More than a brand, Gandhorbi represents a living archive of India's folk legacy—reimagined through the hands and voices of its original custodians.
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.02rem', lineHeight: 1.8, margin: 0 }}>
+                Their products—ranging from home décor and textiles to lifestyle accessories—reflect a deep respect for indigenous aesthetics, ecological consciousness, and storytelling traditions.
               </p>
             </div>
 
@@ -108,24 +142,24 @@ export const About = () => {
               backgroundColor: '#fff'
             }}>
               <img
-                src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80&w=1000"
-                alt="Bengali Heritage Handloom Crafting"
-                style={{ width: '100%', height: '440px', objectFit: 'cover' }}
+                src="/about-kantha-artisan.jpg"
+                alt="Rural Bengal women artisans crafting Kantha embroidery"
+                style={{ width: '100%', height: 'auto', maxHeight: '420px', objectFit: 'cover', display: 'block' }}
               />
               <div style={{
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
                 right: 0,
-                padding: '1.5rem',
-                background: 'linear-gradient(to top, rgba(20,16,12,0.92) 0%, rgba(20,16,12,0) 100%)',
+                padding: '1.25rem',
+                background: 'linear-gradient(to top, rgba(20,16,12,0.9) 0%, rgba(20,16,12,0) 100%)',
                 color: '#fff'
               }}>
-                <span style={{ fontSize: '0.78rem', color: 'var(--highlight-mustard)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                  Authentic Heritage
+                <span style={{ fontSize: '0.75rem', color: 'var(--highlight-mustard)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  Hand-stitched Heritage
                 </span>
-                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', margin: '2px 0 0 0' }}>
-                  Hand-stitched Textiles &amp; Folk Imagery
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', margin: '2px 0 0 0' }}>
+                  Empowering Rural Women Artisans
                 </h4>
               </div>
             </div>
@@ -133,174 +167,244 @@ export const About = () => {
         </div>
       </section>
 
-      {/* ── MEET THE FOUNDER & LEADERSHIP ──────────────────────────────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+      {/* ── SECTION 3: OUR 4 PILLARS & GOALS ───────────────────────────────── */}
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
+        <div className="container" style={{ maxWidth: '1150px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              Leadership &amp; Visionary
+              Strategic Vision
             </span>
-            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', marginTop: '6px', color: 'var(--text-charcoal)' }}>
-              Meet the Founder
+            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.6rem)', marginTop: '6px', color: 'var(--text-charcoal)' }}>
+              Our 4 Pillars &amp; Goals
             </h2>
           </div>
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '3.5rem',
-            alignItems: 'center',
-            backgroundColor: 'var(--bg-soft-ivory)',
-            padding: '2.5rem',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-subtle)',
-            boxShadow: 'var(--shadow-card)'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '2rem'
           }}>
-            
-            {/* Left: Info details */}
-            <div>
-              <div style={{ display: 'inline-block', padding: '0.3rem 0.8rem', backgroundColor: 'rgba(184, 92, 56, 0.1)', color: 'var(--primary-terracotta)', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-                Founder &amp; Mentor
+            {/* Goal 1 */}
+            <div style={{
+              backgroundColor: 'var(--bg-soft-ivory)',
+              padding: '2rem 1.75rem',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--border-subtle)',
+              boxShadow: 'var(--shadow-card)',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--primary-terracotta)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem', flexShrink: 0 }}>
+                <Compass size={24} />
               </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', color: 'var(--text-charcoal)', margin: 0 }}>
-                Debjani Chatterjee
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', marginBottom: '0.75rem', color: 'var(--text-charcoal)' }}>
+                Preservation of Folk Heritage
               </h3>
-              <p style={{ color: 'var(--primary-terracotta)', fontSize: '1.05rem', fontWeight: 600, marginTop: '4px', marginBottom: '1.5rem' }}>
-                Educationist · Corporate Trainer · Entrepreneur · Artist
+              <p style={{ color: 'var(--text-warm-grey)', lineHeight: 1.7, fontSize: '0.94rem', margin: 0 }}>
+                Safeguard traditional art forms like embroidery, weaving, terracotta, and storytelling that are at risk of fading.
               </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.96rem', color: 'var(--text-warm-grey)' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                  <BookOpen size={18} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
-                  <div>
-                    <strong style={{ color: 'var(--text-charcoal)' }}>Educational Qualifications:</strong> M.A. in English, B.Ed.
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                  <Award size={18} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
-                  <div>
-                    <strong style={{ color: 'var(--text-charcoal)' }}>Professional Experience:</strong> 28+ years of experience in teaching, 15 years as a corporate trainer.
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                  <UserCheck size={18} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
-                  <div>
-                    <strong style={{ color: 'var(--text-charcoal)' }}>Areas of Expertise:</strong> Academic mentoring, corporate training &amp; communication skills, arts and handicrafts entrepreneurship.
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                  <Palette size={18} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
-                  <div>
-                    <strong style={{ color: 'var(--text-charcoal)' }}>Artistic Practice:</strong> Kantha embroidery, pre-stitched Bengali traditional dhotis, fashion wares, wooden crafts, and Dokra handicrafts.
-                  </div>
-                </div>
-              </div>
             </div>
 
-            {/* Right: Founder Quote Card */}
+            {/* Goal 2 */}
             <div style={{
-              backgroundColor: 'var(--bg-warm-linen)',
-              padding: '2rem',
-              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--bg-soft-ivory)',
+              padding: '2rem 1.75rem',
+              borderRadius: 'var(--radius-lg)',
               border: '1px solid var(--border-subtle)',
-              textAlign: 'center'
+              boxShadow: 'var(--shadow-card)',
+              display: 'flex',
+              flexDirection: 'column'
             }}>
-              <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: 'var(--primary-terracotta)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem auto' }}>
-                <Star size={30} />
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--secondary-olive)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem', flexShrink: 0 }}>
+                <HeartHandshake size={24} />
               </div>
-              <p style={{ fontFamily: 'var(--font-subheading)', fontSize: '1.15rem', fontStyle: 'italic', color: 'var(--text-charcoal)', lineHeight: 1.75, marginBottom: '1.25rem' }}>
-                "Our mission is to empower rural women artisans by teaching them not just craft techniques, but also branding, pricing, and business skills to build sustainable independence."
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', marginBottom: '0.75rem', color: 'var(--text-charcoal)' }}>
+                Artisan Empowerment
+              </h3>
+              <p style={{ color: 'var(--text-warm-grey)', lineHeight: 1.7, fontSize: '0.94rem', margin: 0 }}>
+                Provide training, fair wages, and market access to artisans, helping them become self-reliant.
               </p>
-              <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--primary-terracotta)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                — Debjani Chatterjee
-              </span>
+            </div>
+
+            {/* Goal 3 */}
+            <div style={{
+              backgroundColor: 'var(--bg-soft-ivory)',
+              padding: '2rem 1.75rem',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--border-subtle)',
+              boxShadow: 'var(--shadow-card)',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--highlight-mustard)', color: '#12141D', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem', flexShrink: 0 }}>
+                <Globe size={24} />
+              </div>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', marginBottom: '0.75rem', color: 'var(--text-charcoal)' }}>
+                Cultural Promotion
+              </h3>
+              <p style={{ color: 'var(--text-warm-grey)', lineHeight: 1.7, fontSize: '0.94rem', margin: 0 }}>
+                Celebrate Bengal's folk identity through exhibitions, workshops, and educational outreach.
+              </p>
+            </div>
+
+            {/* Goal 4 */}
+            <div style={{
+              backgroundColor: 'var(--bg-soft-ivory)',
+              padding: '2rem 1.75rem',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--border-subtle)',
+              boxShadow: 'var(--shadow-card)',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--primary-terracotta)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem', flexShrink: 0 }}>
+                <Leaf size={24} />
+              </div>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', marginBottom: '0.75rem', color: 'var(--text-charcoal)' }}>
+                Sustainable Craft Practices
+              </h3>
+              <p style={{ color: 'var(--text-warm-grey)', lineHeight: 1.7, fontSize: '0.94rem', margin: 0 }}>
+                Encourage eco-conscious production methods and ethical sourcing.
+              </p>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* ── BRAND JOURNEY & EVOLUTION ───────────────────────────────────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-ivory)', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span style={{ color: 'var(--secondary-olive)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              Heritage Evolution
+      {/* ── SECTION 4: OWNER SECTION (ZERO CLIPPING MOBILE LAYOUT) ─────────── */}
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-ivory)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
+        <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+              Leadership &amp; Visionary
             </span>
-            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', marginTop: '6px', color: 'var(--text-charcoal)' }}>
-              The Brand Journey
+            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.6rem)', marginTop: '6px', color: 'var(--text-charcoal)' }}>
+              Owner Profile
             </h2>
-            <p style={{ color: 'var(--text-warm-grey)', marginTop: '0.8rem', maxWidth: '700px', margin: '0.8rem auto 0 auto', fontSize: '1.05rem', lineHeight: 1.7 }}>
-              Gandhorbi Folk Arts began as a folk art documentation initiative focused on preserving Bengal’s traditional crafts and supporting rural women artisans. Over time, it evolved into a craft-based cultural brand that revived practices such as Kantha embroidery, Pattachitra painting, and terracotta work by adapting them into contemporary products. Through exhibitions, workshops, and digital platforms, the brand expanded its reach while staying rooted in authenticity, sustainability, and artisan empowerment.
-            </p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
+            gap: '2.5rem',
+            alignItems: 'start',
+            backgroundColor: 'var(--bg-warm-linen)',
+            padding: 'clamp(1.25rem, 4vw, 2.5rem)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--border-subtle)',
+            boxShadow: 'var(--shadow-card)',
+            boxSizing: 'border-box',
+            width: '100%'
+          }}>
+            
+            {/* Owner Image */}
+            <div style={{
+              borderRadius: 'var(--radius-md)',
+              overflow: 'hidden',
+              border: '1px solid var(--border-subtle)',
+              boxShadow: 'var(--shadow-card)',
+              width: '100%',
+              maxHeight: '480px'
+            }}>
+              <img
+                src="/about-founder-debjani.jpg"
+                alt="Debjani Chatterjee - Owner & Founder of Gandhorbi Folk Arts"
+                style={{ width: '100%', height: 'auto', maxHeight: '480px', objectFit: 'cover', display: 'block' }}
+              />
+            </div>
+
+            {/* Owner Details Card - Mobile Friendly, Flexible Text Wrap */}
+            <div style={{ width: '100%', boxSizing: 'border-box', minWidth: 0 }}>
+              
+              <div style={{ display: 'inline-block', padding: '0.3rem 0.8rem', backgroundColor: 'rgba(184, 92, 56, 0.12)', color: 'var(--primary-terracotta)', borderRadius: 'var(--radius-sm)', fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+                Owner &amp; Founder
+              </div>
+
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', color: 'var(--text-charcoal)', margin: '0 0 1rem 0', wordBreak: 'break-word' }}>
+                Debjani Chatterjee
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', width: '100%', boxSizing: 'border-box' }}>
+                
+                {/* Profession */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <Briefcase size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Profession:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      Educationist, Corporate Trainer, Entrepreneur, Artist
+                    </span>
+                  </div>
+                </div>
+
+                {/* Educational Qualifications */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <GraduationCap size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Educational Qualifications:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      M.A. in English, B.Ed.
+                    </span>
+                  </div>
+                </div>
+
+                {/* Professional Experience */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <Award size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Professional Experience:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      28+ years of experience in teaching, 15 years of experience as a corporate trainer
+                    </span>
+                  </div>
+                </div>
+
+                {/* Areas of Expertise */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <UserCheck size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Areas of Expertise:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      Teaching and academic mentoring, Corporate training and communication skills, Arts and handicrafts entrepreneurship
+                    </span>
+                  </div>
+                </div>
+
+                {/* Artistic Practice */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <Brush size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Artistic Practice:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      Kantha embroidery, Pre-stitched Bengali traditional dhotis, Fashion wares, Wooden crafts, Dokra handicrafts
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION 5: SIGNATURE FOLK ART FORMS ─────────────────────────────── */}
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
+        <div className="container" style={{ maxWidth: '1150px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+              Ancestral Techniques
+            </span>
+            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.6rem)', marginTop: '6px', color: 'var(--text-charcoal)' }}>
+              Folk Arts Forms
+            </h2>
           </div>
 
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '1.8rem'
-          }}>
-            <div className="heritage-card" style={{ padding: '1.8rem', backgroundColor: 'var(--bg-warm-linen)' }}>
-              <div style={{ color: 'var(--primary-terracotta)', fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', marginBottom: '0.5rem' }}>01</div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Folk Documentation
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                Recording oral histories, ancestral stitching motifs, lost-wax bronze techniques, and regional variations of Bengali folk art.
-              </p>
-            </div>
-
-            <div className="heritage-card" style={{ padding: '1.8rem', backgroundColor: 'var(--bg-warm-linen)' }}>
-              <div style={{ color: 'var(--primary-terracotta)', fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', marginBottom: '0.5rem' }}>02</div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Skill Workshops
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                Conducting training programs in design innovation, quality control, motif placement, and garment finishing for women self-help groups.
-              </p>
-            </div>
-
-            <div className="heritage-card" style={{ padding: '1.8rem', backgroundColor: 'var(--bg-warm-linen)' }}>
-              <div style={{ color: 'var(--primary-terracotta)', fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', marginBottom: '0.5rem' }}>03</div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Cultural Showcases
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                Participating in cultural fairs, exhibitions, and monsoon melas in Kolkata and major cities to connect artisans directly with patrons.
-              </p>
-            </div>
-
-            <div className="heritage-card" style={{ padding: '1.8rem', backgroundColor: 'var(--bg-warm-linen)' }}>
-              <div style={{ color: 'var(--primary-terracotta)', fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', marginBottom: '0.5rem' }}>04</div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Modern Craft Brand
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                Launching high-fashion ethnic wear, pre-stitched dhotis, luxury dupattas, and handcrafted home decor for global art connoisseurs.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SIGNATURE FOLK ART FORMS ───────────────────────────────────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              Ancestral Techniques
-            </span>
-            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', marginTop: '6px', color: 'var(--text-charcoal)' }}>
-              Folk Art Forms We Champion
-            </h2>
-          </div>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '2rem'
           }}>
             {/* Kantha */}
@@ -308,11 +412,11 @@ export const About = () => {
               <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(184,92,56,0.12)', color: 'var(--primary-terracotta)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
                 <Palette size={24} />
               </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
                 Kantha Embroidery
               </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.95rem', lineHeight: 1.7 }}>
-                Traditional hand embroidery using fine running stitches, featuring motifs inspired by nature, village life, folklore, and sacred mythology.
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.7, margin: 0 }}>
+                Traditional hand embroidery using fine running stitches, featuring motifs inspired by nature, village life, and mythology.
               </p>
             </div>
 
@@ -321,11 +425,11 @@ export const About = () => {
               <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(184,92,56,0.12)', color: 'var(--primary-terracotta)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
                 <Layers size={24} />
               </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Pattachitra Scroll Painting
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
+                Pattachitra Painting
               </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.95rem', lineHeight: 1.7 }}>
-                Narrative scroll painting tradition created with natural stone colors, depicting religious stories, epic folklore, and vibrant social themes.
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.7, margin: 0 }}>
+                Narrative scroll painting tradition created with natural colors, depicting religious stories, folklore, and social themes.
               </p>
             </div>
 
@@ -334,11 +438,11 @@ export const About = () => {
               <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(184,92,56,0.12)', color: 'var(--primary-terracotta)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
                 <Sun size={24} />
               </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
                 Terracotta Craft
               </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.95rem', lineHeight: 1.7 }}>
-                Hand-molded clay figures and decorative panels from Bankura and Bishnupur, renowned for earthy natural textures and mythological motifs.
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.7, margin: 0 }}>
+                Hand-molded clay figures and decorative panels from Bankura and Bishnupur, known for earthy textures and mythological motifs.
               </p>
             </div>
 
@@ -347,170 +451,82 @@ export const About = () => {
               <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(184,92,56,0.12)', color: 'var(--primary-terracotta)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
                 <Sparkles size={24} />
               </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Contemporary Fashion &amp; Decor
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
+                Modern Adaptations
               </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.95rem', lineHeight: 1.7 }}>
-                Traditional techniques adapted onto modern sarees, dupattas, stoles, pre-stitched Bengali dhotis, kaftans, and lifestyle accessories for global markets.
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.7, margin: 0 }}>
+                Traditional techniques adapted onto contemporary products such as sarees, dupattas, stoles, and handbags to suit modern markets.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── GOALS & CORE PILLARS ───────────────────────────────────────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-sage)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span style={{ color: 'var(--secondary-olive)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              Strategic Vision
-            </span>
-            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', marginTop: '6px', color: 'var(--text-charcoal)' }}>
-              Our 4 Pillars &amp; Goals
-            </h2>
-          </div>
-
+      {/* ── SECTION 6: MRITTIKA ALLIANCE & COMMUNITY IMPACT ────────────────── */}
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-sage)', padding: '3.5rem 1rem' }}>
+        <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '2.5rem'
-          }}>
-            {/* Pillar 1 */}
-            <div style={{
-              backgroundColor: 'var(--bg-warm-linen)',
-              padding: '2.2rem',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--border-subtle)'
-            }}>
-              <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'var(--primary-terracotta)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
-                <Compass size={26} />
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', marginBottom: '0.75rem', color: 'var(--text-charcoal)' }}>
-                Preservation of Folk Heritage
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', lineHeight: 1.7, fontSize: '0.95rem' }}>
-                Safeguarding endangered traditional art forms like Kantha embroidery, handloom weaving, terracotta, and storytelling that are at risk of fading into obscurity.
-              </p>
-            </div>
-
-            {/* Pillar 2 */}
-            <div style={{
-              backgroundColor: 'var(--bg-warm-linen)',
-              padding: '2.2rem',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--border-subtle)'
-            }}>
-              <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'var(--secondary-olive)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
-                <HeartHandshake size={26} />
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', marginBottom: '0.75rem', color: 'var(--text-charcoal)' }}>
-                Artisan Empowerment
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', lineHeight: 1.7, fontSize: '0.95rem' }}>
-                Providing training, fair wages, healthcare support, and direct market access to rural women artisans, fostering long-term economic independence.
-              </p>
-            </div>
-
-            {/* Pillar 3 */}
-            <div style={{
-              backgroundColor: 'var(--bg-warm-linen)',
-              padding: '2.2rem',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--border-subtle)'
-            }}>
-              <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'var(--highlight-mustard)', color: '#12141D', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
-                <Globe size={26} />
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', marginBottom: '0.75rem', color: 'var(--text-charcoal)' }}>
-                Cultural Promotion
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', lineHeight: 1.7, fontSize: '0.95rem' }}>
-                Celebrating Bengal's rich folk identity through curated exhibitions, artisan melas, digital storytelling, and educational outreach in colleges and institutes.
-              </p>
-            </div>
-
-            {/* Pillar 4 */}
-            <div style={{
-              backgroundColor: 'var(--bg-warm-linen)',
-              padding: '2.2rem',
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--border-subtle)'
-            }}>
-              <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'var(--primary-terracotta)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
-                <Leaf size={26} />
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', marginBottom: '0.75rem', color: 'var(--text-charcoal)' }}>
-                Sustainable Craft Practices
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', lineHeight: 1.7, fontSize: '0.95rem' }}>
-                Encouraging eco-conscious production methods, organic cotton &amp; Tussar silk fabrics, upcycled textile designs, and zero-waste ethical sourcing.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ── CULTURAL COLLABORATION WITH MRITTIKA ─────────────────────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)' }}>
-        <div className="container">
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '3.5rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '3rem',
             alignItems: 'center'
           }}>
             
-            {/* Info Card */}
+            {/* Information */}
             <div>
-              <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+              <span style={{ color: 'var(--secondary-olive)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
                 Cultural Alliance &amp; Community Outreach
               </span>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', marginTop: '6px', marginBottom: '1.2rem', color: 'var(--text-charcoal)' }}>
-                Collaboration with Mrittika (Est. 1989)
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.5rem)', marginTop: '6px', marginBottom: '1.2rem', color: 'var(--text-charcoal)' }}>
+                Collaboration with Mrittika
               </h2>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '1.2rem' }}>
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.02rem', lineHeight: 1.8, marginBottom: '1.2rem' }}>
                 Mrittika—originally established in 1989 as a Bengali Language and Heritage Center—has grown into a dynamic South Asian cultural organization dedicated to preserving language, heritage, and traditional arts.
               </p>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '1.2rem' }}>
-                Within this broader mission, Gandhorbi Folk Arts plays a vital role, often featured under Mrittika's umbrella in exhibitions, joint ceramic &amp; folk textile showcases, and community welfare programs including food and blanket distribution drives for needy families.
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.02rem', lineHeight: 1.8, marginBottom: '1.2rem' }}>
+                Within this broader mission, Gandhorbi Folk Arts plays a vital role, often featured under Mrittika's umbrella in exhibitions and community programs that spotlight ceramic arts and folk textiles.
               </p>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.05rem', lineHeight: 1.8 }}>
-                Together, Mrittika's educational outreach frequently incorporates Gandhorbi's folk art modules, fostering intergenerational learning and ensuring the continuity of Bengali cultural knowledge.
+              <p style={{ color: 'var(--text-warm-grey)', fontSize: '1.02rem', lineHeight: 1.8, margin: 0 }}>
+                Their collaboration is evident in events like the Mrittika Ceramic Exhibition, where Gandhorbi's creations blend traditional folk aesthetics with contemporary presentation.
               </p>
             </div>
 
-            {/* Stats / Highlight Box */}
+            {/* Impact Highlights */}
             <div style={{
               backgroundColor: 'var(--bg-soft-ivory)',
-              padding: '2.5rem',
+              padding: '2.2rem',
               borderRadius: 'var(--radius-lg)',
               border: '1px solid var(--border-subtle)',
               boxShadow: 'var(--shadow-card)'
             }}>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', color: 'var(--text-charcoal)', marginBottom: '1.5rem' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', color: 'var(--text-charcoal)', marginBottom: '1.25rem' }}>
                 Artisan Network &amp; Community Impact
               </h3>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', fontSize: '0.98rem' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.8rem' }}>
-                  <CheckCircle2 size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <span><strong>Rural Women Collectives:</strong> Partnering directly with master craftswomen across Murshidabad, Santiniketan, Bikna, and Natungram.</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem', fontSize: '0.95rem' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                  <CheckCircle2 size={19} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>Works with rural women artisans across Bengal.</span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.8rem' }}>
-                  <CheckCircle2 size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <span><strong>Fair-Trade Self-Help Groups:</strong> Ensuring fair compensation, healthcare grants, and dignified livelihoods.</span>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                  <CheckCircle2 size={19} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>Supports self-help groups and artisan collectives.</span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.8rem' }}>
-                  <CheckCircle2 size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <span><strong>Intergenerational Knowledge Transfer:</strong> Passing down sacred stitching and casting techniques to younger generations.</span>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                  <CheckCircle2 size={19} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>Helps artisans gain income, confidence, and recognition.</span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.8rem' }}>
-                  <CheckCircle2 size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <span><strong>Academic &amp; Design Internships:</strong> Collaboration with design institutes and colleges to foster appreciation for local craft.</span>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                  <CheckCircle2 size={19} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>Encourages intergenerational transfer of craft knowledge.</span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                  <CheckCircle2 size={19} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span>Creates respect for handmade traditions in communities.</span>
                 </div>
               </div>
 
@@ -520,7 +536,7 @@ export const About = () => {
                   className="btn-primary"
                   style={{ width: '100%', justifyContent: 'center' }}
                 >
-                  Explore Heritage Collections <ArrowRight size={18} />
+                  Explore Artisan Collections <ArrowRight size={18} />
                 </button>
               </div>
             </div>
