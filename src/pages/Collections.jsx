@@ -34,7 +34,6 @@ export const Collections = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('focus') === 'search') {
-      // Small delay to allow page render
       const timer = setTimeout(() => {
         if (searchInputRef.current) {
           searchInputRef.current.focus();
@@ -97,7 +96,7 @@ export const Collections = () => {
           </h1>
         </div>
 
-        {/* TOP SEARCH BAR — auto-focused when navigated from navbar search icon */}
+        {/* TOP SEARCH BAR */}
         <div style={{ maxWidth: '650px', margin: '0 auto 1.5rem auto', position: 'relative' }}>
           <Search size={20} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary-terracotta)', pointerEvents: 'none', zIndex: 1 }} />
           <input
@@ -121,16 +120,77 @@ export const Collections = () => {
                 ? '0 0 0 4px rgba(212, 164, 78, 0.18), var(--shadow-card)'
                 : 'var(--shadow-card)',
               fontFamily: 'var(--font-body)',
-              transition: 'all 0.3s ease'
+              transition: 'border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease'
             }}
           />
         </div>
 
-        {/* MOBILE FILTER TOGGLE BAR */}
-        <div className="mobile-filter-bar">
+        {/* HORIZONTAL CATEGORIES BAR (SWIPEABLE TOUCH SCROLL ON MOBILE, TABLET & DESKTOP) */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <div
+            className="horizontal-category-scroll"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              overflowX: 'auto',
+              paddingBottom: '0.6rem',
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'none'
+            }}
+          >
+            <button
+              onClick={() => setSelectedCategory('All')}
+              style={{
+                padding: '0.55rem 1.2rem',
+                borderRadius: 'var(--radius-full)',
+                fontFamily: 'var(--font-nav)',
+                fontSize: '0.85rem',
+                fontWeight: selectedCategory === 'All' ? 700 : 500,
+                backgroundColor: selectedCategory === 'All' ? 'var(--primary-terracotta)' : 'var(--bg-soft-ivory)',
+                color: selectedCategory === 'All' ? '#ffffff' : 'var(--text-charcoal)',
+                border: '1px solid var(--border-subtle)',
+                whiteSpace: 'nowrap',
+                transition: 'var(--transition-fast)',
+                cursor: 'pointer',
+                flexShrink: 0
+              }}
+            >
+              All ({products.length})
+            </button>
+
+            {categories.map((cat) => {
+              const isSelected = selectedCategory === cat.name;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.name)}
+                  style={{
+                    padding: '0.55rem 1.2rem',
+                    borderRadius: 'var(--radius-full)',
+                    fontFamily: 'var(--font-nav)',
+                    fontSize: '0.85rem',
+                    fontWeight: isSelected ? 700 : 500,
+                    backgroundColor: isSelected ? 'var(--primary-terracotta)' : 'var(--bg-soft-ivory)',
+                    color: isSelected ? '#ffffff' : 'var(--text-charcoal)',
+                    border: '1px solid var(--border-subtle)',
+                    whiteSpace: 'nowrap',
+                    transition: 'var(--transition-fast)',
+                    cursor: 'pointer',
+                    flexShrink: 0
+                  }}
+                >
+                  {cat.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* MOBILE FILTER TOGGLE BUTTON */}
+        <div className="mobile-filter-bar" style={{ display: 'none', marginBottom: '1.2rem' }}>
           <button
             onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-            className="mobile-filter-toggle-btn"
             style={{
               width: '100%',
               padding: '0.75rem 1.2rem',
@@ -143,126 +203,52 @@ export const Collections = () => {
               fontFamily: 'var(--font-nav)',
               fontWeight: 600,
               fontSize: '0.92rem',
-              color: 'var(--text-charcoal)',
-              marginBottom: '0.5rem'
+              color: 'var(--text-charcoal)'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <SlidersHorizontal size={18} color="var(--primary-terracotta)" />
-              <span>Filters & Sort</span>
+              <span>Filter &amp; Sort Options</span>
             </div>
-            {mobileFiltersOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            {mobileFiltersOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </button>
-          
-          {(selectedCategory !== 'All' || searchQuery || activePriceLimit < maxProductPrice || inStockOnly || sortBy !== 'featured') && (
-            <button
-              onClick={resetFilters}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3rem',
-                fontSize: '0.8rem',
-                color: 'var(--primary-terracotta)',
-                background: 'none',
-                border: 'none',
-                fontWeight: 600,
-                cursor: 'pointer',
-                marginBottom: '1rem'
-              }}
-            >
-              <RotateCcw size={14} /> Reset Filters
-            </button>
-          )}
         </div>
 
-        {/* MAIN LAYOUT: SIDEBAR + PRODUCT GRID */}
-        <div className="collections-layout">
+        {/* MAIN LAYOUT: LEFT SIDEBAR (FILTERS ONLY) + MAIN PRODUCT GRID */}
+        <div className="collections-grid-layout">
           
-          {/* SIDEBAR FILTERS */}
-          <aside className={`collections-sidebar ${mobileFiltersOpen ? 'mobile-open' : ''}`} style={{
-            backgroundColor: 'var(--bg-soft-ivory)',
-            padding: '1.5rem',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-subtle)',
-            boxShadow: 'var(--shadow-card)',
-            position: 'sticky',
-            top: '100px',
-            height: 'fit-content'
-          }}>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', paddingBottom: '0.8rem', borderBottom: '1px solid var(--border-subtle)' }}>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <SlidersHorizontal size={18} color="var(--primary-terracotta)" /> Filters
-              </h3>
-              {(selectedCategory !== 'All' || searchQuery || activePriceLimit < maxProductPrice || inStockOnly || sortBy !== 'featured') && (
-                <button
-                  onClick={resetFilters}
-                  style={{
-                    fontSize: '0.8rem',
-                    color: 'var(--primary-terracotta)',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.3rem',
-                    fontWeight: 600
-                  }}
-                >
-                  <RotateCcw size={13} /> Reset
-                </button>
-              )}
-            </div>
-
-            {/* Filter 1: Categories */}
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ fontFamily: 'var(--font-nav)', fontWeight: 600, fontSize: '0.85rem', display: 'block', marginBottom: '0.6rem', color: 'var(--text-charcoal)' }}>
-                Categories
-              </label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                <button
-                  onClick={() => setSelectedCategory('All')}
-                  style={{
-                    textAlign: 'left',
-                    padding: '0.5rem 0.8rem',
-                    borderRadius: 'var(--radius-sm)',
-                    backgroundColor: selectedCategory === 'All' ? 'var(--primary-terracotta)' : 'transparent',
-                    color: selectedCategory === 'All' ? '#ffffff' : 'var(--text-warm-grey)',
-                    border: 'none',
-                    fontSize: '0.88rem',
-                    fontWeight: selectedCategory === 'All' ? 600 : 400,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  All Collections
-                </button>
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.name)}
-                    style={{
-                      textAlign: 'left',
-                      padding: '0.5rem 0.8rem',
-                      borderRadius: 'var(--radius-sm)',
-                      backgroundColor: selectedCategory === cat.name ? 'var(--primary-terracotta)' : 'transparent',
-                      color: selectedCategory === cat.name ? '#ffffff' : 'var(--text-warm-grey)',
-                      border: 'none',
-                      fontSize: '0.88rem',
-                      fontWeight: selectedCategory === cat.name ? 600 : 400,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {cat.name}
-                  </button>
-                ))}
+          {/* LEFT SIDEBAR (FILTERS ONLY) */}
+          <aside
+            className={`collections-sidebar ${mobileFiltersOpen ? 'mobile-show' : ''}`}
+            style={{
+              backgroundColor: 'var(--bg-soft-ivory)',
+              padding: '1.5rem',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--border-subtle)',
+              boxShadow: 'var(--shadow-card)',
+              position: 'sticky',
+              top: '100px'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.2rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.6rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <SlidersHorizontal size={18} color="var(--primary-terracotta)" />
+                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.3rem', color: 'var(--text-charcoal)' }}>
+                  Filters
+                </h3>
               </div>
+              
+              <button
+                onClick={resetFilters}
+                style={{ fontSize: '0.8rem', color: 'var(--primary-terracotta)', display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                <RotateCcw size={14} /> Reset
+              </button>
             </div>
 
-            {/* Sort Options */}
+            {/* Filter 1: Sort By */}
             <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ fontFamily: 'var(--font-nav)', fontWeight: 600, fontSize: '0.85rem', display: 'block', marginBottom: '0.5rem', color: 'var(--text-charcoal)' }}>
+              <label style={{ display: 'block', fontFamily: 'var(--font-nav)', fontWeight: 600, fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--text-charcoal)' }}>
                 Sort By
               </label>
               <select
@@ -286,7 +272,7 @@ export const Collections = () => {
               </select>
             </div>
 
-            {/* Filter 2: Dynamic Price Range Slider */}
+            {/* Filter 2: Dynamic Price Range Slider (0 to maxProductPrice) */}
             <div style={{ marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                 <label style={{ fontFamily: 'var(--font-nav)', fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-charcoal)' }}>
@@ -303,7 +289,7 @@ export const Collections = () => {
                 step={maxProductPrice > 5000 ? 100 : 10}
                 value={activePriceLimit}
                 onChange={(e) => setPriceRange(Number(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--primary-terracotta)' }}
+                style={{ width: '100%', accentColor: 'var(--primary-terracotta)', cursor: 'pointer' }}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-warm-grey)', marginTop: '2px' }}>
                 <span>₹0</span>
@@ -323,12 +309,12 @@ export const Collections = () => {
                   onChange={(e) => setInStockOnly(e.target.checked)}
                   style={{ width: '16px', height: '16px', accentColor: 'var(--primary-terracotta)' }}
                 />
-                In Stock & Ready to Ship
+                In Stock &amp; Ready to Ship
               </label>
             </div>
           </aside>
 
-          {/* MAIN SECTION: RESPONSIVE PRODUCT GRID (2 PRODUCTS PER ROW ON MOBILE VIEW) */}
+          {/* MAIN SECTION: RESPONSIVE PRODUCT GRID */}
           <main>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.88rem' }}>
@@ -370,6 +356,10 @@ export const Collections = () => {
 
       {/* RESPONSIVE CSS STYLES FOR COLLECTIONS PAGE */}
       <style>{`
+        .horizontal-category-scroll::-webkit-scrollbar {
+          display: none;
+        }
+
         .collections-grid-layout {
           display: grid;
           grid-template-columns: 260px 1fr;
