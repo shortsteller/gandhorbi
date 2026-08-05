@@ -1,16 +1,16 @@
 /**
  * About.jsx
- * Clean, text-only About Us page for Gandhorbi Folk Arts.
- * All images and the Mrittika section removed per user request.
- * Owner Profile is positioned as the final section before the Footer.
+ * About Us page for Gandhorbi Folk Arts.
+ * Clean, text-focused layout.
+ * Folk Arts Forms removed per user directive.
+ * Owner Profile is the final section before the Footer.
  */
 
 import React from 'react';
 import { useShop } from '../context/ShopContext';
 import {
   Sparkles, Heart, Compass, ShieldCheck, Award,
-  UserCheck, Layers, Leaf, Palette,
-  Globe, Sun, Briefcase, GraduationCap, Brush
+  UserCheck, Leaf, Globe, Briefcase, GraduationCap, Brush
 } from 'lucide-react';
 
 export const About = () => {
@@ -234,79 +234,7 @@ export const About = () => {
         </div>
       </section>
 
-      {/* ── SECTION 4: SIGNATURE FOLK ART FORMS ─────────────────────────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-sage)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
-        <div className="container" style={{ maxWidth: '1150px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <span style={{ color: 'var(--secondary-olive)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              Ancestral Techniques
-            </span>
-            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.6rem)', marginTop: '6px', color: 'var(--text-charcoal)' }}>
-              Folk Arts Forms
-            </h2>
-          </div>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '2rem'
-          }}>
-            {/* Kantha */}
-            <div className="heritage-card" style={{ padding: '2rem', backgroundColor: 'var(--bg-soft-ivory)' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(184,92,56,0.12)', color: 'var(--primary-terracotta)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
-                <Palette size={24} />
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Kantha Embroidery
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.7, margin: 0 }}>
-                Traditional hand embroidery using fine running stitches, featuring motifs inspired by nature, village life, and mythology.
-              </p>
-            </div>
-
-            {/* Pattachitra */}
-            <div className="heritage-card" style={{ padding: '2rem', backgroundColor: 'var(--bg-soft-ivory)' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(184,92,56,0.12)', color: 'var(--primary-terracotta)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
-                <Layers size={24} />
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Pattachitra Painting
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.7, margin: 0 }}>
-                Narrative scroll painting tradition created with natural colors, depicting religious stories, folklore, and social themes.
-              </p>
-            </div>
-
-            {/* Terracotta */}
-            <div className="heritage-card" style={{ padding: '2rem', backgroundColor: 'var(--bg-soft-ivory)' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(184,92,56,0.12)', color: 'var(--primary-terracotta)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
-                <Sun size={24} />
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Terracotta Craft
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.7, margin: 0 }}>
-                Hand-molded clay figures and decorative panels from Bankura and Bishnupur, known for earthy textures and mythological motifs.
-              </p>
-            </div>
-
-            {/* Modern Adaptations */}
-            <div className="heritage-card" style={{ padding: '2rem', backgroundColor: 'var(--bg-soft-ivory)' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(184,92,56,0.12)', color: 'var(--primary-terracotta)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
-                <Sparkles size={24} />
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--text-charcoal)', marginBottom: '0.6rem' }}>
-                Modern Adaptations
-              </h3>
-              <p style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.7, margin: 0 }}>
-                Traditional techniques adapted onto contemporary products such as sarees, dupattas, stoles, and handbags to suit modern markets.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 5: OWNER SECTION (LAST SECTION BEFORE FOOTER) ──────────── */}
+      {/* ── SECTION 4: OWNER SECTION (LAST SECTION BEFORE FOOTER) ──────────── */}
       <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-ivory)', padding: '4rem 1rem 5rem 1rem' }}>
         <div className="container" style={{ maxWidth: '900px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
