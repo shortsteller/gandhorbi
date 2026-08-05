@@ -206,12 +206,6 @@ export const QuickViewModal = () => {
                     </span>
                   )}
                 </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                  <Star size={16} fill="var(--highlight-mustard)" color="var(--highlight-mustard)" />
-                  <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>{product.rating}</span>
-                  <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.85rem' }}>({product.reviewsCount} reviews)</span>
-                </div>
               </div>
 
               {/* Description */}

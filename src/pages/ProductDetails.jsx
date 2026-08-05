@@ -174,21 +174,11 @@ export const ProductDetails = () => {
           {/* ── RIGHT / BOTTOM: PRODUCT INFO ── */}
           <div className="pd-info-col">
 
-            {/* Category Badge + Rating row */}
-            <div className="pd-badge-rating-row">
+            {/* Category Badge */}
+            <div className="pd-badge-rating-row" style={{ marginBottom: '0.8rem' }}>
               <span className="pd-category-badge">
                 {product.category}
               </span>
-              <div className="pd-rating-block">
-                <div style={{ display: 'flex', color: '#D4A44E' }}>
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={15} fill="#D4A44E" />
-                  ))}
-                </div>
-                <span className="pd-rating-text">
-                  {product.rating} ({product.reviewsCount} Reviews)
-                </span>
-              </div>
             </div>
 
             {/* Product Title */}

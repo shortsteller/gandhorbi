@@ -72,6 +72,11 @@ export const ShopProvider = ({ children }) => {
   // Filter out hidden products for the public website
   const publicProducts = liveProducts.filter((p) => !p.hidden);
 
+  // Calculate price of the most expensive uploaded product
+  const maxProductPrice = publicProducts.length > 0
+    ? Math.max(...publicProducts.map((p) => Number(p.price) || 0))
+    : 25000;
+
   // Cart & Wishlist State
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem('gandhorbi_cart');
@@ -95,7 +100,7 @@ export const ShopProvider = ({ children }) => {
   // Filters State
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [priceRange, setPriceRange] = useState(25000);
+  const [priceRange, setPriceRange] = useState(null);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState('featured');
 
@@ -405,6 +410,7 @@ export const ShopProvider = ({ children }) => {
         setSelectedCategory,
         priceRange,
         setPriceRange,
+        maxProductPrice,
         inStockOnly,
         setInStockOnly,
         sortBy,

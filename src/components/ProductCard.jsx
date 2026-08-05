@@ -156,18 +156,6 @@ export const ProductCard = ({ product }) => {
       {/* Product Content Details */}
       <div className="product-card-body" style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
         <div>
-          {/* Rating */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '0.3rem' }}>
-            <div style={{ display: 'flex', color: 'var(--highlight-mustard)' }}>
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={12} fill="currentColor" />
-              ))}
-            </div>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-warm-grey)' }}>
-              {product.rating} ({product.reviewsCount})
-            </span>
-          </div>
-
           {/* Product Name */}
           <h3
             onClick={handleProductClick}
