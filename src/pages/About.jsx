@@ -1,13 +1,8 @@
 /**
  * About.jsx
- * Remade About Us page for Gandhorbi Folk Arts.
- * Layout and sections repositioned precisely per user directives:
- * 1. Brand Journey
- * 2. Brand Mission (with artisan embroidery photo)
- * 3. Our 4 Pillars & Goals
- * 4. Owner Section (Debjani Chatterjee - with owner photo, mobile layout zero clipping, no quote box)
- * 5. Folk Art Forms
- * 6. Mrittika Alliance & Community Impact
+ * About Us page for Gandhorbi Folk Arts.
+ * Rebuilt with imported asset images to ensure 100% display reliability.
+ * Owner profile is positioned as the final section before the Footer.
  */
 
 import React from 'react';
@@ -15,8 +10,11 @@ import { useShop } from '../context/ShopContext';
 import {
   Sparkles, Heart, Compass, ShieldCheck, ArrowRight, Award,
   UserCheck, BookOpen, Layers, Leaf, Palette, HeartHandshake,
-  Globe, Sun, CheckCircle2, Star, Briefcase, GraduationCap, Brush
+  Globe, Sun, CheckCircle2, Briefcase, GraduationCap, Brush
 } from 'lucide-react';
+
+import kanthaArtisanImg from '../assets/about-kantha-artisan.jpg';
+import founderDebjaniImg from '../assets/about-founder-debjani.jpg';
 
 export const About = () => {
   const { navigateTo } = useShop();
@@ -142,7 +140,7 @@ export const About = () => {
               backgroundColor: '#fff'
             }}>
               <img
-                src="/about-kantha-artisan.jpg"
+                src={kanthaArtisanImg}
                 alt="Rural Bengal women artisans crafting Kantha embroidery"
                 style={{ width: '100%', height: 'auto', maxHeight: '420px', objectFit: 'cover', display: 'block' }}
               />
@@ -272,129 +270,11 @@ export const About = () => {
         </div>
       </section>
 
-      {/* ── SECTION 4: OWNER SECTION (ZERO CLIPPING MOBILE LAYOUT) ─────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-ivory)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
-        <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              Leadership &amp; Visionary
-            </span>
-            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.6rem)', marginTop: '6px', color: 'var(--text-charcoal)' }}>
-              Owner Profile
-            </h2>
-          </div>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
-            gap: '2.5rem',
-            alignItems: 'start',
-            backgroundColor: 'var(--bg-warm-linen)',
-            padding: 'clamp(1.25rem, 4vw, 2.5rem)',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-subtle)',
-            boxShadow: 'var(--shadow-card)',
-            boxSizing: 'border-box',
-            width: '100%'
-          }}>
-            
-            {/* Owner Image */}
-            <div style={{
-              borderRadius: 'var(--radius-md)',
-              overflow: 'hidden',
-              border: '1px solid var(--border-subtle)',
-              boxShadow: 'var(--shadow-card)',
-              width: '100%',
-              maxHeight: '480px'
-            }}>
-              <img
-                src="/about-founder-debjani.jpg"
-                alt="Debjani Chatterjee - Owner & Founder of Gandhorbi Folk Arts"
-                style={{ width: '100%', height: 'auto', maxHeight: '480px', objectFit: 'cover', display: 'block' }}
-              />
-            </div>
-
-            {/* Owner Details Card - Mobile Friendly, Flexible Text Wrap */}
-            <div style={{ width: '100%', boxSizing: 'border-box', minWidth: 0 }}>
-              
-              <div style={{ display: 'inline-block', padding: '0.3rem 0.8rem', backgroundColor: 'rgba(184, 92, 56, 0.12)', color: 'var(--primary-terracotta)', borderRadius: 'var(--radius-sm)', fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-                Owner &amp; Founder
-              </div>
-
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', color: 'var(--text-charcoal)', margin: '0 0 1rem 0', wordBreak: 'break-word' }}>
-                Debjani Chatterjee
-              </h3>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', width: '100%', boxSizing: 'border-box' }}>
-                
-                {/* Profession */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
-                  <Briefcase size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
-                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
-                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Profession:</strong>
-                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
-                      Educationist, Corporate Trainer, Entrepreneur, Artist
-                    </span>
-                  </div>
-                </div>
-
-                {/* Educational Qualifications */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
-                  <GraduationCap size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
-                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
-                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Educational Qualifications:</strong>
-                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
-                      M.A. in English, B.Ed.
-                    </span>
-                  </div>
-                </div>
-
-                {/* Professional Experience */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
-                  <Award size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
-                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
-                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Professional Experience:</strong>
-                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
-                      28+ years of experience in teaching, 15 years of experience as a corporate trainer
-                    </span>
-                  </div>
-                </div>
-
-                {/* Areas of Expertise */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
-                  <UserCheck size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
-                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
-                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Areas of Expertise:</strong>
-                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
-                      Teaching and academic mentoring, Corporate training and communication skills, Arts and handicrafts entrepreneurship
-                    </span>
-                  </div>
-                </div>
-
-                {/* Artistic Practice */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
-                  <Brush size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
-                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
-                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Artistic Practice:</strong>
-                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
-                      Kantha embroidery, Pre-stitched Bengali traditional dhotis, Fashion wares, Wooden crafts, Dokra handicrafts
-                    </span>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 5: SIGNATURE FOLK ART FORMS ─────────────────────────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
+      {/* ── SECTION 4: SIGNATURE FOLK ART FORMS ─────────────────────────────── */}
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-sage)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
         <div className="container" style={{ maxWidth: '1150px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+            <span style={{ color: 'var(--secondary-olive)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
               Ancestral Techniques
             </span>
             <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.6rem)', marginTop: '6px', color: 'var(--text-charcoal)' }}>
@@ -462,8 +342,8 @@ export const About = () => {
         </div>
       </section>
 
-      {/* ── SECTION 6: MRITTIKA ALLIANCE & COMMUNITY IMPACT ────────────────── */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-sage)', padding: '3.5rem 1rem' }}>
+      {/* ── SECTION 5: MRITTIKA ALLIANCE & COMMUNITY IMPACT ────────────────── */}
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-warm-linen)', borderBottom: '1px solid var(--border-subtle)', padding: '3.5rem 1rem' }}>
         <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{
             display: 'grid',
@@ -474,7 +354,7 @@ export const About = () => {
             
             {/* Information */}
             <div>
-              <span style={{ color: 'var(--secondary-olive)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+              <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
                 Cultural Alliance &amp; Community Outreach
               </span>
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.5rem)', marginTop: '6px', marginBottom: '1.2rem', color: 'var(--text-charcoal)' }}>
@@ -539,6 +419,124 @@ export const About = () => {
                   Explore Artisan Collections <ArrowRight size={18} />
                 </button>
               </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION 6: OWNER SECTION (LAST SECTION BEFORE FOOTER) ──────────── */}
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-soft-ivory)', padding: '4rem 1rem 5rem 1rem' }}>
+        <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <span style={{ color: 'var(--primary-terracotta)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+              Leadership &amp; Visionary
+            </span>
+            <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 2.6rem)', marginTop: '6px', color: 'var(--text-charcoal)' }}>
+              Owner Profile
+            </h2>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
+            gap: '2.5rem',
+            alignItems: 'start',
+            backgroundColor: 'var(--bg-warm-linen)',
+            padding: 'clamp(1.25rem, 4vw, 2.5rem)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--border-subtle)',
+            boxShadow: 'var(--shadow-card)',
+            boxSizing: 'border-box',
+            width: '100%'
+          }}>
+            
+            {/* Owner Image */}
+            <div style={{
+              borderRadius: 'var(--radius-md)',
+              overflow: 'hidden',
+              border: '1px solid var(--border-subtle)',
+              boxShadow: 'var(--shadow-card)',
+              width: '100%',
+              backgroundColor: '#fff'
+            }}>
+              <img
+                src={founderDebjaniImg}
+                alt="Debjani Chatterjee - Owner of Gandhorbi Folk Arts"
+                style={{ width: '100%', height: 'auto', maxHeight: '520px', objectFit: 'cover', display: 'block' }}
+              />
+            </div>
+
+            {/* Owner Details Card - Mobile Friendly, Flexible Text Wrap */}
+            <div style={{ width: '100%', boxSizing: 'border-box', minWidth: 0 }}>
+              
+              <div style={{ display: 'inline-block', padding: '0.3rem 0.8rem', backgroundColor: 'rgba(184, 92, 56, 0.12)', color: 'var(--primary-terracotta)', borderRadius: 'var(--radius-sm)', fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+                Owner
+              </div>
+
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', color: 'var(--text-charcoal)', margin: '0 0 1.25rem 0', wordBreak: 'break-word' }}>
+                Debjani Chatterjee
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', width: '100%', boxSizing: 'border-box' }}>
+                
+                {/* Profession */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <Briefcase size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Profession:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      Educationist, Corporate Trainer, Entrepreneur, Artist
+                    </span>
+                  </div>
+                </div>
+
+                {/* Educational Qualifications */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <GraduationCap size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Educational Qualifications:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      M.A. in English, B.Ed.
+                    </span>
+                  </div>
+                </div>
+
+                {/* Professional Experience */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <Award size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Professional Experience:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      28+ years of experience in teaching, 15 years of experience as a corporate trainer
+                    </span>
+                  </div>
+                </div>
+
+                {/* Areas of Expertise */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <UserCheck size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Areas of Expertise:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      Teaching and academic mentoring, Corporate training and communication skills, Arts and handicrafts entrepreneurship
+                    </span>
+                  </div>
+                </div>
+
+                {/* Artistic Practice */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '100%' }}>
+                  <Brush size={20} color="var(--primary-terracotta)" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  <div style={{ minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word', flex: 1 }}>
+                    <strong style={{ color: 'var(--text-charcoal)', display: 'block', fontSize: '0.92rem' }}>Artistic Practice:</strong>
+                    <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.94rem', lineHeight: 1.5, display: 'block' }}>
+                      Kantha embroidery, Pre-stitched Bengali traditional dhotis, Fashion wares, Wooden crafts, Dokra handicrafts
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
             </div>
 
           </div>
