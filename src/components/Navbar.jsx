@@ -6,8 +6,6 @@ import { categories } from '../data/categories';
 const marqueeCategories = [
   'Kantha Dupattas',
   'Traditional Kantha Creations',
-  'Dokra Art',
-  'Wooden Crafts',
   'Designer Dhotis',
   'Exclusive Designer Punjabis',
   'Exclusive Apparels for Men & Women',

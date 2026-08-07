@@ -23,14 +23,34 @@ export const Collections = () => {
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [searchHighlighted, setSearchHighlighted] = useState(false);
+  const [homeDecorSubcategory, setHomeDecorSubcategory] = useState('All');
   const searchInputRef = useRef(null);
   const location = useLocation();
 
   // Active upper price limit (defaults to max product price if priceRange is null or exceeds maxProductPrice)
   const activePriceLimit = priceRange !== null ? priceRange : maxProductPrice;
 
+  // Reset Home Decor subcategory when top category changes
+  useEffect(() => {
+    setHomeDecorSubcategory('All');
+  }, [selectedCategory]);
+
+  // Handle URL category query parameter mapping
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const catParam = params.get('category');
+    if (catParam) {
+      if (catParam === 'Dokra Art' || catParam === 'Dokra') {
+        setSelectedCategory('Home Decor');
+        setHomeDecorSubcategory('Dokra');
+      } else if (catParam === 'Wooden Crafts') {
+        setSelectedCategory('Home Decor');
+        setHomeDecorSubcategory('Wooden Crafts');
+      }
+    }
+  }, [location.search]);
+
   // When navbar search icon is clicked, navigate here with ?focus=search
-  // Auto-focus the input and briefly highlight it
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('focus') === 'search') {
@@ -46,12 +66,57 @@ export const Collections = () => {
     }
   }, [location.search]);
 
+  // Helper to categorize Home Decor products into subcategories
+  const isDokraProduct = (product) => {
+    const pCat = (product.category || '').toLowerCase();
+    const pName = (product.name || '').toLowerCase();
+    const pDesc = (product.description || '').toLowerCase();
+    return pCat === 'dokra art' || pName.includes('dokra') || pDesc.includes('dokra');
+  };
+
+  const isWoodenProduct = (product) => {
+    const pCat = (product.category || '').toLowerCase();
+    const pName = (product.name || '').toLowerCase();
+    const pDesc = (product.description || '').toLowerCase();
+    return (
+      pCat === 'wooden crafts' ||
+      pName.includes('wooden') ||
+      pName.includes('wood ') ||
+      pDesc.includes('wooden') ||
+      pDesc.includes('wood ')
+    );
+  };
+
   // Filtering Logic
   const filteredProducts = products
     .filter((product) => {
-      if (selectedCategory !== 'All' && product.category !== selectedCategory) {
-        return false;
+      // 1. Category Filter
+      if (selectedCategory !== 'All') {
+        if (selectedCategory === 'Home Decor') {
+          const isHomeDecorFamily =
+            product.category === 'Home Decor' ||
+            product.category === 'Dokra Art' ||
+            product.category === 'Wooden Crafts';
+
+          if (!isHomeDecorFamily) return false;
+
+          // Subcategory filter under Home Decor
+          const isDokra = isDokraProduct(product);
+          const isWooden = isWoodenProduct(product);
+
+          if (homeDecorSubcategory === 'Dokra') {
+            if (!isDokra) return false;
+          } else if (homeDecorSubcategory === 'Wooden Crafts') {
+            if (!isWooden) return false;
+          } else if (homeDecorSubcategory === 'Others') {
+            if (isDokra || isWooden) return false;
+          }
+        } else if (product.category !== selectedCategory) {
+          return false;
+        }
       }
+
+      // 2. Search Query Filter
       if (
         searchQuery &&
         !product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -60,12 +125,17 @@ export const Collections = () => {
       ) {
         return false;
       }
+
+      // 3. Price Limit Filter
       if (product.price > activePriceLimit) {
         return false;
       }
+
+      // 4. In-Stock Filter
       if (inStockOnly && !product.inStock) {
         return false;
       }
+
       return true;
     })
     .sort((a, b) => {
@@ -76,6 +146,7 @@ export const Collections = () => {
 
   const resetFilters = () => {
     setSelectedCategory('All');
+    setHomeDecorSubcategory('All');
     setSearchQuery('');
     setPriceRange(maxProductPrice);
     setInStockOnly(false);
@@ -125,7 +196,7 @@ export const Collections = () => {
           />
         </div>
 
-        {/* HORIZONTAL CATEGORIES BAR (SWIPEABLE TOUCH SCROLL ON MOBILE, TABLET & DESKTOP) */}
+        {/* HORIZONTAL TOP-LEVEL CATEGORIES BAR */}
         <div style={{ marginBottom: '1.5rem' }}>
           <div
             className="horizontal-category-scroll"
@@ -161,6 +232,10 @@ export const Collections = () => {
 
             {categories.map((cat) => {
               const isSelected = selectedCategory === cat.name;
+              const catCount = cat.name === 'Home Decor'
+                ? products.filter((p) => p.category === 'Home Decor' || p.category === 'Dokra Art' || p.category === 'Wooden Crafts').length
+                : products.filter((p) => p.category === cat.name).length;
+
               return (
                 <button
                   key={cat.id}
@@ -180,7 +255,7 @@ export const Collections = () => {
                     flexShrink: 0
                   }}
                 >
-                  {cat.name}
+                  {cat.name} ({catCount})
                 </button>
               );
             })}
@@ -272,7 +347,7 @@ export const Collections = () => {
               </select>
             </div>
 
-            {/* Filter 2: Dynamic Price Range Slider (0 to maxProductPrice) */}
+            {/* Filter 2: Dynamic Price Range Slider */}
             <div style={{ marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                 <label style={{ fontFamily: 'var(--font-nav)', fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-charcoal)' }}>
@@ -316,10 +391,76 @@ export const Collections = () => {
 
           {/* MAIN SECTION: RESPONSIVE PRODUCT GRID */}
           <main>
+            
+            {/* HORIZONTAL SUBCATEGORY SELECTOR (VISIBLE WHEN HOME DECOR IS SELECTED) */}
+            {selectedCategory === 'Home Decor' && (
+              <div style={{
+                marginBottom: '1.2rem',
+                backgroundColor: 'var(--bg-soft-ivory)',
+                padding: '0.8rem 1.2rem',
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid var(--border-subtle)',
+                boxShadow: 'var(--shadow-card)'
+              }}>
+                <div style={{
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  color: 'var(--primary-terracotta)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.12em',
+                  marginBottom: '0.5rem'
+                }}>
+                  Home Decor Subcategories:
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  overflowX: 'auto',
+                  paddingBottom: '0.2rem',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'none'
+                }}>
+                  {['All', 'Dokra', 'Wooden Crafts', 'Others'].map((sub) => {
+                    const isSubSelected = homeDecorSubcategory === sub;
+                    return (
+                      <button
+                        key={sub}
+                        onClick={() => setHomeDecorSubcategory(sub)}
+                        style={{
+                          padding: '0.45rem 1.1rem',
+                          borderRadius: 'var(--radius-full)',
+                          fontFamily: 'var(--font-nav)',
+                          fontSize: '0.85rem',
+                          fontWeight: isSubSelected ? 700 : 500,
+                          backgroundColor: isSubSelected ? 'var(--primary-terracotta)' : 'var(--bg-warm-linen)',
+                          color: isSubSelected ? '#ffffff' : 'var(--text-charcoal)',
+                          border: isSubSelected ? '1px solid var(--primary-terracotta)' : '1px solid var(--border-subtle)',
+                          whiteSpace: 'nowrap',
+                          cursor: 'pointer',
+                          transition: 'var(--transition-fast)',
+                          flexShrink: 0
+                        }}
+                      >
+                        {sub}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <span style={{ color: 'var(--text-warm-grey)', fontSize: '0.88rem' }}>
                 Showing <strong>{filteredProducts.length}</strong> handcrafted items
-                {selectedCategory !== 'All' && <span> in <strong>{selectedCategory}</strong></span>}
+                {selectedCategory !== 'All' && (
+                  <span>
+                    {' '}in <strong>{selectedCategory}</strong>
+                    {selectedCategory === 'Home Decor' && homeDecorSubcategory !== 'All' && (
+                      <span> &rarr; <strong>{homeDecorSubcategory}</strong></span>
+                    )}
+                  </span>
+                )}
               </span>
             </div>
 
@@ -335,7 +476,7 @@ export const Collections = () => {
                   No Heritage Products Found
                 </h3>
                 <p style={{ color: 'var(--text-warm-grey)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-                  Try adjusting your price filter or search keywords.
+                  Try adjusting your price filter, subcategory selection, or search keywords.
                 </p>
                 <button onClick={resetFilters} className="btn-primary">
                   Clear All Filters

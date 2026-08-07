@@ -1,7 +1,7 @@
 /**
  * categories.js
  * Official Product Categories for Gandhorbi Folk Arts.
- * Cover images are managed dynamically via Firestore categoryCovers collection.
+ * Public top-level categories (Dokra Art & Wooden Crafts merged under Home Decor).
  */
 
 export const categories = [
@@ -16,26 +16,10 @@ export const categories = [
   {
     id: "traditional-kantha-creations",
     name: "Traditional Kantha Creations",
-    subtitle: "Kantha O Kahini",
+    subtitle: "Katha O Kahini",
     count: 24,
     image: null,
-    description: "Kantha O Kahini"
-  },
-  {
-    id: "dokra-art",
-    name: "Dokra Art",
-    subtitle: "4,000-Year-Old Lost-Wax Metal Castings",
-    count: 22,
-    image: null,
-    description: "Rustic brass-bronze tribal sculptures crafted using ancient lost-wax technique."
-  },
-  {
-    id: "wooden-crafts",
-    name: "Wooden Crafts",
-    subtitle: "Hand-Carved Folk Masks & Sacred Sculptures",
-    count: 16,
-    image: null,
-    description: "Carved from indigenous timber by master sculptors of Natungram & Purulia."
+    description: "Katha O Kahini"
   },
   {
     id: "designer-dhotis",
@@ -64,9 +48,21 @@ export const categories = [
   {
     id: "home-decor",
     name: "Home Decor",
-    subtitle: "Artisanal Wall Art, Cushion Covers, Runners & Accent Pieces",
-    count: 15,
+    subtitle: "Dokra • Wooden Crafts • Others",
+    count: 53,
     image: null,
-    description: "Transforming living spaces with handcrafted heritage decor, wall hangings, and artisanal accent textiles."
+    description: "Transforming living spaces with handcrafted heritage decor, wall hangings, Dokra metal castings, wooden sculptures, and artisanal accent textiles."
   }
+];
+
+// Admin category options for Add Product / Edit Product forms
+export const adminCategoryOptions = [
+  "Kantha Dupattas",
+  "Traditional Kantha Creations",
+  "Dokra Art",
+  "Wooden Crafts",
+  "Designer Dhotis",
+  "Exclusive Designer Punjabis",
+  "Exclusive Apparels for Men & Women",
+  "Home Decor"
 ];

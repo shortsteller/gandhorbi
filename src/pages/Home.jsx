@@ -252,8 +252,8 @@ export const Home = () => {
             <h2 className="heading-accent" style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', marginTop: 0 }}>
               Shop by Categories
             </h2>
-            <p style={{ color: 'var(--text-warm-grey)', marginTop: '0.75rem', maxWidth: '600px', margin: '0.75rem auto 0 auto' }}>
-              Discover our signature collections of hand-stitched textiles, brass, bell metal and bronze, and artisanal apparel.
+            <p style={{ color: 'var(--text-warm-grey)', marginTop: '0.75rem', maxWidth: '700px', margin: '0.75rem auto 0 auto' }}>
+              Discover our signature collections of Artisanal Home decor, kantha and other artisanal Handicrafts and Designer apparels for men and women
             </p>
           </div>
 
@@ -347,6 +347,19 @@ export const Home = () => {
                         overflow: 'hidden'
                       }}>
                         Kantha O Kahini
+                      </p>
+                    )}
+                    {cat.name === 'Home Decor' && (
+                      <p style={{
+                        fontSize: '0.85rem',
+                        color: 'rgba(255, 253, 248, 0.85)',
+                        marginTop: '4px',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}>
+                        Dokra • Wooden Crafts • Others
                       </p>
                     )}
                   </div>

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { PackagePlus, CheckCircle, AlertCircle, ChevronLeft, Edit3, Tag } from 'lucide-react';
 import { ImageUploader } from '../../components/admin/ImageUploader';
 import { addProduct, getProductById, updateProduct } from '../../services/products';
-import { categories } from '../../data/categories';
+import { categories, adminCategoryOptions } from '../../data/categories';
 import { subscribeToCoupons } from '../../services/coupons';
 
 const INITIAL_FORM = {
@@ -179,8 +179,8 @@ export const AddProduct = () => {
               <select id="prod-category" name="category" className="admin-field-input admin-field-select"
                 value={form.category} onChange={handleChange} required>
                 <option value="">— Select Category —</option>
-                {categories.map(c => (
-                  <option key={c.id} value={c.name}>{c.name}</option>
+                {adminCategoryOptions.map(catName => (
+                  <option key={catName} value={catName}>{catName}</option>
                 ))}
               </select>
             </div>

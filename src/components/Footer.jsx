@@ -59,7 +59,7 @@ export const Footer = () => {
               lineHeight: 1.7,
               marginBottom: '1.5rem'
             }}>
-              A premier Bengali heritage brand dedicated to preserving centuries-old royal craftsmanship—handcrafted Nakshi Kantha textiles, ancient Dokra sculptures, and traditional wooden artifacts.
+              A premier Bengali heritage brand dedicated to preserving traditional craftsmanship—handcrafted Nakshi Kantha textiles, Dokra sculptures, and traditional wooden artifacts.
             </p>
 
             {/* Social Links */}
@@ -161,8 +161,6 @@ export const Footer = () => {
               {[
                 'Kantha Dupattas',
                 'Traditional Kantha Creations',
-                'Dokra Art',
-                'Wooden Crafts',
                 'Designer Dhotis',
                 'Exclusive Designer Punjabis',
                 'Exclusive Apparels for Men & Women',

@@ -83,7 +83,7 @@ export const SearchModal = () => {
               Popular Heritage Searches:
             </span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
-              {['Kantha Dupattas', 'Traditional Kantha Creations', 'Dokra Art', 'Wooden Crafts', 'Designer Dhotis', 'Exclusive Designer Punjabis', 'Home Decor'].map((term) => (
+              {['Kantha Dupattas', 'Traditional Kantha Creations', 'Dokra', 'Wooden Crafts', 'Designer Dhotis', 'Exclusive Designer Punjabis', 'Home Decor'].map((term) => (
                 <button
                   key={term}
                   onClick={() => setQuery(term)}
