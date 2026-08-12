@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
-import { X, Heart, ShoppingBag, MessageCircle, Star, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
+import { X, Heart, ShoppingBag, MessageCircle, Star, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
 import { ProductCard } from './ProductCard';
+import { getReturnPolicyText } from '../utils/productUtils';
 
 export const QuickViewModal = () => {
   const { quickViewProduct, setQuickViewProduct, addToCart, toggleWishlist, isInWishlist, products } = useShop();
@@ -319,12 +320,12 @@ export const QuickViewModal = () => {
               </div>
 
               {/* Guarantees */}
-              <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.8rem', color: 'var(--text-warm-grey)', paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
+              <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontSize: '0.8rem', color: 'var(--text-warm-grey)', paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <ShieldCheck size={16} color="var(--primary-terracotta)" /> 100% Authentic Handcrafted
+                  <RotateCcw size={16} color="var(--primary-terracotta)" /> {getReturnPolicyText(product)}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <Truck size={16} color="var(--primary-terracotta)" /> Worldwide Insured Express Delivery
+                  <ShieldCheck size={16} color="var(--primary-terracotta)" /> 100% Authentic Handcrafted
                 </div>
               </div>
 

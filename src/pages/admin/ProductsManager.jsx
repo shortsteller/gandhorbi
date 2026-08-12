@@ -299,7 +299,19 @@ export const ProductsManager = () => {
 
                 {/* Compact Card Body */}
                 <div className="admin-prod-body" style={{ padding: '0.75rem 0.85rem' }}>
-                  <span className="admin-prod-cat">{p.category || 'General'}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                    <span className="admin-prod-cat">{p.category || 'General'}</span>
+                    <span style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 600,
+                      color: p.isReturnable === false ? '#B85C38' : 'var(--secondary-olive)',
+                      backgroundColor: p.isReturnable === false ? 'rgba(184, 92, 56, 0.08)' : 'rgba(74, 124, 89, 0.08)',
+                      padding: '1px 6px',
+                      borderRadius: '4px'
+                    }}>
+                      {p.isReturnable === false ? 'Non-returnable' : `${p.returnDays || 7}d return`}
+                    </span>
+                  </div>
                   <h3 className="admin-prod-title">{p.name}</h3>
                   <div className="admin-prod-price-row">
                     <span className="admin-prod-price">₹{(p.price || 0).toLocaleString('en-IN')}</span>

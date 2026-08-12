@@ -85,6 +85,10 @@ export const addProduct = async (productData, imageFiles = []) => {
       inStock:       productData.inStock       ?? (productData.stock > 0),
       featured:      productData.featured      ?? false,
       trending:      productData.trending      ?? false,
+      applicableCoupon: productData.applicableCoupon ?? '',
+      isReturnable:     productData.isReturnable  ?? true,
+      returnDays:       productData.isReturnable === false ? 0 : (productData.returnDays !== undefined ? Number(productData.returnDays) : 7),
+      returnPolicy:     productData.isReturnable === false ? 'Non-returnable' : `${productData.returnDays !== undefined ? Number(productData.returnDays) : 7}-day return`,
       images, // contains [{ url, publicId, ... }]
     };
 

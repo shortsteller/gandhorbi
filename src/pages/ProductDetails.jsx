@@ -10,11 +10,13 @@ import {
   Award,
   Truck,
   RotateCcw,
+  HeartHandshake,
   Star,
   ChevronRight,
   ArrowLeft,
   AlertTriangle
 } from 'lucide-react';
+import { getReturnPolicyText } from '../utils/productUtils';
 
 export const ProductDetails = () => {
   const { id } = useParams();
@@ -299,15 +301,15 @@ export const ProductDetails = () => {
             {/* Trust Badges */}
             <div className="pd-trust-row">
               <div className="pd-trust-item">
-                <Truck size={20} color="var(--primary-terracotta)" />
-                <span>Free Shipping</span>
+                <RotateCcw size={20} color="var(--primary-terracotta)" />
+                <span>{getReturnPolicyText(product)}</span>
               </div>
               <div className="pd-trust-item">
                 <Award size={20} color="var(--primary-terracotta)" />
                 <span>100% Authentic</span>
               </div>
               <div className="pd-trust-item">
-                <RotateCcw size={20} color="var(--primary-terracotta)" />
+                <HeartHandshake size={20} color="var(--primary-terracotta)" />
                 <span>Fair Trade</span>
               </div>
             </div>
