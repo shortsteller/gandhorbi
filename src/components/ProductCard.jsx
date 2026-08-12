@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
-import { Heart, Eye, ShoppingBag, RotateCcw, Award, HeartHandshake } from 'lucide-react';
-import { getReturnPolicyText } from '../utils/productUtils';
+import { Heart, Eye, ShoppingBag } from 'lucide-react';
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -10,7 +9,6 @@ export const ProductCard = ({ product }) => {
 
   const isWishlisted = isInWishlist(product.id);
   const isOutOfStock = product.inStock === false || (product.stock !== undefined && Number(product.stock) <= 0);
-  const returnPolicyText = getReturnPolicyText(product);
 
   const handleProductClick = () => {
     navigate(`/product/${product.id}`);
@@ -178,81 +176,39 @@ export const ProductCard = ({ product }) => {
         </div>
 
         {/* Price & Add to Cart */}
-        <div>
-          <div className="product-card-footer" style={{ marginTop: '0.8rem', paddingTop: '0.6rem', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <span className="product-card-price" style={{
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                color: 'var(--primary-terracotta)'
+        <div className="product-card-footer" style={{ marginTop: '0.8rem', paddingTop: '0.6rem', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <span className="product-card-price" style={{
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 700,
+              color: 'var(--primary-terracotta)'
+            }}>
+              ₹{product.price.toLocaleString('en-IN')}
+            </span>
+            {product.originalPrice && (
+              <span className="product-card-original-price" style={{
+                color: 'var(--text-warm-grey)',
+                textDecoration: 'line-through',
+                marginLeft: '0.4rem'
               }}>
-                ₹{product.price.toLocaleString('en-IN')}
+                ₹{product.originalPrice.toLocaleString('en-IN')}
               </span>
-              {product.originalPrice && (
-                <span className="product-card-original-price" style={{
-                  color: 'var(--text-warm-grey)',
-                  textDecoration: 'line-through',
-                  marginLeft: '0.4rem'
-                }}>
-                  ₹{product.originalPrice.toLocaleString('en-IN')}
-                </span>
-              )}
-            </div>
-
-            <button
-              onClick={() => !isOutOfStock && addToCart(product)}
-              disabled={isOutOfStock}
-              aria-label={isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-              className="btn-icon product-card-cart-btn"
-              title={isOutOfStock ? 'Currently Out of Stock' : 'Add to Shopping Cart'}
-              style={{
-                opacity: isOutOfStock ? 0.5 : 1,
-                cursor: isOutOfStock ? 'not-allowed' : 'pointer'
-              }}
-            >
-              <ShoppingBag size={16} />
-            </button>
+            )}
           </div>
 
-          {/* Informational Items Row: Return Policy | 100% Authentic | Fair Trade */}
-          <div
-            className="product-card-trust-row"
+          <button
+            onClick={() => !isOutOfStock && addToCart(product)}
+            disabled={isOutOfStock}
+            aria-label={isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+            className="btn-icon product-card-cart-btn"
+            title={isOutOfStock ? 'Currently Out of Stock' : 'Add to Shopping Cart'}
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '0.2rem',
-              marginTop: '0.6rem',
-              paddingTop: '0.6rem',
-              borderTop: '1px dashed var(--border-light)',
-              textAlign: 'center',
-              fontSize: '0.68rem',
-              color: 'var(--text-warm-grey)'
+              opacity: isOutOfStock ? 0.5 : 1,
+              cursor: isOutOfStock ? 'not-allowed' : 'pointer'
             }}
           >
-            {/* Dynamic Product Return Policy */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-              <RotateCcw size={13} color="var(--primary-terracotta)" />
-              <span style={{ lineHeight: 1.15, fontWeight: 600, color: 'var(--text-charcoal)', fontSize: '0.68rem' }}>
-                {returnPolicyText}
-              </span>
-            </div>
-
-            {/* 100% Authentic */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-              <Award size={13} color="var(--primary-terracotta)" />
-              <span style={{ lineHeight: 1.15, fontWeight: 500, color: 'var(--text-charcoal)', fontSize: '0.68rem' }}>
-                100% Authentic
-              </span>
-            </div>
-
-            {/* Fair Trade */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-              <HeartHandshake size={13} color="var(--primary-terracotta)" />
-              <span style={{ lineHeight: 1.15, fontWeight: 500, color: 'var(--text-charcoal)', fontSize: '0.68rem' }}>
-                Fair Trade
-              </span>
-            </div>
-          </div>
+            <ShoppingBag size={16} />
+          </button>
         </div>
 
       </div>
